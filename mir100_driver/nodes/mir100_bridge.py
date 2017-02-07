@@ -112,33 +112,48 @@ class MiR100Bridge(object):
 
         rospy.loginfo('[%s] ... connected.', rospy.get_name())
 
-        self.topics, self.topic_types = self.get_topics()
+        topics = self.get_topics()
+        published_topics = [topic_name for (topic_name, _, has_publishers, _) in topics if has_publishers]
+        subscribed_topics = [topic_name for (topic_name, _, _, has_subscribers) in topics if has_subscribers]
 
         for pub_topic in PUB_TOPICS:
             PublisherWrapper(pub_topic, self.robot)
-            if ('/' + pub_topic.topic) not in self.topics:
+            if ('/' + pub_topic.topic) not in published_topics:
                 rospy.logwarn("[%s] topic '%s' is not published by the MiR!", rospy.get_name(), pub_topic.topic)
 
         for sub_topic in SUB_TOPICS:
             SubscriberWrapper(sub_topic, self.robot)
-            if ('/' + sub_topic.topic) not in self.topics:
+            if ('/' + sub_topic.topic) not in subscribed_topics:
                 rospy.logwarn("[%s] topic '%s' is not yet subscribed to by the MiR!", rospy.get_name(), sub_topic.topic)
 
     def get_topics(self):
-        print 'Available topics:'
-
         srv_response = self.robot.callService('/rosapi/topics', msg={})
-        topics = sorted(srv_response['topics'])
-        topic_types = []
+        topic_names = sorted(srv_response['topics'])
+        topics = []
 
-        for topic in topics:
-            srv_response = self.robot.callService("/rosapi/topic_type", msg={'topic': topic})
-            topic_types.append(srv_response['type'])
+        for topic_name in topic_names:
+            srv_response = self.robot.callService("/rosapi/topic_type", msg={'topic': topic_name})
+            topic_type = srv_response['type']
 
-        for topic, topic_type in zip(topics, topic_types):
-            print ' * %s [%s]' % (topic, topic_type)
+            srv_response = self.robot.callService("/rosapi/publishers", msg={'topic': topic_name})
+            has_publishers = True if len(srv_response['publishers']) > 0 else False
 
-        return topics, topic_types
+            srv_response = self.robot.callService("/rosapi/subscribers", msg={'topic': topic_name})
+            has_subscribers = True if len(srv_response['subscribers']) > 0 else False
+
+            topics.append([topic_name, topic_type, has_publishers, has_subscribers])
+
+        print 'Publishers:'
+        for (topic_name, topic_type, has_publishers, has_subscribers) in topics:
+            if has_publishers:
+                print ' * %s [%s]' % (topic_name, topic_type)
+
+        print '\nSubscribers:'
+        for (topic_name, topic_type, has_publishers, has_subscribers) in topics:
+            if has_subscribers:
+                print ' * %s [%s]' % (topic_name, topic_type)
+
+        return topics
 
 
 def main():

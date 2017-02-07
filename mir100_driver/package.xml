@@ -2,7 +2,7 @@
 <package format="2">
   <name>mir100_driver</name>
   <version>0.0.0</version>
-  <description>An reverse ROS bridge for the MiR100 robot</description>
+  <description>A reverse ROS bridge for the MiR100 robot</description>
 
   <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
   <author email="martin.guenther@dfki.de">Martin Günther</author>
