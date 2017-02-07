@@ -40,7 +40,7 @@ PUB_TOPICS = [TopicConfig('imu_data',           Imu),                     # not 
               TopicConfig('move_base/feedback', MoveBaseActionFeedback, dict_filter=_move_base_feedback_dict_filter),  # really mir_actions/MirMoveBaseActionFeedback
               TopicConfig('move_base/result',   MoveBaseActionResult,   dict_filter=_move_base_result_dict_filter),    # really mir_actions/MirMoveBaseActionResult
               TopicConfig('move_base/status',   GoalStatusArray),
-              TopicConfig('odom',               Odometry),                # odom_comb on real robot?
+              TopicConfig('odom_comb',          Odometry),                # odom_comb on real robot, odom on simulator
               TopicConfig('robot_pose',         Pose),
               TopicConfig('scan',               LaserScan),
               TopicConfig('tf',                 tfMessage)]
