@@ -1,0 +1,26 @@
+#goal definition
+geometry_msgs/PoseStamped target_pose
+nav_msgs/Path path
+float32 max_plan_time
+bool clear_costmaps
+---
+#result definition
+int16 UNDEFINED = 0
+int16 GOAL_REACHED = 1
+int16 FAILED = -1
+int16 FAILED_NO_PATH = -2
+int16 FAILED_GOAL_IN_STATIC_OBSTACLE = -3
+int16 FAILED_GOAL_IN_FORBIDDEN_AREA = -4
+int16 FAILED_GOAL_IN_DYNAMIC_OBSTACLE = -5
+int16 FAILED_ROBOT_IN_COLLISION = -6
+int16 FAILED_ROBOT_IN_FORBIDDEN_AREA = -7
+int16 FAILED_UNKNOWN_TRAILER = -8
+int16 end_state
+geometry_msgs/PoseStamped end_pose
+---
+#feedback
+int8 PLANNING = 0
+int8 CONTROLLING = 1
+int8 CLEARING = 2
+int8 state
+geometry_msgs/PoseStamped base_position

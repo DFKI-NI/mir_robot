@@ -1,0 +1,21 @@
+#goal definition
+geometry_msgs/PoseStamped target_pose
+float64 yaw
+bool collision_detection
+float64 max_linear_speed
+float64 max_rotational_speed
+float64 pid_dist_offset
+---
+#result definition
+int16 UNDEFINED = 0
+int16 GOAL_REACHED = 1
+int16 FAILED_TIMEOUT = 2
+int16 FAILED_COLLISION = 3
+int16 INVALID_GOAL = 4
+int16 end_state
+geometry_msgs/PoseStamped end_pose
+---
+#feedback
+int8 state
+geometry_msgs/PoseStamped current_goal
+geometry_msgs/PoseStamped dist_to_goal
