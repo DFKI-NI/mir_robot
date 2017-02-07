@@ -4,7 +4,7 @@ import rospy
 import copy
 import sys
 
-from mir100_robot import rosbridge
+from mir100_driver import rosbridge
 from rospy_message_converter import message_converter
 
 from actionlib_msgs.msg import GoalID, GoalStatusArray

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(mir100_robot)
+project(mir100_driver)
 
 find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs
