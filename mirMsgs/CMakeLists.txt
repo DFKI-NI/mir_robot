@@ -1,0 +1,40 @@
+cmake_minimum_required(VERSION 2.8.3)
+project(mirMsgs)
+
+find_package(catkin REQUIRED COMPONENTS
+  message_generation
+  std_msgs
+)
+
+################################################
+## Declare ROS messages, services and actions ##
+################################################
+
+# Generate messages in the 'msg' folder
+add_message_files(
+  FILES
+    Encoders.msg
+    LocalMapStat.msg
+    MirExtra.msg
+    MirStatus.msg
+    RobotMode.msg
+    RobotState.msg
+    serial.msg
+    StampedEncoders.msg
+    Trolley.msg
+)
+
+# Generate added messages and services with any dependencies listed here
+generate_messages(
+  DEPENDENCIES
+    std_msgs
+)
+
+###################################
+## catkin specific configuration ##
+###################################
+catkin_package(
+  CATKIN_DEPENDS
+    message_runtime
+    std_msgs
+)

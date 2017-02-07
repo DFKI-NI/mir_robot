@@ -1,0 +1,14 @@
+# The robot operates in different mode
+uint8 ROBOT_MODE_NONE = 0		# start mode
+uint8 ROBOT_MODE_NOMAP = 1		# basic mode operating with no map given
+uint8 ROBOT_MODE_MANUEL = 2		# 
+uint8 ROBOT_MODE_MAPPING = 3		# in mapping a new map is made
+uint8 ROBOT_MODE_TAXA = 4		# basic motion to a new position
+uint8 ROBOT_MODE_BUS = 5		# bus mode, following a bus-plan
+uint8 ROBOT_MODE_POST = 6		# post devilery mode, some how restricted
+uint8 ROBOT_MODE_MISSION = 7		# primary mode when executing a mission (action list)
+uint8 ROBOT_MODE_CHANGING = 255		# a transition mode - to say that a transition is in progress
+
+uint8 robotMode
+string robotModeString
+
