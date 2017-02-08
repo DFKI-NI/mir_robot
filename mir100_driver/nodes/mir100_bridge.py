@@ -156,16 +156,34 @@ SUB_TOPICS = [TopicConfig('cmd_vel', Twist),
               TopicConfig('relative_move_action/cancel', GoalID),
               TopicConfig('relative_move_action/goal', RelativeMoveActionGoal)]
 
-class PublisherWrapper(object):
+class PublisherWrapper(rospy.SubscribeListener):
     def __init__(self, topic_config, robot):
         self.topic_config = topic_config
+        self.robot = robot
+        self.connected = False
         self.pub = rospy.Publisher(name=topic_config.topic,
                                    data_class=topic_config.topic_type,
+                                   subscriber_listener=self,
                                    latch=topic_config.latch,
                                    queue_size=10)
-        robot.subscribe(topic=('/' + topic_config.topic), callback=self.callback)
         rospy.loginfo("[%s] publishing topic '%s' [%s]",
                       rospy.get_name(), topic_config.topic, topic_config.topic_type._type)
+        # latched topics must be subscribed immediately
+        if topic_config.latch:
+            self.peer_subscribe(None, None, None)
+
+
+    def peer_subscribe(self, topic_name, topic_publish, peer_publish):
+        if (self.pub.get_num_connections() == 1 and not self.connected) or self.topic_config.latch:
+            rospy.loginfo("[%s] starting to stream messages on topic '%s'", rospy.get_name(), self.topic_config.topic)
+            self.robot.subscribe(topic=('/' + self.topic_config.topic), callback=self.callback)
+
+    def peer_unsubscribe(self, topic_name, num_peers):
+        pass
+## doesn't work: once ubsubscribed, robot doesn't let us subscribe again
+#         if self.pub.get_num_connections() == 0:
+#             rospy.loginfo("[%s] stopping to stream messages on topic '%s'", rospy.get_name(), self.topic_config.topic)
+#             self.robot.unsubscribe(topic=('/' + self.topic_config.topic))
 
     def callback(self, msg_dict):
         if self.topic_config.dict_filter is not None:
