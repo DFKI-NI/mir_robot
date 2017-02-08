@@ -3,6 +3,7 @@ import rospy
 
 import copy
 import sys
+from collections import Iterable
 
 from mir100_driver import rosbridge
 from rospy_message_converter import message_converter
@@ -21,6 +22,8 @@ from sensor_msgs.msg import Imu, LaserScan, PointCloud2, Range
 from std_msgs.msg import Float64, String
 from tf.msg import tfMessage
 from visualization_msgs.msg import Marker, MarkerArray
+
+tf_prefix = ''
 
 class TopicConfig(object):
     def __init__(self, topic, topic_type, latch=False, dict_filter=None):
@@ -41,6 +44,61 @@ def _move_base_result_dict_filter(msg_dict):
     filtered_msg_dict = copy.deepcopy(msg_dict)
     filtered_msg_dict['result'] = {key: msg_dict['result'][key] for key in MoveBaseResult.__slots__}
     return filtered_msg_dict
+
+def _tf_dict_filter(msg_dict):
+    filtered_msg_dict = copy.deepcopy(msg_dict)
+    for transform in filtered_msg_dict['transforms']:
+        transform['child_frame_id'] = tf_prefix + '/' + transform['child_frame_id'].strip('/')
+    return filtered_msg_dict
+
+def _prepend_tf_prefix_dict_filter(msg_dict):
+    #filtered_msg_dict = copy.deepcopy(msg_dict)
+    if not isinstance(msg_dict, dict):   # can happen during recursion
+        return
+    for (key, value) in msg_dict.iteritems():
+        if key == 'header':
+            try:
+                # prepend frame_id
+                frame_id = value['frame_id'].strip('/')
+                if (frame_id != 'map'):
+                    value['frame_id'] = tf_prefix + '/' + frame_id
+                else:
+                    value['frame_id'] = frame_id
+
+            except TypeError:
+                pass   # value is not a dict
+            except KeyError:
+                pass   # value doesn't have key 'frame_id'
+        elif isinstance(value, dict):
+            _prepend_tf_prefix_dict_filter(value)
+        elif isinstance(value, Iterable):    # an Iterable other than dict (e.g., a list)
+            for item in value:
+                _prepend_tf_prefix_dict_filter(item)
+    return msg_dict
+
+def _remove_tf_prefix_dict_filter(msg_dict):
+    #filtered_msg_dict = copy.deepcopy(msg_dict)
+    if not isinstance(msg_dict, dict):   # can happen during recursion
+        return
+    for (key, value) in msg_dict.iteritems():
+        if key == 'header':
+            try:
+                # remove frame_id
+                s = value['frame_id'].strip('/')
+                if s.find(tf_prefix) == 0:
+                    value['frame_id'] = s[len(tf_prefix):]  # strip off tf_prefix, leave next '/' intact
+            except TypeError:
+                pass   # value is not a dict
+            except KeyError:
+                pass   # value doesn't have key 'frame_id'
+        elif isinstance(value, dict):
+            _remove_tf_prefix_dict_filter(value)
+        elif isinstance(value, Iterable):    # an Iterable other than dict (e.g., a list)
+            for item in value:
+                _remove_tf_prefix_dict_filter(item)
+    return msg_dict
+
+
 
 # topics we want to publish to ROS (and subscribe to from the MiR)
 PUB_TOPICS = [
@@ -138,7 +196,7 @@ PUB_TOPICS = [
               TopicConfig('rosout_agg', Log),
               TopicConfig('scan', LaserScan),
               TopicConfig('scan_filter/visualization_marker', Marker),
-              TopicConfig('tf', tfMessage),
+              TopicConfig('tf', tfMessage, dict_filter=_tf_dict_filter),
               TopicConfig('transform_footprint/parameter_descriptions', ConfigDescription),
               TopicConfig('transform_footprint/parameter_updates', Config),
               TopicConfig('transform_imu/parameter_descriptions', ConfigDescription),
@@ -186,6 +244,7 @@ class PublisherWrapper(rospy.SubscribeListener):
 #             self.robot.unsubscribe(topic=('/' + self.topic_config.topic))
 
     def callback(self, msg_dict):
+        msg_dict = _prepend_tf_prefix_dict_filter(msg_dict)
         if self.topic_config.dict_filter is not None:
             msg_dict = self.topic_config.dict_filter(msg_dict)
         msg = message_converter.convert_dictionary_to_ros_message(self.topic_config.topic_type._type, msg_dict)
@@ -204,6 +263,7 @@ class SubscriberWrapper(object):
 
     def callback(self, msg):
         msg_dict = message_converter.convert_ros_message_to_dictionary(msg)
+        msg_dict = _remove_tf_prefix_dict_filter(msg_dict)
         if self.topic_config.dict_filter is not None:
             msg_dict = self.topic_config.dict_filter(msg_dict)
         self.robot.publish('/' + self.topic_config.topic, msg_dict)
@@ -216,6 +276,9 @@ class MiR100Bridge(object):
             rospy.logfatal('[%s] parameter "hostname" is not set!', rospy.get_name())
             sys.exit(-1)
         port = rospy.get_param('~port', 9090)
+
+        global tf_prefix
+        tf_prefix = rospy.get_param('~tf_prefix', '').strip('/')
 
         rospy.loginfo('[%s] trying to connect to %s:%i...', rospy.get_name(), hostname, port)
         self.robot = rosbridge.RosbridgeSetup(hostname, port)
