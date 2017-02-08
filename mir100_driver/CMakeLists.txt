@@ -3,13 +3,21 @@ project(mir100_driver)
 
 find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs
+  diagnostic_msgs
+  dynamic_reconfigure
   geometry_msgs
+  mirMsgs
+  mir_actions
   move_base_msgs
   nav_msgs
+  rosgraph_msgs
   rospy
   rospy_message_converter
+  sbpl_lattice_planner
   sensor_msgs
+  std_msgs
   tf
+  visualization_msgs
 )
 
 catkin_python_setup()
@@ -20,11 +28,19 @@ catkin_python_setup()
 catkin_package(
   CATKIN_DEPENDS
     actionlib_msgs
+    diagnostic_msgs
+    dynamic_reconfigure
     geometry_msgs
+    mirMsgs
+    mir_actions
     move_base_msgs
     nav_msgs
+    rosgraph_msgs
+    sbpl_lattice_planner
     sensor_msgs
+    std_msgs
     tf
+    visualization_msgs
 )
 
 #############
