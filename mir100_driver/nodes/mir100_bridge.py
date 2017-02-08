@@ -193,6 +193,7 @@ PUB_TOPICS = [
               TopicConfig('robot_mode', RobotMode),
               TopicConfig('robot_pose', Pose),
               TopicConfig('robot_state', RobotState),
+              TopicConfig('rosout', Log),
               TopicConfig('rosout_agg', Log),
               TopicConfig('scan', LaserScan),
               TopicConfig('scan_filter/visualization_marker', Marker),
