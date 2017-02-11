@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<robot name="mir">
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://mir_description/meshes/mir100_v_1_5.stl"/>
+      </geometry>
+      <material name="light grey">
+        <color rgba="0.8 0.8 .8 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.900 0.600 0.358"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0.179"/>
+    </collision>
+  </link>
+
+  <joint name="base_to_imu" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin xyz="0.000 0.000 0.250" rpy="0 0 0" />
+  </joint>
+
+  <link name="imu_link">
+    <visual>
+      <geometry>
+        <box size="8.2 0.1 1.0"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0.608"/>
+      <material name="light grey">
+        <color rgba="0.8 0.8 .8 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="8.2 0.1 1.0"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0.608"/>
+    </collision>
+  </link>
+</robot>

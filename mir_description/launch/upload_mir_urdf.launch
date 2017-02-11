@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+  <param name="robot_description" textfile="$(find mir_description)/urdf/mir.urdf" />
+</launch>
+

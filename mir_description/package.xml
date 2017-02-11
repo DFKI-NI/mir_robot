@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>mir_description</name>
+  <version>0.0.0</version>
+  <description>URDF description of the MiR100 robot</description>
+
+  <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
+  <author email="martin.guenther@dfki.de">Martin Günther</author>
+
+  <!-- One license tag required, multiple allowed, one license per tag -->
+  <!-- Commonly used license strings: -->
+  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
+  <license>TODO</license>
+
+  <url type="website">https://github.com/dfki-ric/mir_robot</url>
+  <url type="repository">https://github.com/dfki-ric/mir_robot</url>
+  <url type="bugtracker">https://github.com/dfki-ric/mir_robot/issues</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+</package>
