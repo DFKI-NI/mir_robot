@@ -26,9 +26,9 @@
   <link name="imu_link">
     <visual>
       <geometry>
-        <box size="8.2 0.1 1.0"/>
+        <box size="8.0 0.1 1.0"/>
       </geometry>
-      <origin rpy="0 0 0" xyz="0 0 0.608"/>
+      <origin rpy="0 0 0" xyz="0.30 0 0.608"/>
       <material name="light grey">
         <color rgba="0.8 0.8 .8 1"/>
       </material>
