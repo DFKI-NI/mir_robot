@@ -13,7 +13,6 @@ find_package(catkin REQUIRED COMPONENTS
   rosgraph_msgs
   rospy
   rospy_message_converter
-  sbpl_lattice_planner
   sensor_msgs
   std_msgs
   tf
@@ -36,7 +35,6 @@ catkin_package(
     move_base_msgs
     nav_msgs
     rosgraph_msgs
-    sbpl_lattice_planner
     sensor_msgs
     std_msgs
     tf

@@ -30,7 +30,6 @@
   <depend>rosgraph_msgs</depend>
   <depend>rospy</depend>
   <depend>rospy_message_converter</depend>
-  <depend>sbpl_lattice_planner</depend>
   <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
   <depend>tf</depend>

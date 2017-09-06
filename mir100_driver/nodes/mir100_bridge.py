@@ -17,7 +17,6 @@ from mirMsgs.msg import *
 from move_base_msgs.msg import MoveBaseActionFeedback, MoveBaseActionGoal, MoveBaseActionResult, MoveBaseFeedback, MoveBaseResult
 from nav_msgs.msg import GridCells, MapMetaData, OccupancyGrid, Odometry, Path
 from rosgraph_msgs.msg import Log
-from sbpl_lattice_planner.msg import SBPLLatticePlannerStats
 from sensor_msgs.msg import Imu, LaserScan, PointCloud2, Range
 from std_msgs.msg import Float64, String
 from tf.msg import tfMessage
@@ -159,7 +158,6 @@ PUB_TOPICS = [
 #              TopicConfig('move_base_node/MIRPlannerROS/parameter_descriptions', ConfigDescription),
 #              TopicConfig('move_base_node/MIRPlannerROS/parameter_updates', Config),
 #              TopicConfig('move_base_node/SBPLLatticePlanner/plan', Path),
-#              TopicConfig('move_base_node/SBPLLatticePlanner/sbpl_lattice_planner_stats', SBPLLatticePlannerStats),
 #              TopicConfig('move_base_node/SBPLLatticePlanner/visualization_marker', MarkerArray),
 #              TopicConfig('move_base_node/current_goal', PoseStamped),
 #              TopicConfig('move_base_node/global_costmap/forbidden_area', GridCells),
