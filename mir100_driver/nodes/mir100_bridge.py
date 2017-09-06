@@ -209,7 +209,7 @@ SUB_TOPICS = [TopicConfig('cmd_vel', Twist),
 #              TopicConfig('move_base/cancel', GoalID),
 ##              TopicConfig('move_base/goal', MirMoveBaseActionGoal),
 #              TopicConfig('move_base/goal', MoveBaseActionGoal),  # really mir_actions/MirMoveBaseActionGoal
-#              TopicConfig('move_base_simple/goal', PoseStamped),
+              TopicConfig('move_base_simple/goal', PoseStamped),
               TopicConfig('relative_move_action/cancel', GoalID),
               TopicConfig('relative_move_action/goal', RelativeMoveActionGoal)]
 
