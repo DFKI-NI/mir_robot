@@ -22,7 +22,7 @@
   <depend>diagnostic_msgs</depend>
   <depend>dynamic_reconfigure</depend>
   <depend>geometry_msgs</depend>
-  <depend>mirMsgs</depend>
+  <depend>mir_msgs</depend>
   <depend>mir_actions</depend>
   <depend>move_base_msgs</depend>
   <depend>nav_msgs</depend>

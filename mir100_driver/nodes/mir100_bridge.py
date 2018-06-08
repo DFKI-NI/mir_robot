@@ -13,7 +13,7 @@ from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus
 from dynamic_reconfigure.msg import Config, ConfigDescription
 from geometry_msgs.msg import PolygonStamped, Pose, PoseArray, PoseStamped, PoseWithCovarianceStamped, Twist
 from mir_actions.msg import *
-from mirMsgs.msg import *
+from mir_msgs.msg import *
 from move_base_msgs.msg import MoveBaseActionFeedback, MoveBaseActionGoal, MoveBaseActionResult, MoveBaseFeedback, MoveBaseResult
 from nav_msgs.msg import GridCells, MapMetaData, OccupancyGrid, Odometry, Path
 from rosgraph_msgs.msg import Log
