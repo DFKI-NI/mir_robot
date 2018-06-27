@@ -1,5 +1,5 @@
 <launch>
-  <node pkg="mir100_driver" type="mir100_bridge.py" name="mir100_bridge" output="screen">
+  <node pkg="mir_driver" type="mir_bridge.py" name="mir_bridge" output="screen">
     <param name="hostname" value="192.168.12.20" />
     <param name="tf_prefix" value="" />
     <remap from="rosout" to="/rosout" />

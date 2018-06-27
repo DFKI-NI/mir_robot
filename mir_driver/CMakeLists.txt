@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(mir100_driver)
+project(mir_driver)
 
 find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs
@@ -45,5 +45,5 @@ catkin_package(
 ## Install ##
 #############
 
-catkin_install_python(PROGRAMS nodes/mir100_bridge.py
+catkin_install_python(PROGRAMS nodes/mir_bridge.py
                       DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})

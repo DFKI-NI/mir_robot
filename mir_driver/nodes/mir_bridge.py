@@ -5,7 +5,7 @@ import copy
 import sys
 from collections import Iterable
 
-from mir100_driver import rosbridge
+from mir_driver import rosbridge
 from rospy_message_converter import message_converter
 
 from actionlib_msgs.msg import GoalID, GoalStatusArray
@@ -342,7 +342,7 @@ class MiR100Bridge(object):
 
 
 def main():
-    rospy.init_node('mir100_bridge')
+    rospy.init_node('mir_bridge')
     MiR100Bridge()
     rospy.spin()
 
