@@ -139,7 +139,7 @@ PUB_TOPICS = [
               TopicConfig('mir_amcl/parameter_updates', Config),
               TopicConfig('mir_amcl/selected_points', PointCloud2),
               TopicConfig('mir_log', Log),
-              TopicConfig('mir_serial_button', serial),
+              TopicConfig('mir_serial_button', Serial),
               TopicConfig('mir_sound', String),
               TopicConfig('mir_status', MirStatus),
               TopicConfig('mir_status_msg', String),

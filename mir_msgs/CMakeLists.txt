@@ -19,7 +19,7 @@ add_message_files(
     MirStatus.msg
     RobotMode.msg
     RobotState.msg
-    serial.msg
+    Serial.msg
     StampedEncoders.msg
     Trolley.msg
 )
