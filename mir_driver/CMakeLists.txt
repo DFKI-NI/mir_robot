@@ -46,8 +46,12 @@ catkin_package(
 ## Install ##
 #############
 
-catkin_install_python(PROGRAMS nodes/mir_bridge.py
-                      DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+catkin_install_python(PROGRAMS
+  nodes/fake_mir_joint_publisher.py
+  nodes/mir_bridge.py
+  nodes/rep117_filter.py
+  nodes/tf_remove_child_frames.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 #############
 ## Testing ##
