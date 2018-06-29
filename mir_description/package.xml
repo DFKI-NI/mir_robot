@@ -17,4 +17,6 @@
   <url type="bugtracker">https://github.com/dfki-ric/mir_robot/issues</url>
 
   <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roslaunch</build_depend>
 </package>

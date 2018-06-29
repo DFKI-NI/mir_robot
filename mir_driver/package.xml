@@ -18,6 +18,8 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <build_depend>roslaunch</build_depend>
+
   <depend>actionlib_msgs</depend>
   <depend>diagnostic_msgs</depend>
   <depend>dynamic_reconfigure</depend>

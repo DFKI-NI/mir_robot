@@ -6,11 +6,12 @@ find_package(catkin REQUIRED COMPONENTS
   diagnostic_msgs
   dynamic_reconfigure
   geometry_msgs
-  mir_msgs
   mir_actions
+  mir_msgs
   move_base_msgs
   nav_msgs
   rosgraph_msgs
+  roslaunch
   rospy
   rospy_message_converter
   sensor_msgs
@@ -47,3 +48,9 @@ catkin_package(
 
 catkin_install_python(PROGRAMS nodes/mir_bridge.py
                       DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+#############
+## Testing ##
+#############
+
+roslaunch_add_file_check(launch)
