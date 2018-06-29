@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <launch>
-  <param name="robot_description" textfile="$(find mir_description)/urdf/mir.urdf" />
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find mir_description)/urdf/mir.urdf.xacro" />
 </launch>
-

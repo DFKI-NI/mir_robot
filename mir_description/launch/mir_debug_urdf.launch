@@ -1,17 +1,16 @@
-<?xml version="1.0"?>
-<!-- launch file to debug the katana urdf description -->
+<?xml version="1.0" ?>
 
 <launch>
-  <!-- load katana urdf -->
+  <arg name="gui" default="true" />
+
+  <!-- load MiR URDF -->
   <include file="$(find mir_description)/launch/upload_mir_urdf.launch" />
-  
-  <node pkg="robot_state_publisher" type="state_publisher" name="robot_state_publisher" />
 
-  <!-- joint state publisher with gui -->
-  <!-- <param name="use_gui" value="true" />
-  <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher"/>
-  -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="use_gui" value="$(arg gui)"/>
+  </node>
 
-  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find mir_description)/rviz/mir_description.rviz"/>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mir_description)/rviz/mir_description.rviz" required="true" />
 </launch>
-

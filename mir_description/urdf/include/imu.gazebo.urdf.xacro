@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="imu_gazebo" params="link imu_topic update_rate stdev">
+    <gazebo reference="${link}">
+      <gravity>true</gravity>
+      <sensor name="imu_sensor" type="imu">
+        <always_on>true</always_on>
+        <update_rate>100</update_rate>  <!-- this is not the publish rate -->
+        <visualize>true</visualize>
+        <topic>__default_topic__</topic>
+        <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+          <topicName>${imu_topic}</topicName>
+          <bodyName>${link}</bodyName>
+          <updateRateHZ>${update_rate}</updateRateHZ>  <!-- this is the publish rate -->
+          <gaussianNoise>${stdev * stdev}</gaussianNoise>
+          <xyzOffset>0 0 0</xyzOffset>
+          <rpyOffset>0 0 0</rpyOffset>
+          <frameName>imu_frame</frameName>  <!-- from real MiR -->
+        </plugin>
+        <pose>0 0 0 0 0 0</pose>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+</robot>
