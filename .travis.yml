@@ -1,0 +1,58 @@
+sudo: required
+dist: trusty
+# Force travis to use its minimal image with default Python settings
+language: generic
+env:
+  global:
+    - CATKIN_WS=~/catkin_ws
+    - CATKIN_WS_SRC=${CATKIN_WS}/src
+    - CATKIN_PROJECT_DIR=${CATKIN_WS_SRC}/mir_robot
+  matrix:
+    - CI_ROS_DISTRO="indigo"
+install:
+  - sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu trusty main" > /etc/apt/sources.list.d/ros-latest.list'
+  - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq -y python-rosdep python-catkin-tools
+  - sudo rosdep init
+  - rosdep update
+
+script:
+  - export PYTHONPATH=/usr/lib/python2.7/dist-packages   # temporary fix for travis-ci/travis-ci#8048
+
+  # install sbpl library from source
+  - cd $(mktemp -d)
+  - git clone -b master https://github.com/sbpl/sbpl.git
+  - cd sbpl
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=Release ..
+  - sudo make install
+
+  # create a catkin workspace and clone all required ROS packages
+  - mkdir -p $CATKIN_WS_SRC
+  - cd $CATKIN_WS_SRC/
+  - ln -s $TRAVIS_BUILD_DIR $CATKIN_WS_SRC   # outside CI, run this instead: git clone -b kinetic https://github.com/dfki-ric/mir_robot.git
+  - git clone -b indigo-devel https://github.com/ricardo-samaniego/sbpl_lattice_planner.git
+
+  # use rosdep to install all dependencies (including ROS itself)
+  - rosdep install --from-paths ./ -i -y --rosdistro $CI_ROS_DISTRO --skip-keys=sbpl
+
+  # build all packages in the catkin workspace
+  - source /opt/ros/${CI_ROS_DISTRO}/setup.bash
+  - catkin_init_workspace
+  - cd $CATKIN_WS
+  - catkin_make -DCMAKE_BUILD_TYPE=Release install
+  - source install/setup.bash   # not strictly necessary, but checks if everything was properly installed
+
+  # NOTE on testing: `catkin_make run_tests` will show the output of the tests
+  # (gtest, nosetest, etc..) but always returns 0 (success) even if a test
+  # fails. Running `catkin_test_results` aggregates all the results and returns
+  # non-zero when a test fails (which notifies Gitlab CI that the build failed).
+  - catkin_make -DCMAKE_BUILD_TYPE=Release run_tests
+  - catkin_test_results
+
+  # catkin_lint
+  - apt-get install -y python-catkin-lint
+  - cd $CATKIN_PROJECT_DIR
+  - catkin_lint .
