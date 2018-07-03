@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+
+<launch>
+  <arg name="delta_x" default="0.0" />
+  <arg name="delta_y" default="0.0" />
+  <arg name="delta_yaw" default="0.0" />
+
+  <node name="fake_localization" pkg="fake_localization" type="fake_localization" output="screen">
+    <param name="odom_frame_id" value="odom_comb" />
+    <param name="base_frame_id" value="base_footprint" />
+    <param name="delta_x"       value="$(arg delta_x)" />
+    <param name="delta_y"       value="$(arg delta_y)" />
+    <param name="delta_yaw"     value="$(arg delta_yaw)" />
+  </node>
+</launch>
