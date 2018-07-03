@@ -7,10 +7,7 @@
   <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
   <author email="martin.guenther@dfki.de">Martin Günther</author>
 
-  <!-- One license tag required, multiple allowed, one license per tag -->
-  <!-- Commonly used license strings: -->
-  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
-  <license>TODO</license>
+  <license>BSD</license>
 
   <url type="website">https://github.com/dfki-ric/mir_robot</url>
   <url type="repository">https://github.com/dfki-ric/mir_robot</url>
