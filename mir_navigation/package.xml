@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>mir_navigation</name>
+  <version>0.0.0</version>
+  <description>Launch and configuration files for move_base, localization etc. on the MiR robot.</description>
+
+  <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
+  <author email="martin.guenther@dfki.de">Martin Günther</author>
+
+  <!-- One license tag required, multiple allowed, one license per tag -->
+  <!-- Commonly used license strings: -->
+  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
+  <license>TODO</license>
+
+  <url type="website">https://github.com/dfki-ric/mir_robot</url>
+  <url type="repository">https://github.com/dfki-ric/mir_robot</url>
+  <url type="bugtracker">https://github.com/dfki-ric/mir_robot/issues</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roslaunch</build_depend>
+
+  <exec_depend>base_local_planner</exec_depend>
+  <exec_depend>dwa_local_planner</exec_depend>
+  <exec_depend>eband_local_planner</exec_depend>
+  <exec_depend>map_server</exec_depend>
+  <exec_depend>mir_driver</exec_depend>
+  <exec_depend>move_base</exec_depend>
+  <exec_depend>sbpl_lattice_planner</exec_depend>
+  <exec_depend>teb_local_planner</exec_depend>
+</package>

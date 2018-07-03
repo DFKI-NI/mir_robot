@@ -1,0 +1,18 @@
+<launch>
+  <arg name="local_planner"          default="dwa"             doc="Local planner can be either dwa, eband, base, teb or pose" />
+  <arg name="map_file" default="$(find mir_gazebo)/maps/maze.yaml" doc="Path to a map .yaml file (required)." />
+  <arg name="virtual_walls_map_file" default="$(arg map_file)" doc="Path to a virtual walls map .yaml file (optional)." />
+
+  <include file="$(find mir_navigation)/launch/start_maps.launch">
+    <arg name="map_file" value="$(arg map_file)" />
+    <arg name="virtual_walls_map_file" value="$(arg virtual_walls_map_file)" />
+  </include>
+
+  <include file="$(find mir_navigation)/launch/move_base.xml">
+    <arg name="local_planner" value="$(arg local_planner)"/>
+  </include>
+
+  <node name="rep117_laser_filter" pkg="mir_driver" type="rep117_filter.py" output="screen">
+    <remap from="scan_filtered" to="scan_rep117" />
+  </node>
+</launch>
