@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<!-- metadata for the DFKI RIC Software Catalogue -->
+<package>
+  <description brief="ROS driver and configuration files for the MiR100 robot">
+    This repo contains a ROS driver and ROS configuration files (URDF
+    description, Gazebo launch files, move_base config, bringup launch files,
+    message and action descriptions) for the MiR100
+    (http://www.mobile-industrial-robots.com/de/products/mir100/). 
+  </description>
+  <author>Martin Günther/martin.guenther@dfki.de</author>
+  <maintainer>Martin Günther/martin.guenther@dfki.de</maintainer>
+  <license>BSD</license>
+  <url>https://github.com/dfki-ric/mir_robot</url>
+  <logo>http://wiki.ros.org/custom/favicon.ico</logo>
+
+  <keywords>
+    <keyword>robot_driver</keyword>
+    <keyword>mir_robot</keyword>
+    <keyword>mir100</keyword>
+    <keyword>mir</keyword>
+    <keyword>ros</keyword>
+    <keyword>urdf</keyword>
+    <keyword>gazebo</keyword>
+    <keyword>move_base</keyword>
+    <keyword>bringup</keyword>
+  </keywords>
+
+  <stage>2</stage>
+  <use>single project</use>
+  <activity>active</activity>
+  <classifiers>
+    <classifier>ros</classifier>
+    <classifier>ubuntu</classifier>
+  </classifiers>
+</package>
