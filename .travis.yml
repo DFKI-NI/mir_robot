@@ -53,6 +53,6 @@ script:
   - catkin_test_results
 
   # catkin_lint
-  - apt-get install -y python-catkin-lint
+  - sudo apt-get install -y python-catkin-lint
   - cd $CATKIN_PROJECT_DIR
   - catkin_lint .
