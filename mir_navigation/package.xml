@@ -23,6 +23,6 @@
   <exec_depend>map_server</exec_depend>
   <exec_depend>mir_driver</exec_depend>
   <exec_depend>move_base</exec_depend>
-  <exec_depend>sbpl_lattice_planner</exec_depend>
+  <!-- <exec_depend>sbpl_lattice_planner</exec_depend>   commented out because it is not released yet -->
   <exec_depend>teb_local_planner</exec_depend>
 </package>
