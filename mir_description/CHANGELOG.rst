@@ -2,7 +2,7 @@
 Changelog for package mir_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.0 (2018-07-12)
+------------------
 * Initial release
 * Contributors: Martin Günther
