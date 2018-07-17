@@ -60,7 +60,8 @@ def _prepend_tf_prefix_dict_filter(msg_dict):
                 # prepend frame_id
                 frame_id = value['frame_id'].strip('/')
                 if (frame_id != 'map'):
-                    value['frame_id'] = tf_prefix + '/' + frame_id
+                    # prepend tf_prefix, then remove leading '/' (e.g., when tf_prefix is empty)
+                    value['frame_id'] = (tf_prefix + '/' + frame_id).strip('/')
                 else:
                     value['frame_id'] = frame_id
 
@@ -85,7 +86,7 @@ def _remove_tf_prefix_dict_filter(msg_dict):
                 # remove frame_id
                 s = value['frame_id'].strip('/')
                 if s.find(tf_prefix) == 0:
-                    value['frame_id'] = s[len(tf_prefix):]  # strip off tf_prefix, leave next '/' intact
+                    value['frame_id'] = (s[len(tf_prefix):]).strip('/')  # strip off tf_prefix, then strip leading '/'
             except TypeError:
                 pass   # value is not a dict
             except KeyError:
