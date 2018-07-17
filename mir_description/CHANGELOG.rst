@@ -2,8 +2,8 @@
 Changelog for package mir_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.1 (2018-07-17)
+------------------
 * gazebo: Remove leading slashes in TF frames
   TF2 doesn't like it (e.g., robot_localization).
 * Contributors: Martin Günther

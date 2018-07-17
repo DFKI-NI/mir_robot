@@ -2,8 +2,8 @@
 Changelog for package mir_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.1 (2018-07-17)
+------------------
 * gazebo: Replace robot_pose_ekf with robot_localization
   robot_pose_ekf is deprecated, and has been removed from the navigation
   stack starting in melodic.

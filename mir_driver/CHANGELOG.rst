@@ -2,8 +2,8 @@
 Changelog for package mir_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.1 (2018-07-17)
+------------------
 * mir_driver: Remove leading slashes in TF frames
 * mir_driver: Install launch directory
 * Contributors: Martin Günther
