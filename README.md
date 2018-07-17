@@ -1,8 +1,6 @@
 mir_driver
 ==========
 
-[![Build Status](https://travis-ci.org/dfki-ric/mir_robot.svg?branch=kinetic)](https://travis-ci.org/dfki-ric/mir_robot)
-
 This repo contains a ROS driver and ROS configuration files (URDF description,
 Gazebo launch files, move_base config, bringup launch files, message and action
 descriptions) for the [MiR 100 robot](http://www.mobile-industrial-robots.com/en/products/mir100/).
@@ -151,3 +149,27 @@ If the robot's localization is lost:
 ```bash
 roslaunch mir_driver mir.launch
 ```
+
+Travis - Continuous Integration
+-------------------------------
+
+| Indigo |
+|--------|
+| [![Build Status](https://travis-ci.org/dfki-ric/mir_robot.svg?branch=indigo)](https://travis-ci.org/dfki-ric/mir_robot) |
+
+
+ROS Buildfarm
+-------------
+
+|           | Indigo source deb | Indigo binary deb | Kinetic source deb | Kinetic binary deb |
+|-----------|-------------------|-------------------|--------------------|--------------------|
+| [mir_actions](http://wiki.ros.org/mir_actions) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Isrc_uT__mir_actions__ubuntu_trusty__source)](http://build.ros.org/job/Isrc_uT__mir_actions__ubuntu_trusty__source/) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Ibin_uT64__mir_actions__ubuntu_trusty_amd64__binary)](http://build.ros.org/job/Ibin_uT64__mir_actions__ubuntu_trusty_amd64__binary/) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Ksrc_uX__mir_actions__ubuntu_xenial__source)](http://build.ros.org/job/Ksrc_uX__mir_actions__ubuntu_xenial__source/) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Kbin_uX64__mir_actions__ubuntu_xenial_amd64__binary)](http://build.ros.org/job/Kbin_uX64__mir_actions__ubuntu_xenial_amd64__binary/) |
+| [mir_description](http://wiki.ros.org/mir_description) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Isrc_uT__mir_description__ubuntu_trusty__source)](http://build.ros.org/job/Isrc_uT__mir_description__ubuntu_trusty__source/) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Ibin_uT64__mir_description__ubuntu_trusty_amd64__binary)](http://build.ros.org/job/Ibin_uT64__mir_description__ubuntu_trusty_amd64__binary/) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Ksrc_uX__mir_description__ubuntu_xenial__source)](http://build.ros.org/job/Ksrc_uX__mir_description__ubuntu_xenial__source/) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Kbin_uX64__mir_description__ubuntu_xenial_amd64__binary)](http://build.ros.org/job/Kbin_uX64__mir_description__ubuntu_xenial_amd64__binary/) |
+| [mir_driver](http://wiki.ros.org/mir_driver) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Isrc_uT__mir_driver__ubuntu_trusty__source)](http://build.ros.org/job/Isrc_uT__mir_driver__ubuntu_trusty__source/) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Ibin_uT64__mir_driver__ubuntu_trusty_amd64__binary)](http://build.ros.org/job/Ibin_uT64__mir_driver__ubuntu_trusty_amd64__binary/) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Ksrc_uX__mir_driver__ubuntu_xenial__source)](http://build.ros.org/job/Ksrc_uX__mir_driver__ubuntu_xenial__source/) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Kbin_uX64__mir_driver__ubuntu_xenial_amd64__binary)](http://build.ros.org/job/Kbin_uX64__mir_driver__ubuntu_xenial_amd64__binary/) |
+| [mir_gazebo](http://wiki.ros.org/mir_gazebo) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Isrc_uT__mir_gazebo__ubuntu_trusty__source)](http://build.ros.org/job/Isrc_uT__mir_gazebo__ubuntu_trusty__source/) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Ibin_uT64__mir_gazebo__ubuntu_trusty_amd64__binary)](http://build.ros.org/job/Ibin_uT64__mir_gazebo__ubuntu_trusty_amd64__binary/) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Ksrc_uX__mir_gazebo__ubuntu_xenial__source)](http://build.ros.org/job/Ksrc_uX__mir_gazebo__ubuntu_xenial__source/) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Kbin_uX64__mir_gazebo__ubuntu_xenial_amd64__binary)](http://build.ros.org/job/Kbin_uX64__mir_gazebo__ubuntu_xenial_amd64__binary/) |
+| [mir_msgs](http://wiki.ros.org/mir_msgs) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Isrc_uT__mir_msgs__ubuntu_trusty__source)](http://build.ros.org/job/Isrc_uT__mir_msgs__ubuntu_trusty__source/) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Ibin_uT64__mir_msgs__ubuntu_trusty_amd64__binary)](http://build.ros.org/job/Ibin_uT64__mir_msgs__ubuntu_trusty_amd64__binary/) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Ksrc_uX__mir_msgs__ubuntu_xenial__source)](http://build.ros.org/job/Ksrc_uX__mir_msgs__ubuntu_xenial__source/) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Kbin_uX64__mir_msgs__ubuntu_xenial_amd64__binary)](http://build.ros.org/job/Kbin_uX64__mir_msgs__ubuntu_xenial_amd64__binary/) |
+| [mir_navigation](http://wiki.ros.org/mir_navigation) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Isrc_uT__mir_navigation__ubuntu_trusty__source)](http://build.ros.org/job/Isrc_uT__mir_navigation__ubuntu_trusty__source/) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Ibin_uT64__mir_navigation__ubuntu_trusty_amd64__binary)](http://build.ros.org/job/Ibin_uT64__mir_navigation__ubuntu_trusty_amd64__binary/) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Ksrc_uX__mir_navigation__ubuntu_xenial__source)](http://build.ros.org/job/Ksrc_uX__mir_navigation__ubuntu_xenial__source/) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Kbin_uX64__mir_navigation__ubuntu_xenial_amd64__binary)](http://build.ros.org/job/Kbin_uX64__mir_navigation__ubuntu_xenial_amd64__binary/) |
+
+|           | Indigo devel | Indigo doc | Kinetic devel | Kinetic doc |
+|-----------|--------------|------------|---------------|-------------|
+| [mir_robot](http://wiki.ros.org/mir_robot) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Idev__mir_robot__ubuntu_trusty_amd64)](http://build.ros.org/job/Idev__mir_robot__ubuntu_trusty_amd64) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Idoc__mir_robot__ubuntu_trusty_amd64)](http://build.ros.org/job/Idoc__mir_robot__ubuntu_trusty_amd64) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Kdev__mir_robot__ubuntu_xenial_amd64)](http://build.ros.org/job/Kdev__mir_robot__ubuntu_xenial_amd64) | [![Build Status](http://build.ros.org/buildStatus/icon?job=Kdoc__mir_robot__ubuntu_xenial_amd64)](http://build.ros.org/job/Kdoc__mir_robot__ubuntu_xenial_amd64) |
