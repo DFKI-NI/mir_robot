@@ -19,6 +19,14 @@ Package overview
 Installation
 ------------
 
+### From binaries
+
+```bash
+sudo apt install ros-$ROS_DISTRO-mir-robot
+```
+
+### From source
+
 ```bash
 # install sbpl library from source
 cd $(mktemp -d)
