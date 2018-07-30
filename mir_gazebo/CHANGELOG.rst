@@ -2,8 +2,8 @@
 Changelog for package mir_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.2 (2018-07-30)
+------------------
 * mir_gazebo: Install config directory
 * Contributors: Martin Günther
 

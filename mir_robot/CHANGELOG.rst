@@ -2,8 +2,8 @@
 Changelog for package mir_robot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.2 (2018-07-30)
+------------------
 * Add metapackage
 * Contributors: Martin Günther
 
