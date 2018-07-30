@@ -2,6 +2,11 @@
 Changelog for package mir_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* mir_gazebo: Install config directory
+* Contributors: Martin Günther
+
 1.0.1 (2018-07-17)
 ------------------
 * gazebo: Replace robot_pose_ekf with robot_localization
