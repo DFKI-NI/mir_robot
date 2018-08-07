@@ -19,14 +19,6 @@ Package overview
 Installation
 ------------
 
-### From binaries
-
-```bash
-sudo apt install ros-$ROS_DISTRO-mir-robot
-```
-
-### From source
-
 ```bash
 # install sbpl library from source
 cd $(mktemp -d)
@@ -40,12 +32,17 @@ sudo make install
 # create a catkin workspace and clone all required ROS packages
 mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src/
-git clone -b kinetic https://github.com/dfki-ric/mir_robot.git
 git clone -b indigo-devel https://github.com/ricardo-samaniego/sbpl_lattice_planner.git
 
+# install mir_robot itself; choose between binary and source install
+## BINARY INSTALL:
+sudo apt install ros-$ROS_DISTRO-mir-robot
+## SOURCE INSTALL:
+git clone -b kinetic https://github.com/dfki-ric/mir_robot.git
+
 # use rosdep to install all dependencies (including ROS itself)
-apt-get update -qq
-apt-get install -qq -y python-rosdep
+sudo apt-get update -qq
+sudo apt-get install -qq -y python-rosdep
 sudo rosdep init
 rosdep update
 rosdep install --from-paths ./ -i -y --rosdistro kinetic --skip-keys=sbpl
