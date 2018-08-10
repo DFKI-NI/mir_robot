@@ -20,15 +20,6 @@ Installation
 ------------
 
 ```bash
-# install sbpl library from source
-cd $(mktemp -d)
-git clone -b master https://github.com/sbpl/sbpl.git
-cd sbpl
-mkdir build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-sudo make install
-
 # create a catkin workspace and clone all required ROS packages
 mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src/
@@ -45,7 +36,7 @@ sudo apt-get update -qq
 sudo apt-get install -qq -y python-rosdep
 sudo rosdep init
 rosdep update
-rosdep install --from-paths ./ -i -y --rosdistro kinetic --skip-keys=sbpl
+rosdep install --from-paths ./ -i -y --rosdistro kinetic
 
 # build all packages in the catkin workspace
 source /opt/ros/kinetic/setup.bash
