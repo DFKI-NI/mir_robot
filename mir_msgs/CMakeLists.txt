@@ -3,7 +3,7 @@ project(mir_msgs)
 
 find_package(catkin REQUIRED COMPONENTS
   message_generation
-  std_msgs
+  geometry_msgs
 )
 
 ################################################
@@ -27,7 +27,7 @@ add_message_files(
 # Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
-    std_msgs
+    geometry_msgs
 )
 
 ###################################
@@ -36,5 +36,5 @@ generate_messages(
 catkin_package(
   CATKIN_DEPENDS
     message_runtime
-    std_msgs
+    geometry_msgs
 )
