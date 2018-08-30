@@ -1,5 +1,6 @@
 Header header
 float64 hook_length
+float64 hook_height
 float64 angle
 bool braked
 

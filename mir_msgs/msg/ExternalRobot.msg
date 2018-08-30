@@ -1,0 +1,10 @@
+Header header
+uint32 id
+string name
+string footprint
+string ip
+uint32 map_id
+int32 priority
+geometry_msgs/Pose pose
+geometry_msgs/Pose extrapolated_pose
+geometry_msgs/Twist twist
