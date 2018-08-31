@@ -43,8 +43,14 @@
     <remap from="tf" to="/tf" />
   </node>
 
-  <node name="rep117_laser_filter" pkg="mir_driver" type="rep117_filter.py" output="screen">
-    <remap from="scan_filtered" to="scan_rep117" />
+  <node name="b_rep117_laser_filter" pkg="mir_driver" type="rep117_filter.py" output="screen">
+    <remap from="scan" to="b_scan" />
+    <remap from="scan_filtered" to="b_scan_rep117" />
+  </node>
+
+  <node name="f_rep117_laser_filter" pkg="mir_driver" type="rep117_filter.py" output="screen">
+    <remap from="scan" to="f_scan" />
+    <remap from="scan_filtered" to="f_scan_rep117" />
   </node>
 
   <node name="fake_mir_joint_publisher" pkg="mir_driver" type="fake_mir_joint_publisher.py" output="screen" />

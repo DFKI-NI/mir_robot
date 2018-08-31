@@ -11,8 +11,4 @@
   <include file="$(find mir_navigation)/launch/move_base.xml">
     <arg name="local_planner" value="$(arg local_planner)"/>
   </include>
-
-  <node name="rep117_laser_filter" pkg="mir_driver" type="rep117_filter.py" output="screen">
-    <remap from="scan_filtered" to="scan_rep117" />
-  </node>
 </launch>

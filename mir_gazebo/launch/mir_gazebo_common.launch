@@ -34,11 +34,17 @@
     <param name="default_vw_min" value="-1.5" />
   </node>
 
-  <!-- create combined scan topic -->
+  <!-- create combined scan topic (like on real MiR) -->
   <node pkg="topic_tools" type="relay" name="b_scan_relay" args="b_scan scan"/>
   <node pkg="topic_tools" type="relay" name="f_scan_relay" args="f_scan scan"/>
 
-  <node name="rep117_laser_filter" pkg="mir_driver" type="rep117_filter.py" output="screen">
-    <remap from="scan_filtered" to="scan_rep117" />
+  <node name="b_rep117_laser_filter" pkg="mir_driver" type="rep117_filter.py" output="screen">
+    <remap from="scan" to="b_scan" />
+    <remap from="scan_filtered" to="b_scan_rep117" />
+  </node>
+
+  <node name="f_rep117_laser_filter" pkg="mir_driver" type="rep117_filter.py" output="screen">
+    <remap from="scan" to="f_scan" />
+    <remap from="scan_filtered" to="f_scan_rep117" />
   </node>
 </launch>
