@@ -1,2 +1,2 @@
 Header header
-mirMsgs/ExternalRobot[] robots
+mir_msgs/ExternalRobot[] robots

@@ -1,2 +1,2 @@
 Header header
-mirMsgs/Pose2D[] poses
+mir_msgs/Pose2D[] poses

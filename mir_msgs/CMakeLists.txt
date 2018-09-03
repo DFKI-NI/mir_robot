@@ -14,9 +14,15 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
     Encoders.msg
+    ExternalRobot.msg
+    ExternalRobots.msg
     LocalMapStat.msg
     MirExtra.msg
     MirStatus.msg
+    MissionCtrlCommand.msg
+    MissionCtrlState.msg
+    Path.msg
+    Pose2D.msg
     RobotMode.msg
     RobotState.msg
     Serial.msg
