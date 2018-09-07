@@ -19,16 +19,23 @@ Package overview
 Installation
 ------------
 
+Choose between binary and source install below. If you don't want to modify the
+source, the binary install is preferred.
+
+### Binary install
+
 ```bash
-# create a catkin workspace and clone all required ROS packages
+sudo apt install ros-$ROS_DISTRO-mir-robot
+```
+
+### Source install
+
+```bash
+# create a catkin workspace
 mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src/
-git clone -b indigo-devel https://github.com/ricardo-samaniego/sbpl_lattice_planner.git
 
-# install mir_robot itself; choose between binary and source install
-## BINARY INSTALL:
-sudo apt install ros-$ROS_DISTRO-mir-robot
-## SOURCE INSTALL:
+# clone mir_robot into the catkin workspace
 git clone -b kinetic https://github.com/dfki-ric/mir_robot.git
 
 # use rosdep to install all dependencies (including ROS itself)

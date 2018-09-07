@@ -30,27 +30,17 @@ build:
     - export CATKIN_WS_SRC=${CATKIN_WS}/src
     - export CATKIN_PROJECT_DIR=$CATKIN_WS_SRC/mir_robot
 
-    # install sbpl library from source
-    - cd $(mktemp -d)
-    - git clone -b master https://github.com/sbpl/sbpl.git
-    - cd sbpl
-    - mkdir build
-    - cd build
-    - cmake -DCMAKE_BUILD_TYPE=Release ..
-    - make install
-
-    # create a catkin workspace and clone all required ROS packages
+    # create a catkin workspace
     - mkdir -p $CATKIN_WS_SRC
     - cd $CATKIN_WS_SRC/
     - ln -s $CI_PROJECT_DIR $CATKIN_PROJECT_DIR   # outside CI, run this instead: git clone -b kinetic https://github.com/dfki-ric/mir_robot.git
-    - git clone -b indigo-devel https://github.com/ricardo-samaniego/sbpl_lattice_planner.git
 
     # use rosdep to install all dependencies (including ROS itself)
     - apt-get update -qq
     - apt-get install -qq -y python-rosdep
     # - sudo rosdep init   # not needed in CI, because the Docker image already has rosdep initialized
     - rosdep update
-    - rosdep install --from-paths ./ -i -y --rosdistro $CI_ROS_DISTRO --skip-keys=sbpl
+    - rosdep install --from-paths ./ -i -y --rosdistro $CI_ROS_DISTRO
 
     # build all packages in the catkin workspace
     - source /opt/ros/${CI_ROS_DISTRO}/setup.bash
