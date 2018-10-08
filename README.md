@@ -20,7 +20,7 @@ Installation
 ------------
 
 You can chose between binary and source install below. If you don't want to
-Modify the source, the binary install is preferred (if `mir_robot` binary
+modify the source, the binary install is preferred (if `mir_robot` binary
 packages are available for your ROS distro). The instructions below use the ROS
 distro `kinetic` as an example; if you use a different distro (e.g.  `indigo`),
 replace all occurrences of the string `kinetic` by your distro name in the
@@ -29,7 +29,7 @@ instructions.
 ### Preliminaries
 
 If you haven't already installed ROS on your PC, you need to add the ROS apt
-repository (for either binary or source install):
+repository. This step is necessary for either binary or source install.
 
 ```
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
