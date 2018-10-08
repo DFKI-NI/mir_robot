@@ -19,16 +19,39 @@ Package overview
 Installation
 ------------
 
-Choose between binary and source install below. If you don't want to modify the
-source, the binary install is preferred.
+You can chose between binary and source install below. If you don't want to
+Modify the source, the binary install is preferred (if `mir_robot` binary
+packages are available for your ROS distro). The instructions below use the ROS
+distro `kinetic` as an example; if you use a different distro (e.g.  `indigo`),
+replace all occurrences of the string `kinetic` by your distro name in the
+instructions.
+
+### Preliminaries
+
+If you haven't already installed ROS on your PC, you need to add the ROS apt
+repository (for either binary or source install):
+
+```
+sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
+sudo apt-get update -qq
+```
 
 ### Binary install
 
+For a binary install, it suffices to run this command:
+
 ```bash
-sudo apt install ros-$ROS_DISTRO-mir-robot
+sudo apt install ros-kinetic-mir-robot
 ```
 
+See the tables at the end of this README for a list of ROS distros for which
+binary packages are available.
+
 ### Source install
+
+For a source install, run the commands below instead of the command from the
+"binary install" section.
 
 ```bash
 # create a catkin workspace
