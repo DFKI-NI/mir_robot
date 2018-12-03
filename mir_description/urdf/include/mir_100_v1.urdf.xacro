@@ -202,6 +202,23 @@
 
     <xacro:sick_s300 link="${prefix}back_laser_link" topic="b_scan" />
 
+    <!-- Ultrasound sensors -->
+    <joint name="${prefix}us_1_joint" type="fixed">   <!-- right ultrasound -->
+      <parent link="${prefix}base_link" />
+      <child link="${prefix}us_1_frame" />
+      <origin xyz="0.45 -0.12 0.16 " rpy="0 0 0" />  <!-- from visually matching to the mesh of the MiR -->
+    </joint>
+
+    <link name="${prefix}us_1_frame" />
+
+    <joint name="${prefix}us_2_joint" type="fixed">   <!-- left ultrasound -->
+      <parent link="${prefix}base_link" />
+      <child link="${prefix}us_2_frame" />
+      <origin xyz="0.45 0.12 0.16 " rpy="0 0 0" />  <!-- from visually matching to the mesh of the MiR -->
+    </joint>
+
+    <link name="${prefix}us_2_frame" />
+
     <!-- wheels -->
     <xacro:actuated_wheel prefix="${prefix}" locationprefix="left" locationright="-1"/>
     <xacro:actuated_wheel prefix="${prefix}" locationprefix="right" locationright="1"/>
