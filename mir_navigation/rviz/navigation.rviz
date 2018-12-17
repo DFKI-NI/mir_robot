@@ -139,10 +139,87 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        sensor_bbox_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        sensor_board_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        structure_part_down:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        structure_part_up:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        structure_pedestal:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        structure_pedestal_surface:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         surface:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        ur5_base:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        ur5_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ur5_ee_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ur5_forearm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ur5_shoulder_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ur5_tool0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        ur5_upper_arm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ur5_wrist_1_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ur5_wrist_2_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ur5_wrist_3_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
       Name: RobotModel
       Robot Description: robot_description
       TF Prefix: ""
@@ -188,7 +265,7 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.0500000007
       Style: Squares
-      Topic: /scan
+      Topic: scan
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
@@ -218,7 +295,7 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.0799999982
       Style: Spheres
-      Topic: /mobile_base/sensors/bumper_pointcloud
+      Topic: mobile_base/sensors/bumper_pointcloud
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
@@ -241,7 +318,7 @@ Visualization Manager:
           Draw Behind: true
           Enabled: true
           Name: Costmap
-          Topic: /move_base_node/global_costmap/costmap
+          Topic: move_base_node/global_costmap/costmap
           Unreliable: false
           Use Timestamp: false
           Value: true
@@ -253,8 +330,8 @@ Visualization Manager:
           Head Diameter: 0.300000012
           Head Length: 0.200000003
           Length: 0.300000012
-          Line Style: Lines
-          Line Width: 0.0299999993
+          Line Style: Billboards
+          Line Width: 0.0500000007
           Name: Planner
           Offset:
             X: 0
@@ -265,7 +342,7 @@ Visualization Manager:
           Radius: 0.0299999993
           Shaft Diameter: 0.100000001
           Shaft Length: 0.100000001
-          Topic: /move_base_node/DWAPlannerROS/global_plan
+          Topic: move_base_node/DWAPlannerROS/global_plan
           Unreliable: false
           Value: true
         - Alpha: 1
@@ -273,7 +350,7 @@ Visualization Manager:
           Color: 255; 0; 0
           Enabled: true
           Name: Footprint
-          Topic: /move_base_node/global_costmap/footprint
+          Topic: move_base_node/global_costmap/footprint
           Unreliable: false
           Value: true
       Enabled: true
@@ -286,7 +363,7 @@ Visualization Manager:
           Draw Behind: false
           Enabled: true
           Name: Costmap
-          Topic: /move_base_node/local_costmap/costmap
+          Topic: move_base_node/local_costmap/costmap
           Unreliable: false
           Use Timestamp: false
           Value: true
@@ -298,8 +375,8 @@ Visualization Manager:
           Head Diameter: 0.300000012
           Head Length: 0.200000003
           Length: 0.300000012
-          Line Style: Lines
-          Line Width: 0.0299999993
+          Line Style: Billboards
+          Line Width: 0.0500000007
           Name: Planner
           Offset:
             X: 0
@@ -310,7 +387,7 @@ Visualization Manager:
           Radius: 0.0299999993
           Shaft Diameter: 0.100000001
           Shaft Length: 0.100000001
-          Topic: /move_base_node/DWAPlannerROS/local_plan
+          Topic: move_base_node/DWAPlannerROS/local_plan
           Unreliable: false
           Value: true
         - Alpha: 1
@@ -318,7 +395,7 @@ Visualization Manager:
           Color: 25; 255; 0
           Enabled: true
           Name: Footprint
-          Topic: /move_base_node/local_costmap/footprint
+          Topic: move_base_node/local_costmap/footprint
           Unreliable: false
           Value: true
         - Alpha: 0.800000012
@@ -346,7 +423,7 @@ Visualization Manager:
           Size (Pixels): 3
           Size (m): 0.0399999991
           Style: Flat Squares
-          Topic: /move_base_node/DWAPlannerROS/cost_cloud
+          Topic: move_base_node/DWAPlannerROS/cost_cloud
           Unreliable: false
           Use Fixed Frame: true
           Use rainbow: true
@@ -376,14 +453,14 @@ Visualization Manager:
           Size (Pixels): 3
           Size (m): 0.0399999991
           Style: Flat Squares
-          Topic: /move_base_node/DWAPlannerROS/trajectory_cloud
+          Topic: move_base_node/DWAPlannerROS/trajectory_cloud
           Unreliable: false
           Use Fixed Frame: true
           Use rainbow: false
           Value: true
         - Class: rviz/MarkerArray
           Enabled: true
-          Marker Topic: /move_base_node/EBandPlannerROS/eband_visualization_array
+          Marker Topic: move_base_node/EBandPlannerROS/eband_visualization_array
           Name: eband markers
           Namespaces:
             bubbles: true
@@ -404,7 +481,7 @@ Visualization Manager:
       Shaft Length: 0.230000004
       Shaft Radius: 0.00999999978
       Shape: Arrow (Flat)
-      Topic: /particlecloud
+      Topic: particlecloud
       Unreliable: false
       Value: true
     - Alpha: 1
@@ -415,8 +492,8 @@ Visualization Manager:
       Head Diameter: 0.300000012
       Head Length: 0.200000003
       Length: 0.300000012
-      Line Style: Lines
-      Line Width: 0.0299999993
+      Line Style: Billboards
+      Line Width: 0.0500000007
       Name: Full Plan
       Offset:
         X: 0
@@ -427,7 +504,7 @@ Visualization Manager:
       Radius: 0.0299999993
       Shaft Diameter: 0.100000001
       Shaft Length: 0.100000001
-      Topic: /move_base_node/SBPLLatticePlanner/plan
+      Topic: move_base_node/SBPLLatticePlanner/plan
       Unreliable: false
       Value: true
   Enabled: true
@@ -443,13 +520,13 @@ Visualization Manager:
       Hide Inactive Objects: true
     - Class: rviz/Select
     - Class: rviz/SetInitialPose
-      Topic: /initialpose
+      Topic: initialpose
     - Class: rviz/SetGoal
-      Topic: /move_base_simple/goal
+      Topic: move_base_simple/goal
     - Class: rviz/Measure
     - Class: rviz/PublishPoint
       Single click: true
-      Topic: /clicked_point
+      Topic: clicked_point
   Value: true
   Views:
     Current:
