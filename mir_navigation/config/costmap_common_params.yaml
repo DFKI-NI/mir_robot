@@ -9,7 +9,7 @@ obstacle_range: 3.0
 publish_voxel_map: true
 navigation_map:
   map_topic: /map
-  first_map_only: true
+#  first_map_only: true # set in costmap_params_[mapping|planning] to true/false
 obstacles:
   observation_sources: b_scan_marking b_scan_clearing f_scan_marking f_scan_clearing
   b_scan_marking:
