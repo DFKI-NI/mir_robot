@@ -139,87 +139,18 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        sensor_bbox_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        sensor_board_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        structure_part_down:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        structure_part_up:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        structure_pedestal:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        structure_pedestal_surface:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
         surface:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        ur5_base:
+        us_1_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        ur5_base_link:
+        us_2_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
-        ur5_ee_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        ur5_forearm_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        ur5_shoulder_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        ur5_tool0:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        ur5_upper_arm_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        ur5_wrist_1_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        ur5_wrist_2_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        ur5_wrist_3_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
       Name: RobotModel
       Robot Description: robot_description
       TF Prefix: ""
@@ -342,7 +273,7 @@ Visualization Manager:
           Radius: 0.0299999993
           Shaft Diameter: 0.100000001
           Shaft Length: 0.100000001
-          Topic: move_base_node/DWAPlannerROS/global_plan
+          Topic: move_base_node/SBPLLatticePlanner/plan
           Unreliable: false
           Value: true
         - Alpha: 1
@@ -387,7 +318,7 @@ Visualization Manager:
           Radius: 0.0299999993
           Shaft Diameter: 0.100000001
           Shaft Length: 0.100000001
-          Topic: move_base_node/DWAPlannerROS/local_plan
+          Topic: move_base_node/EBandPlannerROS/global_plan
           Unreliable: false
           Value: true
         - Alpha: 1
