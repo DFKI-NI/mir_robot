@@ -10,15 +10,11 @@
         <rosparam file="$(find mir_navigation)/config/$(arg local_planner)_local_planner_params.yaml" command="load" />
         <!-- global costmap params -->
         <rosparam file="$(find mir_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
-        <rosparam file="$(find mir_navigation)/config/costmap_common_params_mapping.yaml" command="load" ns="global_costmap" if="$(arg mapping)" />
-        <rosparam file="$(find mir_navigation)/config/costmap_common_params_planning.yaml" command="load" ns="global_costmap" unless="$(arg mapping)" />
         <rosparam file="$(find mir_navigation)/config/costmap_global_params.yaml" command="load" />
         <rosparam file="$(find mir_navigation)/config/costmap_global_params_plugins_mapping.yaml" command="load" if="$(arg mapping)" />
         <rosparam file="$(find mir_navigation)/config/costmap_global_params_plugins_planning.yaml" command="load" unless="$(arg mapping)" />
         <!-- local costmap params -->
         <rosparam file="$(find mir_navigation)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
-        <rosparam file="$(find mir_navigation)/config/costmap_common_params_mapping.yaml" command="load" ns="local_costmap" if="$(arg mapping)" />
-        <rosparam file="$(find mir_navigation)/config/costmap_common_params_planning.yaml" command="load" ns="local_costmap" unless="$(arg mapping)" />
         <rosparam file="$(find mir_navigation)/config/costmap_local_params.yaml" command="load" />
         <rosparam file="$(find mir_navigation)/config/costmap_local_params_plugins_mapping.yaml" command="load" if="$(arg mapping)" />
         <rosparam file="$(find mir_navigation)/config/costmap_local_params_plugins_planning.yaml" command="load" unless="$(arg mapping)" />
