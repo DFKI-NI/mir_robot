@@ -1,15 +1,27 @@
 <launch>
     <!--node ns="local_costmap" name="voxel_grid_throttle" pkg="topic_tools" type="throttle" args="messages voxel_grid 3.0 voxel_grid_throttled" /-->
     <arg name="local_planner" doc="Local planner can be either dwa, base, teb or pose"/>
+    <arg name="mapping" default="false" doc="Disables usage of virtual walls when set. Necessary when creating a new map." />
+
     <node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen" clear_params="true">
         <param name="SBPLLatticePlanner/primitive_filename" value="$(find mir_navigation)/mprim/unicycle_highcost_5cm.mprim" />
         <rosparam file="$(find mir_navigation)/config/move_base_common_params.yaml" command="load" />
         <rosparam file="$(find mir_navigation)/config/sbpl_global_params.yaml" command="load" />
         <rosparam file="$(find mir_navigation)/config/$(arg local_planner)_local_planner_params.yaml" command="load" />
+        <!-- global costmap params -->
         <rosparam file="$(find mir_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
-        <rosparam file="$(find mir_navigation)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find mir_navigation)/config/costmap_common_params_mapping.yaml" command="load" ns="global_costmap" if="$(arg mapping)" />
+        <rosparam file="$(find mir_navigation)/config/costmap_common_params_planning.yaml" command="load" ns="global_costmap" unless="$(arg mapping)" />
         <rosparam file="$(find mir_navigation)/config/costmap_global_params.yaml" command="load" />
+        <rosparam file="$(find mir_navigation)/config/costmap_global_params_plugins_mapping.yaml" command="load" if="$(arg mapping)" />
+        <rosparam file="$(find mir_navigation)/config/costmap_global_params_plugins_planning.yaml" command="load" unless="$(arg mapping)" />
+        <!-- local costmap params -->
+        <rosparam file="$(find mir_navigation)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find mir_navigation)/config/costmap_common_params_mapping.yaml" command="load" ns="local_costmap" if="$(arg mapping)" />
+        <rosparam file="$(find mir_navigation)/config/costmap_common_params_planning.yaml" command="load" ns="local_costmap" unless="$(arg mapping)" />
         <rosparam file="$(find mir_navigation)/config/costmap_local_params.yaml" command="load" />
+        <rosparam file="$(find mir_navigation)/config/costmap_local_params_plugins_mapping.yaml" command="load" if="$(arg mapping)" />
+        <rosparam file="$(find mir_navigation)/config/costmap_local_params_plugins_planning.yaml" command="load" unless="$(arg mapping)" />
         <remap from="map" to="/map" />
     </node>
 </launch>
