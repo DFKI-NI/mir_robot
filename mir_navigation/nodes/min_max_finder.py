@@ -26,7 +26,7 @@ def odom_cb(msg):
 
 def main():
     rospy.init_node('min_max_finder', anonymous=True)
-    rospy.Subscriber('odom', Odometry, odom_cb)
+    rospy.Subscriber('odom_comb', Odometry, odom_cb)
     rospy.loginfo('min_max_finde node ready and listening. now use teleop to move your robot to the limits!')
     rospy.spin()
 
