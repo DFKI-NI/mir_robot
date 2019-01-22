@@ -79,9 +79,10 @@ odom0: odom_comb
 # do not provide some of the state variables estimated by the filter. For example, a TwistWithCovarianceStamped message
 # has no pose information, so the first six values would be meaningless in that case. Each vector defaults to all false
 # if unspecified, effectively making this parameter required for each sensor.
-odom0_config: [true,  true,  false,   # x y z
+# see http://docs.ros.org/melodic/api/robot_localization/html/configuring_robot_localization.html
+odom0_config: [false, false, false,   # x y z
                false, false, false,   # roll pitch yaw
-               false, false, false,   # vx vy vz
+               true,  true,  false,   # vx vy vz
                false, false, true,    # vroll vpitch vyaw
                false, false, false]   # ax ay az
 
@@ -120,12 +121,13 @@ odom0_relative: false
 #odom0_twist_rejection_threshold: 1
 
 # Further input parameter examples
+# see http://docs.ros.org/melodic/api/robot_localization/html/configuring_robot_localization.html
 imu0: imu_data
 imu0_config: [false, false, false,   # x y z
-              true,  true,  true,    # roll pitch yaw
+              false, false, true,    # roll pitch yaw
               false, false, false,   # vx vy vz
-              true,  true,  true,    # vroll vpitch vyaw
-              true,  true,  true]    # ax ay az
+              false, false, true,    # vroll vpitch vyaw
+              true,  false, false]    # ax ay az
 imu0_nodelay: false
 imu0_differential: false
 imu0_relative: true
