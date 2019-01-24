@@ -3,10 +3,11 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
   <!-- If tf_prefix is given, use "frame tf_prefix/imu_frame", else "imu_frame" -->
   <xacro:arg name="tf_prefix" default="" />
-  <xacro:if value="$(eval tf_prefix == '')">
+  <xacro:property name="tf_prefix" value="$(arg tf_prefix)" />
+  <xacro:if value="${tf_prefix == ''}">
       <xacro:property name="imu_frame" value="imu_frame" />
   </xacro:if>
-  <xacro:unless value="$(eval tf_prefix == '')">
+  <xacro:unless value="${tf_prefix == ''}">
       <xacro:property name="imu_frame" value="$(arg tf_prefix)/imu_frame" />
   </xacro:unless>
 
