@@ -8,8 +8,8 @@
   <xacro:property name="laser_z" value="0.185" />
   <xacro:property name="laser_mass" value="2.0" />
 
-  <xacro:macro name="sick_s300" params="link topic">
-    <link name="${link}">
+  <xacro:macro name="sick_s300" params="link topic prefix">
+    <link name="${prefix}${link}">
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="${pi} 0 0" />
         <geometry>
@@ -29,11 +29,11 @@
       </xacro:box_inertial>
     </link>
 
-    <gazebo reference="${link}">
+    <gazebo reference="${prefix}${link}">
       <!-- <material value="Gazebo/Yellow" /> -->
       <material value="Gazebo/FlatBlack" />
 
-      <sensor type="gpu_ray" name="${link}">
+      <sensor type="gpu_ray" name="${prefix}${link}">
         <pose>0 0 0 0 0 0</pose>
         <visualize>false</visualize>
         <update_rate>12.5</update_rate>
@@ -61,6 +61,7 @@
           </noise>
         </ray>
         <plugin name="gazebo_ros_${link}_controller" filename="libgazebo_ros_gpu_laser.so">
+          <!-- no prefix, plugin always uses a tf_prefix (if none is set it uses robotNamespace) -->
           <frameName>${link}</frameName>
           <topicName>${topic}</topicName>
         </plugin>
