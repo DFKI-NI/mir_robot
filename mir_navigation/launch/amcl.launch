@@ -1,9 +1,10 @@
 <?xml version="1.0.0" ?>
 
 <launch>
-  <arg name="use_map_topic"   default="false"/>
+  <arg name="use_map_topic"   default="true"/>
   <arg name="scan_topic"      default="scan"/>
-  <arg name="map_topic"       default="/map"/>
+  <arg name="map_topic"       default="/map"/>         <!-- if use_map_topic = true  -->
+  <arg name="map_service"     default="/static_map"/>  <!-- if use_map_topic = false -->
   <arg name="initial_pose_x"  default="0.0"/>
   <arg name="initial_pose_y"  default="0.0"/>
   <arg name="initial_pose_a"  default="0.0"/>
@@ -49,5 +50,6 @@
     <param name="initial_pose_a"            value="$(arg initial_pose_a)"/>
     <remap from="scan"                      to="$(arg scan_topic)"/>
     <remap from="map"                       to="$(arg map_topic)"/>
+    <remap from="static_map"                to="$(arg map_service)"/>
   </node>
 </launch>
