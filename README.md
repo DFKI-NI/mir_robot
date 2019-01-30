@@ -86,8 +86,8 @@ close and reopen all terminals:
 source ~/catkin_ws/devel/setup.bash
 ```
 
-Gazebo demo
------------
+Gazebo demo (existing map)
+--------------------------
 
 ```bash
 ### gazebo:
@@ -101,8 +101,7 @@ roslaunch mir_navigation amcl.launch initial_pose_x:=10.0 initial_pose_y:=10.0
 # navigation:
 roslaunch mir_navigation start_planner.launch \
     map_file:=$(rospack find mir_gazebo)/maps/maze.yaml \
-    virtual_walls_map_file:=$(rospack find mir_gazebo)/maps/maze_virtual_walls.yaml \
-    local_planner:=eband
+    virtual_walls_map_file:=$(rospack find mir_gazebo)/maps/maze_virtual_walls.yaml
 rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
 ```
 
@@ -110,6 +109,23 @@ Now, you can use the "2D Nav Goal" tool in RViz to set a navigation goal for mov
 
 [![MiR100 robot: navigation in Gazebo (2x)](https://i.vimeocdn.com/video/712859121.jpg?mw=640)](https://vimeo.com/279628049)
 (Click image to see video)
+
+
+Gazebo demo (mapping)
+---------------------
+
+```bash
+### gazebo:
+roslaunch mir_gazebo mir_maze_world.launch
+rosservice call /gazebo/unpause_physics   # or click the "start" button in the Gazebo GUI
+
+### mapping:
+roslaunch mir_navigation hector_mapping.launch.xml
+
+# navigation:
+roslaunch mir_navigation move_base.xml with_virtual_walls:=false
+rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
+```
 
 
 Running the driver on the real robot
