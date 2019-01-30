@@ -36,8 +36,8 @@ DWAPlannerROS:
   vtheta_samples: 20
 
   # Trajectory scoring
-  path_distance_bias: 64.0      # default: 32.0  mir: 0.4   - weighting for how much it should stick to the global path plan
-  goal_distance_bias: 12.0      # default: 24.0  mir: 0.6   - weighting for how much it should attempt to reach its goal
+  path_distance_bias: 64.0      # default: 32.0  mir: 32.0  - weighting for how much it should stick to the global path plan
+  goal_distance_bias: 12.0      # default: 24.0  mir: 48.0  - weighting for how much it should attempt to reach its goal
   occdist_scale: 0.5            # default: 0.01  mir: 0.01  - weighting for how much the controller should avoid obstacles
   forward_point_distance: 0.325 # default: 0.325 mir: 0.325 - how far along to place an additional scoring point
   stop_time_buffer: 0.2         # default: 0.2   mir: 0.2   - amount of time a robot must stop before colliding for a valid traj.
