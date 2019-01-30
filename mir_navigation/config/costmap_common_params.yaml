@@ -2,8 +2,6 @@ robot_base_frame: $(arg prefix)base_footprint
 transform_tolerance: 0.4
 update_frequency: 5.0
 publish_frequency: 1.0
-footprint: [[0.506,-0.32],[0.506,0.32],[-0.454,0.32],[-0.454,-0.32]]
-footprint_padding: 0.0
 obstacle_range: 3.0
 #mark_threshold: 1
 publish_voxel_map: true

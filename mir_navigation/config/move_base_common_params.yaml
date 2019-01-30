@@ -1,3 +1,7 @@
+### footprint
+footprint: [[0.506,-0.32],[0.506,0.32],[-0.454,0.32],[-0.454,-0.32]]
+footprint_padding: 0.0
+
 ### replanning
 controller_frequency: 10.0   # run controller at 10.0 Hz
 controller_patience: 15.0    # if the controller failed, clear obstacles and retry; after 15.0 s, abort and replan
