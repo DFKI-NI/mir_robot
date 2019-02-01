@@ -1,4 +1,4 @@
-robot_base_frame: base_footprint
+robot_base_frame: $(arg prefix)base_footprint
 transform_tolerance: 0.4
 update_frequency: 5.0
 publish_frequency: 1.0

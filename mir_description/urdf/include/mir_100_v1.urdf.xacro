@@ -192,7 +192,7 @@
       <child link="${prefix}front_laser_link" />
       <origin xyz="0.4288 0.2358 0.1914" rpy="0.0 0.0 ${0.25 * pi}" />  <!-- from visually matching up the meshes of the MiR and the laser scanner -->
     </joint>
-    <xacro:sick_s300 link="${prefix}front_laser_link" topic="f_scan" />
+    <xacro:sick_s300 prefix="${prefix}" link="front_laser_link" topic="f_scan" />
 
     <joint name="${prefix}base_link_to_back_laser_joint" type="fixed">
       <parent link="${prefix}base_link" />
@@ -200,7 +200,7 @@
       <origin xyz="-0.3548 -0.2352 0.1914" rpy="0.0 0.0 ${-0.75 * pi}" />  <!-- from visually matching up the meshes of the MiR and the laser scanner -->
     </joint>
 
-    <xacro:sick_s300 link="${prefix}back_laser_link" topic="b_scan" />
+    <xacro:sick_s300 prefix="${prefix}" link="back_laser_link" topic="b_scan" />
 
     <!-- Ultrasound sensors -->
     <joint name="${prefix}us_1_joint" type="fixed">   <!-- right ultrasound -->

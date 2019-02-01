@@ -1,6 +1,15 @@
 <?xml version="1.0"?>
 
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <!-- If tf_prefix is given, use "frame tf_prefix/imu_frame", else "imu_frame" -->
+  <xacro:arg name="tf_prefix" default="" />
+  <xacro:property name="tf_prefix" value="$(arg tf_prefix)" />
+  <xacro:if value="${tf_prefix == ''}">
+      <xacro:property name="imu_frame" value="imu_frame" />
+  </xacro:if>
+  <xacro:unless value="${tf_prefix == ''}">
+      <xacro:property name="imu_frame" value="$(arg tf_prefix)/imu_frame" />
+  </xacro:unless>
 
   <xacro:macro name="imu_gazebo" params="link imu_topic update_rate stdev">
     <gazebo reference="${link}">
@@ -17,7 +26,7 @@
           <gaussianNoise>${stdev * stdev}</gaussianNoise>
           <xyzOffset>0 0 0</xyzOffset>
           <rpyOffset>0 0 0</rpyOffset>
-          <frameName>imu_frame</frameName>  <!-- from real MiR -->
+          <frameName>${imu_frame}</frameName>  <!-- from real MiR -->
         </plugin>
         <pose>0 0 0 0 0 0</pose>
       </sensor>
