@@ -70,8 +70,8 @@ DWBLocalPlanner:
     scale: 24.0            # default: 24.0  mir: 48.0   - weighting for how much it should attempt to reach its goal
     heading_scale: 1.0
     class: 'mir_dwb_critics::PathProgress'
-    xy_local_goal_tolerance: 0.15
-    angle_threshold: 0.52359878
+    xy_local_goal_tolerance: 0.20
+    angle_threshold: 0.78539816  # 45 degrees
   
 
   # Prune already passed poses from plan
