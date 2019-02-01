@@ -44,7 +44,7 @@ bool PathProgressCritic::prepare(const geometry_msgs::Pose2D &pose, const nav_2d
   dwb_critics::MapGridCritic::reset();
 
   unsigned int local_goal_x, local_goal_y;
-  if (!getGoalPose(pose, global_plan, local_goal_x, local_goal_y)) {
+  if (!getGoalPose(pose, global_plan, local_goal_x, local_goal_y, desired_angle_)) {
     return false;
   }
 
@@ -61,14 +61,26 @@ void PathProgressCritic::onInit() {
   dwb_critics::MapGridCritic::onInit();
   critic_nh_.param("xy_local_goal_tolerance", xy_local_goal_tolerance_, 0.20);
   critic_nh_.param("angle_threshold", angle_threshold_, M_PI_4);
+  critic_nh_.param("heading_scale", heading_scale_, 1.0);
+
+  // divide heading scale by position scale because the sum will be multiplied by scale again
+  heading_scale_ /= getScale();
 }
 
 void PathProgressCritic::reset() {
   reached_intermediate_goals_.clear();
 }
 
+double PathProgressCritic::scoreTrajectory(const dwb_msgs::Trajectory2D &traj) {
+  double position_score = MapGridCritic::scoreTrajectory(traj);
+  double heading_diff = fabs(remainder(traj.poses.back().theta - desired_angle_, 2 * M_PI));
+  double heading_score = heading_diff * heading_diff;
+
+  return position_score + heading_scale_ * heading_score;
+}
+
 bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D &robot_pose, const nav_2d_msgs::Path2D &global_plan,
-                                     unsigned int &x, unsigned int &y) {
+                                     unsigned int &x, unsigned int &y, double &desired_angle) {
   const nav_core2::Costmap &costmap = *costmap_;
   const nav_grid::NavGridInfo &info = costmap.getInfo();
 
@@ -171,6 +183,7 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D &robot_pose, co
 
   // save goal in x, y
   worldToGridBounded(info, plan[goal_index].x, plan[goal_index].y, x, y);
+  desired_angle = plan[start_index].theta;
   return true;
 }
 

@@ -71,6 +71,7 @@ DWBLocalPlanner:
     heading_scale: 1.0
     class: 'mir_dwb_critics::PathProgress'
     xy_local_goal_tolerance: 0.15
+    angle_threshold: 0.52359878
   
 
   # Prune already passed poses from plan

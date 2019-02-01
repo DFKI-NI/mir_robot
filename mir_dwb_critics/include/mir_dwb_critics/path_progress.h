@@ -56,12 +56,14 @@ class PathProgressCritic : public dwb_critics::MapGridCritic {
 
   void onInit() override;
   void reset() override;
+  double scoreTrajectory(const dwb_msgs::Trajectory2D& traj) override;
 
  protected:
   bool getGoalPose(const geometry_msgs::Pose2D &robot_pose,
                    const nav_2d_msgs::Path2D &global_plan,
                    unsigned int &x,
-                   unsigned int &y);
+                   unsigned int &y,
+                   double &desired_angle);
 
   unsigned int getGoalIndex(const std::vector<geometry_msgs::Pose2D> &plan,
                             unsigned int start_index,
@@ -69,9 +71,10 @@ class PathProgressCritic : public dwb_critics::MapGridCritic {
 
   double xy_local_goal_tolerance_;
   double angle_threshold_;
+  double heading_scale_;
 
   std::vector<geometry_msgs::Pose2D> reached_intermediate_goals_;
-
+  double desired_angle_;
 };
 
 }  // namespace mir_dwb_critics
