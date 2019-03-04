@@ -2,8 +2,8 @@
 Changelog for package mir_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.3 (2019-03-04)
+------------------
 * Add hector_mapping
 * fake_localization.launch: Add frame id args
 * Merge pull request `#16 <https://github.com/dfki-ric/mir_robot/issues/16>`_ from niniemann/add-prefix-argument-to-configs

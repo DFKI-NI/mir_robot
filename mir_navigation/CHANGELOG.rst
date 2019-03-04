@@ -2,8 +2,8 @@
 Changelog for package mir_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.3 (2019-03-04)
+------------------
 * fix frame_id for melodic (`#18 <https://github.com/dfki-ric/mir_robot/issues/18>`_)
 * Tune dwb parameters
 * PathProgressCritic: Add heading score

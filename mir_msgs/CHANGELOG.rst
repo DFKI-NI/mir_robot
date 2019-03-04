@@ -2,8 +2,8 @@
 Changelog for package mir_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.3 (2019-03-04)
+------------------
 * mir_msgs: Compile new msgs + rename mirMsgs -> mir_msgs
 * mir_msgs: Add geometry_msgs dependency
   Now that we have an actual msg package dependency, we don't need the std_msgs placeholder any more.

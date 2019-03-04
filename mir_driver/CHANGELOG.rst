@@ -2,8 +2,8 @@
 Changelog for package mir_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.3 (2019-03-04)
+------------------
 * Make disable_map work with MiR software 2.0
   See `#5 <https://github.com/dfki-ric/mir_robot/issues/5>`_.
 * mir_driver: Optionally disable the map topic + TF frame (`#6 <https://github.com/dfki-ric/mir_robot/issues/6>`_)
