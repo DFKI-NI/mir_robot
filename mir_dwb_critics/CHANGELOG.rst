@@ -1,16 +1,15 @@
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package mir_robot
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package mir_dwb_critics
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Forthcoming
 -----------
+* PathProgressCritic: Add heading score
 * Add package: mir_dwb_critics
 * Contributors: Martin Günther
 
 1.0.2 (2018-07-30)
 ------------------
-* Add metapackage
-* Contributors: Martin Günther
 
 1.0.1 (2018-07-17)
 ------------------

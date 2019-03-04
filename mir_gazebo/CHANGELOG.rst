@@ -2,6 +2,25 @@
 Changelog for package mir_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add hector_mapping
+* fake_localization.launch: Add frame id args
+* Merge pull request `#16 <https://github.com/dfki-ric/mir_robot/issues/16>`_ from niniemann/add-prefix-argument-to-configs
+  Add prefix argument to configs
+* adds $(arg prefix) to a lot of configs
+  This is an important step to be able to re-parameterize move base,
+  the diffdrive controller, ekf, amcl and the costmaps for adding a
+  tf prefix to the robots links
+* Fix translation error in odom_comb (`#12 <https://github.com/dfki-ric/mir_robot/issues/12>`_)
+  Previously, the ekf localization only computed a correct orientation, but the translation still followed the pure odometry data. This led to strange errors where the robot would move sideways (despite only having a diff drive).
+  This PR changes the ekf configuration to not use any position information from the odometry, but to integrate the velocities, which fixes this problem.
+* Split scan_rep117 topic into two separate topics
+  This fixes the problem that the back laser scanner was ignored in the
+  navigation costmap in Gazebo (probably because in Gazebo, both laser
+  scanners have the exact same timestamp).
+* Contributors: Martin Günther, Nils Niemann
+
 1.0.2 (2018-07-30)
 ------------------
 * mir_gazebo: Install config directory

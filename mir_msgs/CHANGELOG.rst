@@ -2,6 +2,14 @@
 Changelog for package mir_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* mir_msgs: Compile new msgs + rename mirMsgs -> mir_msgs
+* mir_msgs: Add geometry_msgs dependency
+  Now that we have an actual msg package dependency, we don't need the std_msgs placeholder any more.
+* mir_msgs: Add new messages on kinetic
+* Contributors: Martin Günther
+
 1.0.2 (2018-07-30)
 ------------------
 

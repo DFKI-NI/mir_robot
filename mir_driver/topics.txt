@@ -1,0 +1,241 @@
+/MC/encoders
+/camera_floor/filter/visualization_marker
+/camera_floor_nodelet_manager/bond
+/camera_top/background
+/camera_top/obstacles
+/docking_node/cancel
+/docking_node/docking_node/parameter_descriptions
+/docking_node/docking_node/parameter_updates
+/docking_node/docking_node/visualization_marker
+/docking_node/feedback
+/docking_node/goal
+/docking_node/result
+/docking_node/status
+/event_cmd
+/hook/status
+/move_base_node/MIRPlannerROS/visualization_marker
+/move_base_node/SBPLLatticePlanner/sbpl_lattice_planner_stats
+/robot_tracker/external_robots
+/robot_tracker/robots_pointcloud
+/robot_tracker/tracked_robots
+/scan_filter/parameter_descriptions
+/scan_filter/parameter_updates
+# /tf_static   # only subscribers
+
+
+------- /MC/encoders
+Type: sdc21x0/StampedEncoders
+
+Publishers: 
+ * /MC (http://192.168.12.20:42633/)
+
+Subscribers: 
+ * /mir_auto_bagger (http://192.168.12.20:38224/)
+ * /StateTF (http://192.168.12.20:35344/)
+
+
+------- /camera_floor/filter/visualization_marker
+Type: visualization_msgs/Marker
+
+Publishers: 
+ * /camera_floor_nodelet_manager (http://192.168.12.20:38620/)
+
+Subscribers: None
+
+
+------- /camera_floor_nodelet_manager/bond
+Type: bond/Status
+
+Publishers: 
+ * /camera_floor_nodelet_manager (http://192.168.12.20:38620/)
+ * /camera_floor/filter (http://192.168.12.20:46164/)
+
+Subscribers: 
+ * /camera_floor_nodelet_manager (http://192.168.12.20:38620/)
+ * /camera_floor/filter (http://192.168.12.20:46164/)
+ * /mir_auto_bagger (http://192.168.12.20:38224/)
+
+
+------- /camera_top/background
+Type: sensor_msgs/PointCloud2
+
+Publishers: None
+
+Subscribers: 
+ * /move_base_node (http://192.168.12.20:37617/)
+
+
+------- /camera_top/obstacles
+Type: sensor_msgs/PointCloud2
+
+Publishers: 
+ * /camera_top_nodelet_manager (http://192.168.12.20:35128/)
+
+Subscribers: 
+ * /move_base_node (http://192.168.12.20:37617/)
+ * /mir_auto_bagger (http://192.168.12.20:38224/)
+
+
+------- /docking_node/cancel
+Type: actionlib_msgs/GoalID
+
+Publishers: None
+
+Subscribers: 
+ * /mir_auto_bagger (http://192.168.12.20:38224/)
+ * /docking_node (http://192.168.12.20:38109/)
+
+
+------- /docking_node/docking_node/parameter_descriptions
+Type: dynamic_reconfigure/ConfigDescription
+
+Publishers: 
+ * /docking_node (http://192.168.12.20:38109/)
+
+Subscribers: None
+
+
+------- /docking_node/docking_node/parameter_updates
+Type: dynamic_reconfigure/Config
+
+Publishers: 
+ * /docking_node (http://192.168.12.20:38109/)
+
+Subscribers: None
+
+
+------- /docking_node/docking_node/visualization_marker
+Type: visualization_msgs/Marker
+
+Publishers: 
+ * /docking_node (http://192.168.12.20:38109/)
+
+Subscribers: 
+ * /mir_auto_bagger (http://192.168.12.20:38224/)
+
+
+------- /docking_node/feedback
+Type: mirDocking/DockingActionFeedback
+
+Publishers: 
+ * /docking_node (http://192.168.12.20:38109/)
+
+Subscribers: 
+ * /mir_auto_bagger (http://192.168.12.20:38224/)
+
+
+------- /docking_node/goal
+Type: mirDocking/DockingActionGoal
+
+Publishers: None
+
+Subscribers: 
+ * /mir_auto_bagger (http://192.168.12.20:38224/)
+ * /docking_node (http://192.168.12.20:38109/)
+
+
+------- /docking_node/result
+Type: mirDocking/DockingActionResult
+
+Publishers: 
+ * /docking_node (http://192.168.12.20:38109/)
+
+Subscribers: 
+ * /mir_auto_bagger (http://192.168.12.20:38224/)
+
+
+------- /docking_node/status
+Type: actionlib_msgs/GoalStatusArray
+
+Publishers: 
+ * /docking_node (http://192.168.12.20:38109/)
+
+Subscribers: 
+ * /mir_auto_bagger (http://192.168.12.20:38224/)
+
+
+------- /event_cmd
+Type: std_msgs/String
+
+Publishers: None
+
+Subscribers: 
+ * /mirEventTrigger (http://192.168.12.20:43326/)
+
+
+------- /hook/status
+Type: mirMsgs/Trolley
+
+Publishers: None
+
+Subscribers: 
+ * /scan_filter (http://192.168.12.20:36783/)
+ * /relative_move_node (http://192.168.12.20:35548/)
+ * /move_base_node (http://192.168.12.20:37617/)
+
+
+------- /move_base_node/MIRPlannerROS/visualization_marker
+Type: visualization_msgs/MarkerArray
+
+Publishers: 
+ * /move_base_node (http://192.168.12.20:37617/)
+
+Subscribers: 
+ * /mir_auto_bagger (http://192.168.12.20:38224/)
+
+
+------- /move_base_node/SBPLLatticePlanner/sbpl_lattice_planner_stats
+Type: sbpl_lattice_planner/SBPLLatticePlannerStats
+
+Publishers: 
+ * /move_base_node (http://192.168.12.20:37617/)
+
+Subscribers: 
+ * /mir_auto_bagger (http://192.168.12.20:38224/)
+
+
+------- /robot_tracker/external_robots
+Type: mirMsgs/ExternalRobots
+
+Publishers: None
+
+Subscribers: 
+ * /robot_tracker (http://192.168.12.20:39397/)
+
+
+------- /robot_tracker/robots_pointcloud
+Type: sensor_msgs/PointCloud2
+
+Publishers: None
+
+Subscribers: 
+ * /move_base_node (http://192.168.12.20:37617/)
+
+
+------- /robot_tracker/tracked_robots
+Type: mirMsgs/ExternalRobots
+
+Publishers: None
+
+Subscribers: 
+ * /move_base_node (http://192.168.12.20:37617/)
+
+
+------- /scan_filter/parameter_descriptions
+Type: dynamic_reconfigure/ConfigDescription
+
+Publishers: 
+ * /scan_filter (http://192.168.12.20:36783/)
+
+Subscribers: None
+
+
+------- /scan_filter/parameter_updates
+Type: dynamic_reconfigure/Config
+
+Publishers: 
+ * /scan_filter (http://192.168.12.20:36783/)
+
+Subscribers: None
+
+
