@@ -32,6 +32,7 @@
       <mu2 value="${friction}"/>
       <kp value="10000000.0"/>
       <kd value="1.0"/>
+      <minDepth>0.01</minDepth>
     </gazebo>
   </xacro:macro>
 
