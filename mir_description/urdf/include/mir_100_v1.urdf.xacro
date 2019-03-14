@@ -238,8 +238,8 @@
 
     <xacro:mir_100_wheel_transmissions prefix="${prefix}"/>
 
-    <!-- disabled, because it doesn't make a difference in Gazebo: -->
-    <!-- <xacro:set_all_wheel_frictions prefix="${prefix}"/> -->
+    <!-- set the gazebo friction parameters for the wheels -->
+    <xacro:set_all_wheel_frictions prefix="${prefix}"/>
 
     <p3d_base_controller prefix="${prefix}" />
   </xacro:macro>
