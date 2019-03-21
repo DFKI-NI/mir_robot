@@ -15,7 +15,10 @@
   <logo>http://wiki.ros.org/custom/favicon.ico</logo>
 
   <keywords>
-    <keyword>robot_driver</keyword>
+    <keyword>drivers</keyword>
+    <keyword>configuration</keyword>
+    <keyword>navigation</keyword>
+    <keyword>simulation</keyword>
     <keyword>mir_robot</keyword>
     <keyword>mir100</keyword>
     <keyword>mir</keyword>
