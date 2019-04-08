@@ -8,8 +8,6 @@ Panels:
         - /Grid1/Offset1
         - /TF1/Frames1
         - /TF1/Tree1
-        - /Global Map1
-        - /Local Map1
         - /Local Map1/DWB Markers1/Namespaces1
       Splitter Ratio: 0.5
     Tree Height: 575
@@ -264,7 +262,7 @@ Visualization Manager:
           Length: 0.300000012
           Line Style: Billboards
           Line Width: 0.0500000007
-          Name: Planner
+          Name: Global Plan (DWB)
           Offset:
             X: 0
             Y: 0
@@ -323,6 +321,13 @@ Visualization Manager:
           Use Timestamp: false
           Value: true
         - Alpha: 1
+          Class: rviz/GridCells
+          Color: 25; 255; 0
+          Enabled: true
+          Name: Costmap (MiR)
+          Topic: move_base_node/local_costmap/obstacles
+          Value: true
+        - Alpha: 1
           Buffer Length: 1
           Class: rviz/Path
           Color: 0; 12; 255
@@ -332,7 +337,7 @@ Visualization Manager:
           Length: 0.300000012
           Line Style: Billboards
           Line Width: 0.0500000007
-          Name: Planner
+          Name: Local Plan (DWB)
           Offset:
             X: 0
             Y: 0
@@ -343,6 +348,29 @@ Visualization Manager:
           Shaft Diameter: 0.100000001
           Shaft Length: 0.100000001
           Topic: move_base_node/DWBLocalPlanner/local_plan
+          Unreliable: false
+          Value: true
+        - Alpha: 1
+          Buffer Length: 1
+          Class: rviz/Path
+          Color: 0; 12; 255
+          Enabled: true
+          Head Diameter: 0.300000012
+          Head Length: 0.200000003
+          Length: 0.300000012
+          Line Style: Billboards
+          Line Width: 0.0500000007
+          Name: Local Plan (MiR)
+          Offset:
+            X: 0
+            Y: 0
+            Z: 0
+          Pose Color: 255; 85; 255
+          Pose Style: None
+          Radius: 0.0299999993
+          Shaft Diameter: 0.100000001
+          Shaft Length: 0.100000001
+          Topic: move_base_node/MIRPlannerROS/local_plan
           Unreliable: false
           Value: true
         - Alpha: 1
