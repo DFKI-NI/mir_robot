@@ -8,6 +8,7 @@
           <robotNamespace>($robot_namespace)</robotNamespace>
         </xacro:unless>
         <controlPeriod>0.001</controlPeriod>
+        <legacyModeNS>false</legacyModeNS>
       </plugin>
     </gazebo>
   </xacro:macro>
