@@ -3,7 +3,7 @@
   <arg name="robot_x"   default="0.0" />
   <arg name="robot_y"   default="0.0" />
   <arg name="robot_yaw" default="0.0" />
-  <arg name="prefix"    default="" />
+  <arg name="prefix"    value="" />   <!-- this has to be "value", not "default", otherwise subst_value doesn't work -->
 
   <!-- Load URDF -->
   <include file="$(find mir_description)/launch/upload_mir_urdf.launch" />
