@@ -1,0 +1,16 @@
+bool is_connected
+
+bool is_firmware_ok
+int32 firmware_version
+
+bool in_protective_stop
+bool in_emergency_stop
+bool sto_feedback
+bool is_restart_required
+
+bool is_safety_muted
+bool is_limited_speed_active
+bool in_sleep_mode
+
+bool in_manual_mode
+bool is_manual_mode_restart_required

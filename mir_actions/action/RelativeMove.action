@@ -2,9 +2,14 @@
 geometry_msgs/PoseStamped target_pose
 float64 yaw
 bool collision_detection
+float64 disable_collision_check_dist
 float64 max_linear_speed
 float64 max_rotational_speed
 float64 pid_dist_offset
+float64 target_offset
+bool only_collision_detection
+float64 timeout
+bool same_goal
 ---
 #result definition
 int16 UNDEFINED = 0
@@ -16,6 +21,8 @@ int16 end_state
 geometry_msgs/PoseStamped end_pose
 ---
 #feedback
+int8 DOCKING = 0
+int8 COLLISION = 1
 int8 state
 geometry_msgs/PoseStamped current_goal
 geometry_msgs/PoseStamped dist_to_goal

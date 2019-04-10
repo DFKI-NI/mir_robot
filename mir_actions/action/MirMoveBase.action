@@ -1,5 +1,7 @@
 #goal definition
 geometry_msgs/PoseStamped target_pose
+float64 goal_dist_threshold
+float64 goal_orientation_threshold
 nav_msgs/Path path
 float32 max_plan_time
 bool clear_costmaps
