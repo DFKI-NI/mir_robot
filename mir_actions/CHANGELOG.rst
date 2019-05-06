@@ -2,6 +2,11 @@
 Changelog for package mir_actions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update mir_msgs and mir_actions to MiR 2.3.1
+* Contributors: Martin Günther
+
 1.0.3 (2019-03-04)
 ------------------
 

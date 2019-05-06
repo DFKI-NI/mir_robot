@@ -2,6 +2,16 @@
 Changelog for package mir_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update mir_msgs and mir_actions to MiR 2.3.1
+  The following changes were made to the actual mir_msgs:
+  * rename mirMsgs -> mir_msgs
+  * rename proximity -> Proximity
+  * rename serial -> Serial
+  * keep MirStatus msg (was replaced by RobotStatus in MiR software 2.0)
+* Contributors: Martin Günther
+
 1.0.3 (2019-03-04)
 ------------------
 * mir_msgs: Compile new msgs + rename mirMsgs -> mir_msgs

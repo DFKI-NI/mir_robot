@@ -2,6 +2,11 @@
 Changelog for package mir_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Remove garbage file
+* Contributors: Martin Günther
+
 1.0.3 (2019-03-04)
 ------------------
 * Make disable_map work with MiR software 2.0

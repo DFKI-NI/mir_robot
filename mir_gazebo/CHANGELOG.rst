@@ -2,6 +2,13 @@
 Changelog for package mir_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix gazebo launch file
+  Before this commit, the mobile base plugin couldn't initialize, because
+  subst_value didn't work.
+* Contributors: Martin Günther
+
 1.0.3 (2019-03-04)
 ------------------
 * Add hector_mapping

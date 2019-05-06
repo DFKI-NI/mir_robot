@@ -2,6 +2,14 @@
 Changelog for package mir_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add legacyModeNS param to gazebo_ros_control plugin
+  This enables the new behavior of the plugin (pid_gains parameter are now
+  in the proper namespace).
+* re-added gazebo friction parameters for the wheels (`#19 <https://github.com/dfki-ric/mir_robot/issues/19>`_)
+* Contributors: Martin Günther, niniemann
+
 1.0.3 (2019-03-04)
 ------------------
 * Merge pull request `#16 <https://github.com/dfki-ric/mir_robot/issues/16>`_ from niniemann/add-prefix-argument-to-configs
