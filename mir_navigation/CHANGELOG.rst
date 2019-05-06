@@ -2,8 +2,8 @@
 Changelog for package mir_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.4 (2019-05-06)
+------------------
 * Rviz config: Add planned paths + costmap from real MiR
 * Contributors: Martin Günther
 

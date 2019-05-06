@@ -2,8 +2,8 @@
 Changelog for package mir_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.4 (2019-05-06)
+------------------
 * Update mir_msgs and mir_actions to MiR 2.3.1
   The following changes were made to the actual mir_msgs:
   * rename mirMsgs -> mir_msgs

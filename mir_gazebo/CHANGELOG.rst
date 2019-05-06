@@ -2,8 +2,8 @@
 Changelog for package mir_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.4 (2019-05-06)
+------------------
 * Fix gazebo launch file
   Before this commit, the mobile base plugin couldn't initialize, because
   subst_value didn't work.

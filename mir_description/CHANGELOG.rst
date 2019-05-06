@@ -2,8 +2,8 @@
 Changelog for package mir_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.4 (2019-05-06)
+------------------
 * Add legacyModeNS param to gazebo_ros_control plugin
   This enables the new behavior of the plugin (pid_gains parameter are now
   in the proper namespace).
