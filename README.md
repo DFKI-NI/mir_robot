@@ -199,6 +199,19 @@ If the robot's localization is lost:
 roslaunch mir_driver mir.launch
 ```
 
+Troubleshooting
+---------------
+
+**Q:** I can't get the Gazebo demos running. The robot can be teleoperated, but
+       mapping / localization / obstacle avoidance is not working.
+
+**A:** Check that the laser scans are properly simulated. If not, your graphics
+       card is probably compatible with Gazebo - please try running it on a computer
+       with a NVidia graphics card. See:
+       [#1](https://github.com/dfki-ric/mir_robot/issues/1),
+       [#32](https://github.com/dfki-ric/mir_robot/issues/32)
+
+
 Travis - Continuous Integration
 -------------------------------
 
