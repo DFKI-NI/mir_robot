@@ -1,6 +1,6 @@
 <launch>
     <!--node ns="local_costmap" name="voxel_grid_throttle" pkg="topic_tools" type="throttle" args="messages voxel_grid 3.0 voxel_grid_throttled" /-->
-    <arg name="local_planner" doc="Local planner can be either dwa, base, teb or pose"/>
+    <arg name="local_planner" default="dwb" doc="Local planner can be either dwa, base, teb or pose"/>
     <arg name="with_virtual_walls" default="true" doc="Enables usage of virtual walls when set. Set to false when running SLAM." />
     <arg name="prefix" default="" doc="Prefix used for robot tf frames" /> <!-- used in the config files -->
 
