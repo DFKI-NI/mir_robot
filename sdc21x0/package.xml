@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>sdc21x0</name>
+  <version>1.0.4</version>
+  <description>Message definitions for the sdc21x0 motor controller</description>
+
+  <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
+  <author email="martin.guenther@dfki.de">Martin Günther</author>
+
+  <license>BSD</license>
+
+  <url type="website">https://github.com/dfki-ric/mir_robot</url>
+  <url type="repository">https://github.com/dfki-ric/mir_robot</url>
+  <url type="bugtracker">https://github.com/dfki-ric/mir_robot/issues</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>std_msgs</depend>
+
+  <build_depend>message_generation</build_depend>
+  <exec_depend>message_runtime</exec_depend>
+</package>

@@ -17,6 +17,7 @@ from mir_msgs.msg import *
 from move_base_msgs.msg import MoveBaseActionFeedback, MoveBaseActionGoal, MoveBaseActionResult, MoveBaseFeedback, MoveBaseResult
 from nav_msgs.msg import GridCells, MapMetaData, OccupancyGrid, Odometry, Path
 from rosgraph_msgs.msg import Log
+from sdc21x0.msg import MotorCurrents
 from sensor_msgs.msg import Imu, LaserScan, PointCloud2, Range
 from std_msgs.msg import Float64, String
 from tf.msg import tfMessage
@@ -103,6 +104,7 @@ def _remove_tf_prefix_dict_filter(msg_dict):
 # topics we want to publish to ROS (and subscribe to from the MiR)
 PUB_TOPICS = [
               TopicConfig('LightCtrl/us_list', Range),
+              TopicConfig('MC/currents', MotorCurrents),
               TopicConfig('MissionController/CheckArea/visualization_marker', Marker),
               TopicConfig('SickPLC/parameter_descriptions', ConfigDescription),
               TopicConfig('SickPLC/parameter_updates', Config),
