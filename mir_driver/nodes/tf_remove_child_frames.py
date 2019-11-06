@@ -30,7 +30,8 @@ def main():
     def tf_cb(msg):
         msg.transforms = [t for t in msg.transforms
                           if t.child_frame_id.lstrip('/') not in remove_frames]
-        tf_pub.publish(msg)
+        if len(msg.transforms) > 0:
+            tf_pub.publish(msg)
 
     rospy.Subscriber('tf_in', tfMessage, tf_cb)
 
@@ -40,7 +41,8 @@ def main():
     def tf_static_cb(msg):
         msg.transforms = [t for t in msg.transforms
                           if t.child_frame_id.lstrip('/') not in remove_frames]
-        tf_static_pub.publish(msg)
+        if len(msg.transforms) > 0:
+            tf_static_pub.publish(msg)
 
     rospy.Subscriber('tf_static_in', tfMessage, tf_static_cb)
 
