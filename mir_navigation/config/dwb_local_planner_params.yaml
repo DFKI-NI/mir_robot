@@ -45,7 +45,7 @@ DWBLocalPlanner:
 
   # Critics (trajectory scoring)
   #default_critic_namespaces: [dwb_critics, mir_dwb_critics]
-  critics: [RotateToGoal, Oscillation, ObstacleFootprint, PathAlign, PathDist, PathProgress]
+  critics: [RotateToGoal, Oscillation, ObstacleFootprint, PathAlign, PathDistPruned, PathProgress]
   RotateToGoal:
     scale: 1.0
     # lookahead_time: -1.0
@@ -64,8 +64,9 @@ DWBLocalPlanner:
   PathAlign:
     scale: 16.0
     forward_point_distance: 0.325 # default: 0.325 mir: 0.325 - how far along to place an additional scoring point
-  PathDist:
+  PathDistPruned:
     scale: 32.0            # default: 32.0  mir: 32.0   - weighting for how much it should stick to the global path plan
+    class: 'mir_dwb_critics::PathDistPruned'
   PathProgress:
     scale: 24.0            # default: 24.0  mir: 48.0   - weighting for how much it should attempt to reach its goal
     heading_scale: 1.0
