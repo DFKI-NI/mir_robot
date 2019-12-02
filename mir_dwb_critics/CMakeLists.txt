@@ -32,6 +32,7 @@ include_directories(
 add_library(${PROJECT_NAME}
   src/path_angle.cpp
   src/path_progress.cpp
+  src/path_dist_pruned.cpp
 )
 add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})

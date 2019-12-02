@@ -6,5 +6,8 @@
     <class type="mir_dwb_critics::PathAngleCritic" base_class_type="dwb_local_planner::TrajectoryCritic">
       <description>TODO</description>
     </class>
+    <class type="mir_dwb_critics::PathDistPrunedCritic" base_class_type="dwb_local_planner::TrajectoryCritic">
+      <description>Scores trajectories based on the distance to the global path, only taking the parts into account that are still ahead of the robot.</description>
+    </class>
   </library>
 </class_libraries>
