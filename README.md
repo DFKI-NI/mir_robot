@@ -211,7 +211,7 @@ Troubleshooting
        mapping / localization / obstacle avoidance is not working.
 
 **A:** Check that the laser scans are properly simulated. If not, your graphics
-       card is probably compatible with Gazebo - please try running it on a computer
+       card is probably not compatible with Gazebo - please try running it on a computer
        with a NVidia graphics card. See:
        [#1](https://github.com/dfki-ric/mir_robot/issues/1),
        [#32](https://github.com/dfki-ric/mir_robot/issues/32)
