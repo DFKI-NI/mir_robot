@@ -113,7 +113,8 @@ rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
 
 Now, you can use the "2D Nav Goal" tool in RViz to set a navigation goal for move_base.
 
-[![MiR100 robot: navigation in Gazebo (2x)](https://i.vimeocdn.com/video/712859121.jpg?mw=640)](https://vimeo.com/279628049)
+[![MiR100 robot: navigation in Gazebo (4x)](https://i.vimeocdn.com/video/859959481.jpg?mw=640)](https://vimeo.com/394184430)
+
 (Click image to see video)
 
 
