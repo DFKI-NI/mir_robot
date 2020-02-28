@@ -66,11 +66,11 @@ def genmprim_unicycle(outfilename, visualize_ = False):
         #%preferably a power of 2, definitely multiple of 8
         numberofprimsperangle = 7
         #%multipliers (multiplier is used as costmult*cost)
-        forwardcostmult = 10.
-        backwardcostmult = 50.
-        forwardandturncostmult = 20.
+        forwardcostmult = 1.
+        backwardcostmult = 40.
+        forwardandturncostmult = 2.
         sidestepcostmult = 10.
-        turninplacecostmult = 100.
+        turninplacecostmult = 20.
         #%note, what is shown x,y,theta changes (not absolute numbers)
         #%0 degreees
         basemprimendpts0_c = np.zeros((numberofprimsperangle, 4))
@@ -79,7 +79,7 @@ def genmprim_unicycle(outfilename, visualize_ = False):
         #%counterclockwise
         #%0 theta change
         basemprimendpts0_c[0,:] = np.array(np.hstack(( 1.,  0.,  0., forwardcostmult)))
-        basemprimendpts0_c[1,:] = np.array(np.hstack(( 8.,  0.,  0., 2. * forwardcostmult)))
+        basemprimendpts0_c[1,:] = np.array(np.hstack(( 8.,  0.,  0., forwardcostmult)))
         basemprimendpts0_c[2,:] = np.array(np.hstack((-1.,  0.,  0., backwardcostmult)))
         #%1/16 theta change
         basemprimendpts0_c[3,:] = np.array(np.hstack(( 8.,  1.,  1., forwardandturncostmult)))
@@ -94,7 +94,7 @@ def genmprim_unicycle(outfilename, visualize_ = False):
         #%counterclockwise
         #%0 theta change
         basemprimendpts45_c[0,:] = np.array(np.hstack(( 1.,  1.,  0., forwardcostmult)))
-        basemprimendpts45_c[1,:] = np.array(np.hstack(( 6.,  6.,  0., 2. * forwardcostmult)))
+        basemprimendpts45_c[1,:] = np.array(np.hstack(( 6.,  6.,  0., forwardcostmult)))
         basemprimendpts45_c[2,:] = np.array(np.hstack((-1., -1.,  0., backwardcostmult)))
         #%1/16 theta change
         basemprimendpts45_c[3,:] = np.array(np.hstack(( 5.,  7.,  1., forwardandturncostmult)))
@@ -109,7 +109,7 @@ def genmprim_unicycle(outfilename, visualize_ = False):
         #%counterclockwise
         #%0 theta change
         basemprimendpts22p5_c[0,:] = np.array(np.hstack(( 2.,  1.,  0., forwardcostmult)))
-        basemprimendpts22p5_c[1,:] = np.array(np.hstack(( 6.,  3.,  0., 2. * forwardcostmult)))
+        basemprimendpts22p5_c[1,:] = np.array(np.hstack(( 6.,  3.,  0., forwardcostmult)))
         basemprimendpts22p5_c[2,:] = np.array(np.hstack((-2., -1.,  0., backwardcostmult)))
         #%1/16 theta change
         basemprimendpts22p5_c[3,:] = np.array(np.hstack(( 5.,  4.,  1., forwardandturncostmult)))

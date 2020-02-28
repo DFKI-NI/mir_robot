@@ -47,11 +47,11 @@ if UNICYCLE_MPRIM_16DEGS == 1
     numberofprimsperangle = 7;
 
     %multipliers (multiplier is used as costmult*cost)
-    forwardcostmult = 10;
-    backwardcostmult = 50;
-    forwardandturncostmult = 20;
+    forwardcostmult = 1;
+    backwardcostmult = 40;
+    forwardandturncostmult = 2;
     sidestepcostmult = 10;
-    turninplacecostmult = 100;
+    turninplacecostmult = 20;
 
     %note, what is shown x,y,theta changes (not absolute numbers)
 
@@ -61,7 +61,7 @@ if UNICYCLE_MPRIM_16DEGS == 1
     %counterclockwise
     %0 theta change
     basemprimendpts0_c(1,:) = [1 0 0 forwardcostmult];
-    basemprimendpts0_c(2,:) = [8 0 0 2 * forwardcostmult];
+    basemprimendpts0_c(2,:) = [8 0 0 forwardcostmult];
     basemprimendpts0_c(3,:) = [-1 0 0 backwardcostmult];
     %1/16 theta change
     basemprimendpts0_c(4,:) = [8 1 1 forwardandturncostmult];
@@ -76,7 +76,7 @@ if UNICYCLE_MPRIM_16DEGS == 1
     %counterclockwise
     %0 theta change
     basemprimendpts45_c(1,:) = [1 1 0 forwardcostmult];
-    basemprimendpts45_c(2,:) = [6 6 0 2 * forwardcostmult];
+    basemprimendpts45_c(2,:) = [6 6 0 forwardcostmult];
     basemprimendpts45_c(3,:) = [-1 -1 0 backwardcostmult];
     %1/16 theta change
     basemprimendpts45_c(4,:) = [5 7 1 forwardandturncostmult];
@@ -91,7 +91,7 @@ if UNICYCLE_MPRIM_16DEGS == 1
     %counterclockwise
     %0 theta change
     basemprimendpts22p5_c(1,:) = [2 1 0 forwardcostmult];
-    basemprimendpts22p5_c(2,:) = [6 3 0 2 * forwardcostmult];
+    basemprimendpts22p5_c(2,:) = [6 3 0 forwardcostmult];
     basemprimendpts22p5_c(3,:) = [-2 -1 0 backwardcostmult];
     %1/16 theta change
     basemprimendpts22p5_c(4,:) = [5 4 1 forwardandturncostmult];
