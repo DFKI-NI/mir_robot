@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+#
 # Copyright (c) 2016, David Conner (Christopher Newport University)
 # Based on genmprim_unicycle.m
 # Copyright (c) 2008, Maxim Likhachev
@@ -29,12 +31,13 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 import numpy as np
+import rospkg
 
 # if available import pylab (from matlibplot)
-visualize_plt = True
+matplotlib_found = False
 try:
     import matplotlib.pylab as plt
-    visualize_plt = True
+    matplotlib_found = True
 except ImportError:
     pass
 
@@ -46,9 +49,8 @@ def matrix_size(mat, elem=None):
         return mat.shape[int(elem)-1]
 
 
-def genmprim_unicycle(outfilename, visualize_ = False):
-
-    visualize = visualize_plt and visualize_  # Plot the primitives
+def genmprim_unicycle(outfilename, visualize=False):
+    visualize = matplotlib_found and visualize  # Plot the primitives
 
     # Local Variables: basemprimendpts22p5_c, endtheta_c, endx_c, baseendpose_c, additionalactioncostmult, fout, numofsamples, basemprimendpts45_c, primind, basemprimendpts0_c, rv, angle, outfilename, numberofangles, startpt, UNICYCLE_MPRIM_16DEGS, sidestepcostmult, rotation_angle, basemprimendpts_c, forwardandturncostmult, forwardcostmult, turninplacecostmult, endpose_c, backwardcostmult, interpfactor, S, R, tvoverrv, dtheta, intermcells_m, tv, dt, currentangle, numberofprimsperangle, resolution, currentangle_36000int, l, iind, errorxy, interind, endy_c, angleind, endpt
     # Function calls: plot, cos, pi, grid, figure, genmprim_unicycle, text, int2str, basemprimendpts33p75_c, pause, axis, sin, pinv, basemprimendpts11p25_c, fprintf, fclose, rem, zeros, fopen, round, size
@@ -316,3 +318,8 @@ def genmprim_unicycle(outfilename, visualize_ = False):
         #    plt.waitforbuttonpress()  # hold until buttom pressed
         plt.show()  # Keep windows open until the program is terminated
     return []
+
+if __name__ == "__main__":
+    rospack = rospkg.RosPack()
+    outfilename = rospack.get_path('mir_navigation') + '/mprim/unicycle_highcost_5cm.mprim'
+    genmprim_unicycle(outfilename, visualize=True)
