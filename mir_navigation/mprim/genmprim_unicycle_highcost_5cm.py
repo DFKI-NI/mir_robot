@@ -49,7 +49,7 @@ def matrix_size(mat, elem=None):
         return mat.shape[int(elem)-1]
 
 
-def genmprim_unicycle(outfilename, visualize=False):
+def genmprim_unicycle(outfilename, visualize=False, separate_plots=False):
     visualize = matplotlib_found and visualize  # Plot the primitives
 
     # Local Variables: basemprimendpts22p5_c, endtheta_c, endx_c, baseendpose_c, additionalactioncostmult, fout, numofsamples, basemprimendpts45_c, primind, basemprimendpts0_c, rv, angle, outfilename, numberofangles, startpt, UNICYCLE_MPRIM_16DEGS, sidestepcostmult, rotation_angle, basemprimendpts_c, forwardandturncostmult, forwardcostmult, turninplacecostmult, endpose_c, backwardcostmult, interpfactor, S, R, tvoverrv, dtheta, intermcells_m, tv, dt, currentangle, numberofprimsperangle, resolution, currentangle_36000int, l, iind, errorxy, interind, endy_c, angleind, endpt
@@ -134,12 +134,24 @@ def genmprim_unicycle(outfilename, visualize=False):
         currentangle = ((angleind-1)*2.*np.pi)/numberofangles
         currentangle_36000int = np.round((angleind-1)*36000./numberofangles)
         if (visualize):
-            plt.figure(1)#angleind)  # use angleind to plot each primitive set on different window
-            plt.hold(True)
-            plt.grid(True)
+            if separate_plots:
+                fig = plt.figure(angleind)
+                plt.title('angle {:2.0f} (= {:3.1f} degrees)'.format(angleind - 1, currentangle_36000int/100.))
+            else:
+                fig = plt.figure(1)
+
             plt.axis('equal')
             plt.axis([-10*resolution,10*resolution,-10*resolution,10*resolution])
-            plt.title(str(angleind)+" "+str(currentangle_36000int/100.))
+            ax = fig.add_subplot(1, 1, 1)
+            major_ticks = np.arange(-8*resolution, 9*resolution, 4*resolution)
+            minor_ticks = np.arange(-8*resolution, 9*resolution, resolution)
+            ax.set_xticks(major_ticks)
+            ax.set_xticks(minor_ticks, minor=True)
+            ax.set_yticks(major_ticks)
+            ax.set_yticks(minor_ticks, minor=True)
+            ax.grid(which='minor', alpha=0.5)
+            ax.grid(which='major', alpha=0.9)
+
         #%iterate over primitives
         for primind in np.arange(1., (numberofprimsperangle)+1):
             fout.write('primID: %d\n'%(primind-1))
@@ -308,7 +320,7 @@ def genmprim_unicycle(outfilename, visualize=False):
 
             if (visualize):
                 plt.plot(intermcells_m[:,0], intermcells_m[:,1],linestyle="-",marker="o")
-                plt.text(endpt[0], endpt[1], str(endpose_c[2]))
+                plt.text(endpt[0], endpt[1], '{:2.0f}'.format(endpose_c[2]))
                 plt.hold(True)
         #if (visualize):
         #    plt.waitforbuttonpress()  # uncomment to plot each primitive set one at a time
