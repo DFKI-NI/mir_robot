@@ -2,8 +2,8 @@
 Changelog for package sdc21x0
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.5 (2020-05-01)
+------------------
 * Add sdc21x0 package, MC/currents topic
 * Contributors: Martin Günther
 

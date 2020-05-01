@@ -2,8 +2,8 @@
 Changelog for package mir_dwb_critics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.5 (2020-05-01)
+------------------
 * mir_dwb_critics: Add plot_dwb_scores.py
 * mir_dwb_critics: Improve print_dwb_scores output
 * added PathDistPrunedCritic for dwb (`#42 <https://github.com/dfki-ric/mir_robot/issues/42>`_)

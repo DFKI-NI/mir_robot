@@ -2,8 +2,8 @@
 Changelog for package mir_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.5 (2020-05-01)
+------------------
 * Add optional prefix parameter to fake_mir_joint_publisher (`#47 <https://github.com/dfki-ric/mir_robot/issues/47>`_)
 * tf_remove_child_frames: Don't publish empty TFs
 * Add sdc21x0 package, MC/currents topic

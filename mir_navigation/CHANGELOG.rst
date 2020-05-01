@@ -2,8 +2,8 @@
 Changelog for package mir_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.5 (2020-05-01)
+------------------
 * Rename hector_mapping.launch, add dependency
 * genmprim.py: Improve plotting
 * genmprim.py: Make executable

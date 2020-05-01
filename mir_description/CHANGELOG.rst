@@ -2,8 +2,8 @@
 Changelog for package mir_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.5 (2020-05-01)
+------------------
 * Switch from Gazebo GPU laser to normal laser plugin
   The GPU laser plugin has caused multiple people problems before, because
   it is not compatible with all GPUS: `#1 <https://github.com/dfki-ric/mir_robot/issues/1>`_ 
