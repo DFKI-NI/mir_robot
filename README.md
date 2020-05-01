@@ -127,7 +127,7 @@ roslaunch mir_gazebo mir_maze_world.launch
 rosservice call /gazebo/unpause_physics   # or click the "start" button in the Gazebo GUI
 
 ### mapping:
-roslaunch mir_navigation hector_mapping.launch.xml
+roslaunch mir_navigation hector_mapping.launch
 
 # navigation:
 roslaunch mir_navigation move_base.xml with_virtual_walls:=false
