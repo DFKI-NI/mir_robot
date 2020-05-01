@@ -33,7 +33,7 @@
       <!-- <material value="Gazebo/Yellow" /> -->
       <material value="Gazebo/FlatBlack" />
 
-      <sensor type="gpu_ray" name="${prefix}${link}">
+      <sensor type="ray" name="${prefix}${link}">
         <pose>0 0 0 0 0 0</pose>
         <visualize>false</visualize>
         <update_rate>12.5</update_rate>
@@ -60,7 +60,7 @@
             <stddev>0.01</stddev>
           </noise>
         </ray>
-        <plugin name="gazebo_ros_${link}_controller" filename="libgazebo_ros_gpu_laser.so">
+        <plugin name="gazebo_ros_${link}_controller" filename="libgazebo_ros_laser.so">
           <!-- no prefix, plugin always uses a tf_prefix (if none is set it uses robotNamespace) -->
           <frameName>${link}</frameName>
           <topicName>${topic}</topicName>
