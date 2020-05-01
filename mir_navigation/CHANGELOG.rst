@@ -2,6 +2,35 @@
 Changelog for package mir_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Rename hector_mapping.launch, add dependency
+* genmprim.py: Improve plotting
+* genmprim.py: Make executable
+* SBPL: Reduce allocated_time + initial_epsilon params
+  This leads to shorter planning times, but will perhaps fail on larger
+  maps.
+* Update mprim file to mir-software 2.0.17
+  This was updated in 2.0.17 and hasn't changed through 2.6 at least.
+* Add genmprim_unicycle matlab + python script, fix mprim file
+* Adjust dwb params: split_path, finer trajectories (`#43 <https://github.com/dfki-ric/mir_robot/issues/43>`_)
+  - use split_path option to enforce following complex paths
+  - more trajectory samples over a smaller simulated time. This fixes a
+  problem where the robot would stop too far away from the goal, as all
+  possible trajectories either overshot the goal, or were too short to
+  reach into the next gridcell of the critics.
+  - remove Oscillation critic (never helped)
+* added PathDistPrunedCritic for dwb (`#42 <https://github.com/dfki-ric/mir_robot/issues/42>`_)
+  which works exactly like the original PathDistCritic, except that it
+  searches for a local minimum in the distance from the global path to the robots
+  current position. It then prunes the global_path from the start up to
+  this point, therefore approximately cutting of a segment of the path
+  that the robot already followed.
+* Add default local_planner to move_base launch file
+  This makes the hector_mapping Gazebo demo work with the instructions
+  from the README (see `#32 <https://github.com/dfki-ric/mir_robot/issues/32>`_).
+* Contributors: Martin Günther, Nils Niemann
+
 1.0.4 (2019-05-06)
 ------------------
 * Rviz config: Add planned paths + costmap from real MiR

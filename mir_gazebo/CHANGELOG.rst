@@ -2,6 +2,9 @@
 Changelog for package mir_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.4 (2019-05-06)
 ------------------
 * Fix gazebo launch file
