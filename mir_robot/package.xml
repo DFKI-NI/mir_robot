@@ -24,6 +24,7 @@
   <exec_depend>mir_gazebo</exec_depend>
   <exec_depend>mir_msgs</exec_depend>
   <exec_depend>mir_navigation</exec_depend>
+  <exec_depend>sdc21x0</exec_depend>
 
   <export>
     <metapackage/>
