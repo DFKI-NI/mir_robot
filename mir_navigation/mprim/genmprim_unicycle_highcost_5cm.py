@@ -231,7 +231,7 @@ def genmprim_unicycle(outfilename, visualize=False, separate_plots=False):
 
             #%generate intermediate poses (remember they are w.r.t 0,0 (and not
             #%centers of the cells)
-            numofsamples = 10.
+            numofsamples = 10
             intermcells_m = np.zeros((numofsamples, 3))
             if UNICYCLE_MPRIM_16DEGS == 1.:
                 startpt = np.array(np.hstack((0., 0., currentangle)))
