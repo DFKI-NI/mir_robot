@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # Copyright (c) 2016, David Conner (Christopher Newport University)
 # Based on genmprim_unicycle.m
@@ -212,7 +212,7 @@ def genmprim_unicycle(outfilename, visualize=False, separate_plots=False):
                 print('11p25\n')
 
             else:
-                print('ERROR: invalid angular resolution. angle = %d\n', currentangle_36000int)
+                print(('ERROR: invalid angular resolution. angle = %d\n', currentangle_36000int))
                 return []
 
 
@@ -223,8 +223,8 @@ def genmprim_unicycle(outfilename, visualize=False, separate_plots=False):
             endy_c = np.round((baseendpose_c[0]*np.sin(angle))+(baseendpose_c[1]*np.cos(angle)))
             endtheta_c = np.fmod(angleind-1+baseendpose_c[2], numberofangles)
             endpose_c = np.array(np.hstack((endx_c, endy_c, endtheta_c)))
-            print "endpose_c=",endpose_c
-            print( 'rotation angle=%f\n'% (angle*180./np.pi))
+            print("endpose_c=",endpose_c)
+            print(( 'rotation angle=%f\n'% (angle*180./np.pi)))
             #if np.logical_and(baseendpose_c[1] == 0., baseendpose_c[2] == 0.):
                 #%fprintf(1, 'endpose=%d %d %d\n', endpose_c(1), endpose_c(2), endpose_c(3));
 
@@ -239,8 +239,8 @@ def genmprim_unicycle(outfilename, visualize=False, separate_plots=False):
                                             (endpose_c[1]*resolution),
                                             (( (np.fmod(angleind-1+baseendpose_c[2], numberofangles))*2.*np.pi)/numberofangles))))
 
-                print "startpt =",startpt
-                print "endpt   =",endpt
+                print("startpt =",startpt)
+                print("endpt   =",endpt)
                 intermcells_m = np.zeros((numofsamples, 3))
                 if np.logical_or(np.logical_and(endx_c == 0., endy_c == 0.), baseendpose_c[2] == 0.):
                     #%turn in place or move forward
@@ -271,7 +271,7 @@ def genmprim_unicycle(outfilename, visualize=False, separate_plots=False):
                     #print "tv=",tv
 
                     if l<0.:
-                        print('WARNING: l = %f < 0 -> bad action start/end points\n'%(l))
+                        print(('WARNING: l = %f < 0 -> bad action start/end points\n'%(l)))
                         l = 0.
 
 

@@ -31,7 +31,7 @@
   <exec_depend>mir_gazebo</exec_depend>
   <exec_depend>move_base</exec_depend>
   <exec_depend>nav_core_adapter</exec_depend>    <!-- for dwb_local_planner -->
-  <exec_depend>python-matplotlib</exec_depend>
+  <exec_depend>python3-matplotlib</exec_depend>
   <exec_depend>sbpl_lattice_planner</exec_depend>
   <!-- <exec_depend>teb_local_planner</exec_depend> -->
 </package>

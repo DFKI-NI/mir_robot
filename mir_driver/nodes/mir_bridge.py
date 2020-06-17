@@ -1,9 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import rospy
 
 import copy
 import sys
-from collections import Iterable
+from collections.abc import Iterable
 
 from mir_driver import rosbridge
 from rospy_message_converter import message_converter
@@ -55,7 +55,7 @@ def _prepend_tf_prefix_dict_filter(msg_dict):
     #filtered_msg_dict = copy.deepcopy(msg_dict)
     if not isinstance(msg_dict, dict):   # can happen during recursion
         return
-    for (key, value) in msg_dict.iteritems():
+    for (key, value) in msg_dict.items():
         if key == 'header':
             try:
                 # prepend frame_id
@@ -81,7 +81,7 @@ def _remove_tf_prefix_dict_filter(msg_dict):
     #filtered_msg_dict = copy.deepcopy(msg_dict)
     if not isinstance(msg_dict, dict):   # can happen during recursion
         return
-    for (key, value) in msg_dict.iteritems():
+    for (key, value) in msg_dict.items():
         if key == 'header':
             try:
                 # remove frame_id
@@ -331,15 +331,15 @@ class MiR100Bridge(object):
 
             topics.append([topic_name, topic_type, has_publishers, has_subscribers])
 
-        print 'Publishers:'
+        print('Publishers:')
         for (topic_name, topic_type, has_publishers, has_subscribers) in topics:
             if has_publishers:
-                print ' * %s [%s]' % (topic_name, topic_type)
+                print((' * %s [%s]' % (topic_name, topic_type)))
 
-        print '\nSubscribers:'
+        print('\nSubscribers:')
         for (topic_name, topic_type, has_publishers, has_subscribers) in topics:
             if has_subscribers:
-                print ' * %s [%s]' % (topic_name, topic_type)
+                print((' * %s [%s]' % (topic_name, topic_type)))
 
         return topics
 

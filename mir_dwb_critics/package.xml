@@ -30,7 +30,7 @@
   <depend>roscpp</depend>
   <depend>sensor_msgs</depend>
 
-  <exec_depend>python-matplotlib</exec_depend>
+  <exec_depend>python3-matplotlib</exec_depend>
 
   <export>
     <dwb_local_planner plugin="${prefix}/default_critics.xml"/>
