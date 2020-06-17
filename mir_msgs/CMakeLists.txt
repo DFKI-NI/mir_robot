@@ -3,8 +3,8 @@ cmake_policy(SET CMP0048 NEW)
 project(mir_msgs)
 
 find_package(catkin REQUIRED COMPONENTS
-  message_generation
   geometry_msgs
+  message_generation
 )
 
 ################################################
@@ -73,6 +73,6 @@ generate_messages(
 ###################################
 catkin_package(
   CATKIN_DEPENDS
-    message_runtime
     geometry_msgs
+    message_runtime
 )

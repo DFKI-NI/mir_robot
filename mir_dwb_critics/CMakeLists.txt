@@ -38,7 +38,9 @@ add_library(${PROJECT_NAME}
 add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
-install(PROGRAMS nodes/print_dwb_scores.py
+install(PROGRAMS
+    nodes/print_dwb_scores.py
+    nodes/plot_dwb_scores.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 install(TARGETS ${PROJECT_NAME}

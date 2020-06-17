@@ -1,4 +1,4 @@
-<?xml version="1.0.0" ?>
+<?xml version="1.0" ?>
 
 <launch>
   <arg name="use_map_topic"   default="true"/>

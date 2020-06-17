@@ -21,6 +21,7 @@ catkin_package()
 # Mark executable scripts (Python etc.) for installation
 # in contrast to setup.py, you can choose the destination
 install(PROGRAMS
+  mprim/genmprim_unicycle_highcost_5cm.py
   nodes/acc_finder.py
   nodes/min_max_finder.py
   scripts/plot_mprim.py
