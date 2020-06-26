@@ -5,8 +5,7 @@ services:
 
 env:
   matrix:
-    - CI_ROS_DISTRO="kinetic"
-    - CI_ROS_DISTRO="melodic"
+    - CI_ROS_DISTRO="noetic"
 
 install:
   - docker build -t mir_robot_$CI_ROS_DISTRO -f Dockerfile-$CI_ROS_DISTRO .
