@@ -2,6 +2,11 @@
 Changelog for package mir_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Set cmake_policy CMP0048 to fix warning
+* Contributors: Martin Günther
+
 1.0.5 (2020-05-01)
 ------------------
 

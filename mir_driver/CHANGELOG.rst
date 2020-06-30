@@ -2,6 +2,11 @@
 Changelog for package mir_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Set cmake_policy CMP0048 to fix warning
+* Contributors: Martin Günther
+
 1.0.5 (2020-05-01)
 ------------------
 * Add optional prefix parameter to fake_mir_joint_publisher (`#47 <https://github.com/dfki-ric/mir_robot/issues/47>`_)

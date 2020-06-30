@@ -2,6 +2,16 @@
 Changelog for package mir_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add missing matplotlib dependency
+* plot_mprim: Fix color display
+* Fix bug in genmprim_unicycle_highcost_5cm
+  In Python3, np.arange doesn't accept floats.
+* Fix some catkin_lint warnings
+* Set cmake_policy CMP0048 to fix warning
+* Contributors: Martin Günther
+
 1.0.5 (2020-05-01)
 ------------------
 * Rename hector_mapping.launch, add dependency
