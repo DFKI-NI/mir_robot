@@ -2,8 +2,8 @@
 Changelog for package mir_dwb_critics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.6 (2020-06-30)
+------------------
 * Add missing matplotlib dependency
 * Fix some catkin_lint warnings
 * Set cmake_policy CMP0048 to fix warning

@@ -2,8 +2,8 @@
 Changelog for package mir_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.6 (2020-06-30)
+------------------
 * Add missing matplotlib dependency
 * plot_mprim: Fix color display
 * Fix bug in genmprim_unicycle_highcost_5cm
