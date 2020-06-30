@@ -2,8 +2,8 @@
 Changelog for package mir_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2020-06-30)
+------------------
 * Initial release into noetic
 * Remove hector_mapping dependency (not released in noetic)
 * Update scripts to Python3 (Noetic)

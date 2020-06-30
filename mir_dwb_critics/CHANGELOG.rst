@@ -2,8 +2,8 @@
 Changelog for package mir_dwb_critics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2020-06-30)
+------------------
 * Initial release into noetic
 * Update scripts to Python3 (Noetic)
 * Contributors: Martin Günther

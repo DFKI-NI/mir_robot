@@ -2,8 +2,8 @@
 Changelog for package mir_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2020-06-30)
+------------------
 * Initial release into noetic
 * Adapt to changes in websocket-client >= 0.49
   Ubuntu 16.04 has python-websocket  0.18

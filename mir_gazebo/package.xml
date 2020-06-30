@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>mir_gazebo</name>
-  <version>1.0.6</version>
+  <version>1.1.0</version>
   <description>Simulation specific launch and configuration files for the MiR100 robot.</description>
 
   <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>

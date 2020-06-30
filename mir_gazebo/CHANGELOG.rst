@@ -2,8 +2,8 @@
 Changelog for package mir_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2020-06-30)
+------------------
 * Initial release into noetic
 * Contributors: Martin Günther
 
