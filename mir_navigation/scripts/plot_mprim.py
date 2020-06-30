@@ -29,10 +29,10 @@ class MPrim:
         for _ in xrange(self.nrPoses):
             poses.append(f.readline())
         self.poses = np.loadtxt(poses, delimiter=" ")
-        self.cmap = plt.get_cmap("spectral")
+        self.cmap = plt.get_cmap("nipy_spectral")
 
     def plot(self, nr_angles):
-        plt.plot(self.poses[:, 0], self.poses[:, 1], c=self.cmap(self.startAngle * 256 / nr_angles))
+        plt.plot(self.poses[:, 0], self.poses[:, 1], c=self.cmap(float(self.startAngle) / nr_angles))
 
 
 class MPrims:
