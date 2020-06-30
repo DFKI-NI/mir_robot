@@ -2,6 +2,15 @@
 Changelog for package mir_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Initial release into noetic
+* Adapt to changes in websocket-client >= 0.49
+  Ubuntu 16.04 has python-websocket  0.18
+  Ubuntu 20.04 has python3-websocket 0.53
+* Update scripts to Python3 (Noetic)
+* Contributors: Martin Günther
+
 1.0.6 (2020-06-30)
 ------------------
 * Set cmake_policy CMP0048 to fix warning

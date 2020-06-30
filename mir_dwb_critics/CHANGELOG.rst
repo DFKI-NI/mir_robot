@@ -2,6 +2,12 @@
 Changelog for package mir_dwb_critics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Initial release into noetic
+* Update scripts to Python3 (Noetic)
+* Contributors: Martin Günther
+
 1.0.6 (2020-06-30)
 ------------------
 * Add missing matplotlib dependency

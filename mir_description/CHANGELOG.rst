@@ -2,6 +2,11 @@
 Changelog for package mir_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Initial release into noetic
+* Contributors: Martin Günther
+
 1.0.6 (2020-06-30)
 ------------------
 * Update to non-deprecated robot_state_publisher node

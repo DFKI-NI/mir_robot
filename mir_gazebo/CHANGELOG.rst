@@ -2,6 +2,11 @@
 Changelog for package mir_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Initial release into noetic
+* Contributors: Martin Günther
+
 1.0.6 (2020-06-30)
 ------------------
 * Set cmake_policy CMP0048 to fix warning

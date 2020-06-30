@@ -2,6 +2,13 @@
 Changelog for package mir_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Initial release into noetic
+* Remove hector_mapping dependency (not released in noetic)
+* Update scripts to Python3 (Noetic)
+* Contributors: Martin Günther
+
 1.0.6 (2020-06-30)
 ------------------
 * Add missing matplotlib dependency
