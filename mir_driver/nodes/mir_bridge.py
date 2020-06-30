@@ -33,6 +33,11 @@ class TopicConfig(object):
         self.dict_filter = dict_filter
 
 # remap mir_actions/MirMoveBaseAction => move_base_msgs/MoveBaseAction
+def _move_base_goal_dict_filter(msg_dict):
+    filtered_msg_dict = copy.deepcopy(msg_dict)
+    filtered_msg_dict['goal']['move_task'] = MirMoveBaseGoal.GLOBAL_MOVE
+    return filtered_msg_dict
+
 def _move_base_feedback_dict_filter(msg_dict):
     # filter out slots from the dict that are not in our message definition
     # e.g., MiRMoveBaseFeedback has the field "state", which MoveBaseFeedback doesn't
@@ -222,7 +227,7 @@ SUB_TOPICS = [TopicConfig('cmd_vel', Twist, _cmd_vel_dict_filter),
               TopicConfig('mir_cmd', String),
               TopicConfig('move_base/cancel', GoalID),
 ##              TopicConfig('move_base/goal', MirMoveBaseActionGoal),
-              TopicConfig('move_base/goal', MoveBaseActionGoal),  # really mir_actions/MirMoveBaseActionGoal
+              TopicConfig('move_base/goal', MoveBaseActionGoal, dict_filter=_move_base_goal_dict_filter),  # really mir_actions/MirMoveBaseActionGoal
               TopicConfig('move_base_simple/goal', PoseStamped),
               TopicConfig('relative_move_action/cancel', GoalID),
               TopicConfig('relative_move_action/goal', RelativeMoveActionGoal)]
