@@ -19,7 +19,7 @@ from nav_msgs.msg import GridCells, MapMetaData, OccupancyGrid, Odometry, Path
 from rosgraph_msgs.msg import Log
 from sdc21x0.msg import MotorCurrents
 from sensor_msgs.msg import Imu, LaserScan, PointCloud2, Range
-from std_msgs.msg import Float64, String
+from std_msgs.msg import Float64, String, Header
 from tf.msg import tfMessage
 from visualization_msgs.msg import Marker, MarkerArray
 
@@ -43,6 +43,17 @@ def _move_base_feedback_dict_filter(msg_dict):
 def _move_base_result_dict_filter(msg_dict):
     filtered_msg_dict = copy.deepcopy(msg_dict)
     filtered_msg_dict['result'] = {key: msg_dict['result'][key] for key in MoveBaseResult.__slots__}
+    return filtered_msg_dict
+
+def _cmd_vel_dict_filter(msg_dict):
+    """
+    Converts a geometry_msgs/Twist message dict (as sent from the ROS side) to
+    a geometry_msgs/TwistStamped message dict (as expected by the MiR on
+    software version >=2.7).
+    """
+    header = Header(frame_id='', stamp=rospy.Time.now())
+    filtered_msg_dict = {'header': message_converter.convert_ros_message_to_dictionary(header),
+                         'twist': copy.deepcopy(msg_dict)}
     return filtered_msg_dict
 
 def _tf_dict_filter(msg_dict):
@@ -205,7 +216,7 @@ PUB_TOPICS = [
               TopicConfig('transform_imu/parameter_updates', Config)]
 
 # topics we want to subscribe to from ROS (and publish to the MiR)
-SUB_TOPICS = [TopicConfig('cmd_vel', Twist),
+SUB_TOPICS = [TopicConfig('cmd_vel', Twist, _cmd_vel_dict_filter),
               TopicConfig('initialpose', PoseWithCovarianceStamped),
               TopicConfig('light_cmd', String),
               TopicConfig('mir_cmd', String),
