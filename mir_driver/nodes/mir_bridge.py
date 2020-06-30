@@ -200,13 +200,13 @@ PUB_TOPICS = [
               TopicConfig('odom_comb', Odometry),    # odom_comb on real robot, odom on simulator
               TopicConfig('odom_enc', Odometry),
               TopicConfig('particlecloud', PoseArray),
-              TopicConfig('relative_move_action/feedback', RelativeMoveActionFeedback),
-              TopicConfig('relative_move_action/result', RelativeMoveActionResult),
-              TopicConfig('relative_move_action/status', GoalStatusArray),
-              TopicConfig('relative_move_node/parameter_descriptions', ConfigDescription),
-              TopicConfig('relative_move_node/parameter_updates', Config),
-              TopicConfig('relative_move_node/time_to_coll', Float64),
-              TopicConfig('relative_move_node/visualization_marker', Marker),
+#              TopicConfig('relative_move_action/feedback', RelativeMoveActionFeedback),
+#              TopicConfig('relative_move_action/result', RelativeMoveActionResult),
+#              TopicConfig('relative_move_action/status', GoalStatusArray),
+#              TopicConfig('relative_move_node/parameter_descriptions', ConfigDescription),
+#              TopicConfig('relative_move_node/parameter_updates', Config),
+#              TopicConfig('relative_move_node/time_to_coll', Float64),
+#              TopicConfig('relative_move_node/visualization_marker', Marker),
               TopicConfig('robot_mode', RobotMode),
               TopicConfig('robot_pose', Pose),
               TopicConfig('robot_state', RobotState),
@@ -228,9 +228,9 @@ SUB_TOPICS = [TopicConfig('cmd_vel', Twist, _cmd_vel_dict_filter),
               TopicConfig('move_base/cancel', GoalID),
 ##              TopicConfig('move_base/goal', MirMoveBaseActionGoal),
               TopicConfig('move_base/goal', MoveBaseActionGoal, dict_filter=_move_base_goal_dict_filter),  # really mir_actions/MirMoveBaseActionGoal
-              TopicConfig('move_base_simple/goal', PoseStamped),
-              TopicConfig('relative_move_action/cancel', GoalID),
-              TopicConfig('relative_move_action/goal', RelativeMoveActionGoal)]
+              TopicConfig('move_base_simple/goal', PoseStamped)]
+#              TopicConfig('relative_move_action/cancel', GoalID),
+#              TopicConfig('relative_move_action/goal', RelativeMoveActionGoal)]
 
 class PublisherWrapper(rospy.SubscribeListener):
     def __init__(self, topic_config, robot):
