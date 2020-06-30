@@ -64,4 +64,9 @@ install(DIRECTORY
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-roslaunch_add_file_check(launch)
+## skipping hector_mapping.launch for now because hector_mapping is not released into noetic yet
+#roslaunch_add_file_check(launch)
+roslaunch_add_file_check(launch/amcl.launch)
+roslaunch_add_file_check(launch/move_base.xml)
+roslaunch_add_file_check(launch/start_maps.launch)
+roslaunch_add_file_check(launch/start_planner.launch)

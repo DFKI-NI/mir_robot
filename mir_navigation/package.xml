@@ -24,7 +24,7 @@
   <exec_depend>dwb_local_planner</exec_depend>   <!-- for dwb_local_planner -->
   <exec_depend>dwb_plugins</exec_depend>         <!-- for dwb_local_planner -->
   <!-- <exec_depend>eband_local_planner</exec_depend> -->
-  <exec_depend>hector_mapping</exec_depend>
+  <!-- <exec_depend>hector_mapping</exec_depend> -->   <!-- temporarily commented out because hector_mapping is not released to noetic yet -->
   <exec_depend>map_server</exec_depend>
   <exec_depend>mir_driver</exec_depend>
   <exec_depend>mir_dwb_critics</exec_depend>     <!-- for dwb_local_planner -->
