@@ -199,7 +199,7 @@ PUB_TOPICS = [
 #              TopicConfig('move_base_node/parameter_updates', Config),
               TopicConfig('odom_comb', Odometry),    # odom_comb on real robot, odom on simulator
               TopicConfig('odom_enc', Odometry),
-              TopicConfig('particlecloud', PoseArray),
+#              TopicConfig('particlecloud', PoseArray),
 #              TopicConfig('relative_move_action/feedback', RelativeMoveActionFeedback),
 #              TopicConfig('relative_move_action/result', RelativeMoveActionResult),
 #              TopicConfig('relative_move_action/status', GoalStatusArray),
