@@ -221,7 +221,7 @@ PUB_TOPICS = [
               TopicConfig('transform_imu/parameter_updates', Config)]
 
 # topics we want to subscribe to from ROS (and publish to the MiR)
-SUB_TOPICS = [TopicConfig('cmd_vel', Twist, _cmd_vel_dict_filter),
+SUB_TOPICS = [TopicConfig('cmd_vel', Twist, dict_filter=_cmd_vel_dict_filter),
               TopicConfig('initialpose', PoseWithCovarianceStamped),
               TopicConfig('light_cmd', String),
               TopicConfig('mir_cmd', String),
