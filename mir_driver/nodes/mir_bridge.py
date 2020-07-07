@@ -215,6 +215,7 @@ PUB_TOPICS = [
               TopicConfig('scan', LaserScan),
               TopicConfig('scan_filter/visualization_marker', Marker),
               TopicConfig('tf', tfMessage, dict_filter=_tf_dict_filter),
+              TopicConfig('tf_static', tfMessage, dict_filter=_tf_dict_filter),
               TopicConfig('transform_footprint/parameter_descriptions', ConfigDescription),
               TopicConfig('transform_footprint/parameter_updates', Config),
               TopicConfig('transform_imu/parameter_descriptions', ConfigDescription),
