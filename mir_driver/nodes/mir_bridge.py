@@ -8,13 +8,14 @@ from collections import Iterable
 from mir_driver import rosbridge
 from rospy_message_converter import message_converter
 
+from actionlib import SimpleActionClient
 from actionlib_msgs.msg import GoalID, GoalStatusArray
 from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus
 from dynamic_reconfigure.msg import Config, ConfigDescription
 from geometry_msgs.msg import PolygonStamped, Pose, PoseArray, PoseStamped, PoseWithCovarianceStamped, Twist
 from mir_actions.msg import *
 from mir_msgs.msg import *
-from move_base_msgs.msg import MoveBaseActionFeedback, MoveBaseActionGoal, MoveBaseActionResult, MoveBaseFeedback, MoveBaseResult
+from move_base_msgs.msg import MoveBaseAction, MoveBaseActionFeedback, MoveBaseActionGoal, MoveBaseActionResult, MoveBaseFeedback, MoveBaseGoal, MoveBaseResult
 from nav_msgs.msg import GridCells, MapMetaData, OccupancyGrid, Odometry, Path
 from rosgraph_msgs.msg import Log
 from sdc21x0.msg import MotorCurrents
@@ -228,8 +229,8 @@ SUB_TOPICS = [TopicConfig('cmd_vel', Twist, dict_filter=_cmd_vel_dict_filter),
               TopicConfig('mir_cmd', String),
               TopicConfig('move_base/cancel', GoalID),
 ##              TopicConfig('move_base/goal', MirMoveBaseActionGoal),
-              TopicConfig('move_base/goal', MoveBaseActionGoal, dict_filter=_move_base_goal_dict_filter),  # really mir_actions/MirMoveBaseActionGoal
-              TopicConfig('move_base_simple/goal', PoseStamped)]
+              TopicConfig('move_base/goal', MoveBaseActionGoal, dict_filter=_move_base_goal_dict_filter)]  # really mir_actions/MirMoveBaseActionGoal
+#              TopicConfig('move_base_simple/goal', PoseStamped)]
 #              TopicConfig('relative_move_action/cancel', GoalID),
 #              TopicConfig('relative_move_action/goal', RelativeMoveActionGoal)]
 
@@ -331,6 +332,11 @@ class MiR100Bridge(object):
             if ('/' + sub_topic.topic) not in subscribed_topics:
                 rospy.logwarn("[%s] topic '%s' is not yet subscribed to by the MiR!", rospy.get_name(), sub_topic.topic)
 
+        # At least with software version 2.8 there were issues when forwarding a simple goal to the robot
+        # This workaround converts it into an action. Check https://github.com/dfki-ric/mir_robot/issues/60 for details.
+        self._move_base_client = SimpleActionClient('move_base', MoveBaseAction)
+        rospy.Subscriber("/move_base_simple/goal",  PoseStamped, self._move_base_simple_goal_callback)
+
     def get_topics(self):
         srv_response = self.robot.callService('/rosapi/topics', msg={})
         topic_names = sorted(srv_response['topics'])
@@ -359,6 +365,16 @@ class MiR100Bridge(object):
                 print ' * %s [%s]' % (topic_name, topic_type)
 
         return topics
+
+    def _move_base_simple_goal_callback(self, msg):
+        if not self._move_base_client.wait_for_server(rospy.Duration(2)):
+            rospy.logwarn("Could not connect to 'move_base' server after two seconds. Dropping goal.")
+            rospy.logwarn("Did you activate 'planner' in the MIR web interface?")
+            return
+        goal = MoveBaseGoal()
+        goal.target_pose.header = copy.deepcopy(msg.header)
+        goal.target_pose.pose = copy.deepcopy(msg.pose)
+        self._move_base_client.send_goal(goal)
 
 
 def main():
