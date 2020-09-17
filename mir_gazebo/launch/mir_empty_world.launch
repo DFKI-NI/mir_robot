@@ -7,6 +7,8 @@
   <arg name="robot_y"   default="0.0" />
   <arg name="robot_yaw" default="0.0" />
 
+  <arg name="tf_prefix" default="" doc="tf_prefix to be used by gazebo plugins and in the robot's urdf etc." />
+
   <group>
     <remap from="joint_states"                   to="mir/joint_states" />
     <remap from="mobile_base_controller/cmd_vel" to="cmd_vel" />
@@ -30,5 +32,6 @@
     <arg name="robot_x"   value="$(arg robot_x)" />
     <arg name="robot_y"   value="$(arg robot_y)" />
     <arg name="robot_yaw" value="$(arg robot_yaw)" />
+    <arg name="tf_prefix" value="$(arg tf_prefix)" />
   </include>
 </launch>
