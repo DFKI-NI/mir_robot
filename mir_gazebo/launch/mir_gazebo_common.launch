@@ -3,10 +3,17 @@
   <arg name="robot_x"   default="0.0" />
   <arg name="robot_y"   default="0.0" />
   <arg name="robot_yaw" default="0.0" />
-  <arg name="prefix"    value="" />   <!-- this has to be "value", not "default", otherwise subst_value doesn't work -->
+
+  <arg name="tf_prefix" default="" doc="tf_prefix to be used by gazebo plugins and in the robot's urdf etc." />
+
+  <arg name="prefix" value="$(arg tf_prefix)/" if="$(eval tf_prefix != '')" /> <!-- $(arg prefix) is used in all the config files! TODO: For multiple robots, create groups when loading the parameters to overwrite the arg? -->
+  <arg name="prefix" value=""                  unless="$(eval tf_prefix != '')" />
+
 
   <!-- Load URDF -->
-  <include file="$(find mir_description)/launch/upload_mir_urdf.launch" />
+  <include file="$(find mir_description)/launch/upload_mir_urdf.launch">
+    <arg name="tf_prefix" value="$(arg tf_prefix)" />
+  </include>
 
   <!-- Spawn the robot into Gazebo -->
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model mir
@@ -21,7 +28,9 @@
     args="joint_state_controller mobile_base_controller"/>
 
   <!-- EKF -->
-  <include file="$(find mir_gazebo)/launch/includes/ekf.launch.xml"/>
+  <include file="$(find mir_gazebo)/launch/includes/ekf.launch.xml">
+      <arg name="tf_prefix" value="$(arg prefix)" />
+  </include>
 
   <!-- Robot state publisher -->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" />
