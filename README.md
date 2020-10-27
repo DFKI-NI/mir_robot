@@ -205,6 +205,17 @@ If the robot's localization is lost:
 roslaunch mir_driver mir.launch
 ```
 
+Troubleshooting
+---------------
+
+### Got a result when we were already in the DONE state
+
+Sometimes the move_base action will print the warning "Got a result when we
+were already in the DONE state". This is caused by a race condition between the
+`/move_base/result` and `/move_base/status` topics. When a status message with
+status `SUCCEEDED` arrives before the corresponding result message, this
+warning will be printed. It can be safely ignored.
+
 
 Travis - Continuous Integration
 -------------------------------
