@@ -37,6 +37,8 @@ class TopicConfig(object):
 def _move_base_goal_dict_filter(msg_dict):
     filtered_msg_dict = copy.deepcopy(msg_dict)
     filtered_msg_dict['goal']['move_task'] = MirMoveBaseGoal.GLOBAL_MOVE
+    filtered_msg_dict['goal']['goal_dist_threshold'] = 0.25
+    filtered_msg_dict['goal']['clear_costmaps'] = True
     return filtered_msg_dict
 
 def _move_base_feedback_dict_filter(msg_dict):
