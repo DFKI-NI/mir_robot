@@ -90,8 +90,8 @@ bool PathDistPrunedCritic::prepare(
   nav_2d_msgs::Path2D global_plan_pruned;
   global_plan_pruned.header = global_plan.header;
   global_plan_pruned.poses = std::vector<geometry_msgs::Pose2D>(
-      global_plan.poses.begin() + start_index,
-      global_plan.poses.end());
+      plan.begin() + start_index,
+      plan.end());
 
   return dwb_critics::PathDistCritic::prepare(pose, vel, goal, global_plan_pruned);
 }
