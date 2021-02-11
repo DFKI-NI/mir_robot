@@ -6,7 +6,16 @@
   <xacro:include filename="$(find mir_description)/urdf/include/mir_100_v1.urdf.xacro" />
   <xacro:include filename="$(find mir_description)/urdf/include/common.gazebo.xacro" />
 
-  <xacro:mir_100 prefix=""/>
+  <xacro:arg name="tf_prefix" default="" />
+  <xacro:property name="tf_prefix_" value="$(arg tf_prefix)" />
+  <xacro:if value="${tf_prefix_ == ''}">
+    <xacro:property name="prefix" value="" />
+  </xacro:if>
+  <xacro:unless value="${tf_prefix_ == ''}">
+    <xacro:property name="prefix" value="${tf_prefix_}/" />
+  </xacro:unless>
+
+  <xacro:mir_100 prefix="${prefix}"/>
   <xacro:controller_plugin_gazebo robot_namespace=""/>
 
   <!-- instead of the controller_plugin_gazebo, you can use the diffdrive controller like this:

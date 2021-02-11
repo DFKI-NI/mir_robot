@@ -1,5 +1,19 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <!-- The gazebo_ros_laser plugin does the following:
+       - If the ROS parameter 'tf_prefix' is set, it prepends the
+       - tf_prefix in front of the frameName.
+       - Otherwise, it prepends the robotNamespace.
+
+       The robotNamespace gets automatically set if you start the
+       spawn_model node inside a namespace. In this case, set
+       prepend_prefix_to_laser_frame to 'false', otherwise the
+       resulting frameName will have two prefixes prepended.
+
+       If you don't start spawn_model inside a namespace but have a
+       non-empty prefix, set prepend_prefix_to_laser_frame to 'true'. -->
+  <xacro:arg name="prepend_prefix_to_laser_frame" default="false" />
+
   <xacro:include filename="$(find mir_description)/urdf/include/common_properties.urdf.xacro" />
   <xacro:include filename="$(find mir_description)/urdf/include/imu.gazebo.urdf.xacro" />
   <xacro:include filename="$(find mir_description)/urdf/include/mir_100.gazebo.xacro" />
@@ -192,7 +206,8 @@
       <child link="${prefix}front_laser_link" />
       <origin xyz="0.4288 0.2358 0.1914" rpy="0.0 0.0 ${0.25 * pi}" />  <!-- from visually matching up the meshes of the MiR and the laser scanner -->
     </joint>
-    <xacro:sick_s300 prefix="${prefix}" link="front_laser_link" topic="f_scan" />
+    <xacro:sick_s300 prefix="${prefix}" link="front_laser_link" topic="f_scan"
+                     prepend_prefix_to_laser_frame="$(arg prepend_prefix_to_laser_frame)" />
 
     <joint name="${prefix}base_link_to_back_laser_joint" type="fixed">
       <parent link="${prefix}base_link" />
@@ -200,7 +215,8 @@
       <origin xyz="-0.3548 -0.2352 0.1914" rpy="0.0 0.0 ${-0.75 * pi}" />  <!-- from visually matching up the meshes of the MiR and the laser scanner -->
     </joint>
 
-    <xacro:sick_s300 prefix="${prefix}" link="back_laser_link" topic="b_scan" />
+    <xacro:sick_s300 prefix="${prefix}" link="back_laser_link" topic="b_scan"
+                     prepend_prefix_to_laser_frame="$(arg prepend_prefix_to_laser_frame)" />
 
     <!-- Ultrasound sensors -->
     <joint name="${prefix}us_1_joint" type="fixed">   <!-- right ultrasound -->
@@ -241,6 +257,6 @@
     <!-- set the gazebo friction parameters for the wheels -->
     <xacro:set_all_wheel_frictions prefix="${prefix}"/>
 
-    <p3d_base_controller prefix="${prefix}" />
+    <xacro:p3d_base_controller prefix="${prefix}" />
   </xacro:macro>
 </robot>

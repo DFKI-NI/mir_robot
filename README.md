@@ -134,6 +134,55 @@ roslaunch mir_navigation move_base.xml with_virtual_walls:=false
 rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
 ```
 
+Gazebo demo (multiple robots)
+-----------------------------
+
+If you want to spawn multiple robots into Gazebo, you unfortunately have to
+hard-code the name of the second robot into the `mir_empty_world.launch` file,
+like this:
+
+```diff
+diff --git i/mir_gazebo/launch/mir_empty_world.launch w/mir_gazebo/launch/mir_empty_world.launch
+index 27b9159..7773fae 100644
+--- i/mir_gazebo/launch/mir_empty_world.launch
++++ w/mir_gazebo/launch/mir_empty_world.launch
+@@ -17,6 +17,10 @@
+       <remap from="$(arg namespace)/mobile_base_controller/cmd_vel" to="$(arg namespace)/cmd_vel" />
+       <remap from="$(arg namespace)/mobile_base_controller/odom"    to="$(arg namespace)/odom_comb" />
+ 
++      <remap from="mir2/joint_states"                   to="mir2/mir/joint_states" />
++      <remap from="mir2/mobile_base_controller/cmd_vel" to="mir2/cmd_vel" />
++      <remap from="mir2/mobile_base_controller/odom"    to="mir2/odom_comb" />
++
+       <include file="$(find gazebo_ros)/launch/empty_world.launch">
+         <arg name="world_name" value="$(arg world_name)"/>
+         <arg name="paused" value="true" />
+```
+
+Then you can run the simulation like this:
+
+```bash
+# start Gazebo + first MiR
+roslaunch mir_gazebo mir_maze_world.launch tf_prefix:=mir
+
+# first MiR: start localization, navigation + rviz
+roslaunch mir_navigation amcl.launch initial_pose_x:=10.0 initial_pose_y:=10.0 tf_prefix:=mir#
+roslaunch mir_navigation start_planner.launch \
+        map_file:=$(rospack find mir_gazebo)/maps/maze.yaml \
+        virtual_walls_map_file:=$(rospack find mir_gazebo)/maps/maze_virtual_walls.yaml prefix:=mir/
+ROS_NAMESPACE=mir rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
+
+# spawn second MiR into Gazebo
+roslaunch mir_gazebo mir_gazebo_common.launch robot_x:=-2 robot_y:=-2 tf_prefix:=mir2 model_name:=mir2 __ns:=mir2
+
+# second MiR: start localization, navigation + rviz
+roslaunch mir_navigation amcl.launch initial_pose_x:=8.0 initial_pose_y:=8.0 tf_prefix:=mir2
+roslaunch mir_navigation start_planner.launch \
+        map_file:=$(rospack find mir_gazebo)/maps/maze.yaml \
+        virtual_walls_map_file:=$(rospack find mir_gazebo)/maps/maze_virtual_walls.yaml prefix:=mir2/
+ROS_NAMESPACE=mir2 rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
+```
+
 
 Running the driver on the real robot
 ------------------------------------
@@ -204,6 +253,17 @@ If the robot's localization is lost:
 ```bash
 roslaunch mir_driver mir.launch
 ```
+
+Troubleshooting
+---------------
+
+### Got a result when we were already in the DONE state
+
+Sometimes the move_base action will print the warning "Got a result when we
+were already in the DONE state". This is caused by a race condition between the
+`/move_base/result` and `/move_base/status` topics. When a status message with
+status `SUCCEEDED` arrives before the corresponding result message, this
+warning will be printed. It can be safely ignored.
 
 
 Travis - Continuous Integration
