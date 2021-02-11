@@ -2,6 +2,12 @@
 Changelog for package mir_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add optional namespace to launch files
+* Add prefix to start_planner.launch (`#67 <https://github.com/dfki-ric/mir_robot/issues/67>`_)
+* Contributors: Christoph Krause, Martin Günther
+
 1.0.6 (2020-06-30)
 ------------------
 * Add missing matplotlib dependency

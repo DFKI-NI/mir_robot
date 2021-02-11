@@ -2,6 +2,9 @@
 Changelog for package sdc21x0
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.6 (2020-06-30)
 ------------------
 * Set cmake_policy CMP0048 to fix warning

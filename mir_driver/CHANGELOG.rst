@@ -2,6 +2,18 @@
 Changelog for package mir_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix subscribing twice to same topic (TF etc)
+  There was a flaw in the subscriber logic that caused the mir_bridge to
+  subscribe multiple times to the same topic from the MiR, especially for
+  latched topics. This can be seen by repeated lines in the output:
+  starting to stream messages on topic 'tf'
+  starting to stream messages on topic 'tf'
+  starting to stream messages on topic 'tf'
+  Probably related to `#64 <https://github.com/dfki-ric/mir_robot/issues/64>`_.
+* Contributors: Martin Günther
+
 1.0.6 (2020-06-30)
 ------------------
 * Set cmake_policy CMP0048 to fix warning

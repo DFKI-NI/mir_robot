@@ -2,6 +2,9 @@
 Changelog for package mir_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.6 (2020-06-30)
 ------------------
 * Fix some catkin_lint warnings

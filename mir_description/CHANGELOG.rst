@@ -2,6 +2,17 @@
 Changelog for package mir_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add prepend_prefix_to_laser_frame to URDF and launch files
+  Fixes `#65 <https://github.com/dfki-ric/mir_robot/issues/65>`_.
+* Add tf_prefix to URDF and launch files
+* Fix typo in robot_namespace
+* Add missing 'xacro:' xml namespace prefixes
+  Macro calls without 'xacro:' prefix are deprecated in Melodic and will
+  be forbidden in Noetic.
+* Contributors: Martin Günther
+
 1.0.6 (2020-06-30)
 ------------------
 * Update to non-deprecated robot_state_publisher node
