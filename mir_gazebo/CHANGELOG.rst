@@ -2,8 +2,8 @@
 Changelog for package mir_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.1 (2021-02-11)
+------------------
 * mir_gazebo: Add model_name arg
 * Move joint_state_publisher to mir_gazebo_common.launch
 * Add optional namespace to launch files

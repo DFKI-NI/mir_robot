@@ -2,8 +2,8 @@
 Changelog for package sdc21x0
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.1 (2021-02-11)
+------------------
 * Contributors: Martin Günther
 
 1.1.0 (2020-06-30)

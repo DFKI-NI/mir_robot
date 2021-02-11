@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>mir_dwb_critics</name>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
   <description>
     Trajectory critics for the dwb_local_planner that work well together with the SBPL global planner on the MiR robot
   </description>

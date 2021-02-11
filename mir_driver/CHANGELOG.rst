@@ -2,8 +2,8 @@
 Changelog for package mir_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.1 (2021-02-11)
+------------------
 * Fix subscribing twice to same topic (TF etc)
   There was a flaw in the subscriber logic that caused the mir_bridge to
   subscribe multiple times to the same topic from the MiR, especially for
