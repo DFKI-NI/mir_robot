@@ -2,8 +2,8 @@
 Changelog for package mir_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.7 (2021-02-11)
+------------------
 * Add prepend_prefix_to_laser_frame to URDF and launch files
   Fixes `#65 <https://github.com/dfki-ric/mir_robot/issues/65>`_.
 * Add tf_prefix to URDF and launch files
