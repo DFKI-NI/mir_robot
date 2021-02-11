@@ -2,6 +2,10 @@
 Changelog for package mir_actions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Contributors: Martin Günther
+
 1.1.0 (2020-06-30)
 ------------------
 * Initial release into noetic
