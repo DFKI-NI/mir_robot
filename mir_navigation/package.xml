@@ -19,7 +19,7 @@
 
   <exec_depend>amcl</exec_depend>
   <exec_depend>base_local_planner</exec_depend>
-  <!-- <exec_depend>dwa_local_planner</exec_depend> -->
+  <exec_depend>dwa_local_planner</exec_depend> 
   <exec_depend>dwb_critics</exec_depend>         <!-- for dwb_local_planner -->
   <exec_depend>dwb_local_planner</exec_depend>   <!-- for dwb_local_planner -->
   <exec_depend>dwb_plugins</exec_depend>         <!-- for dwb_local_planner -->
@@ -33,5 +33,5 @@
   <exec_depend>nav_core_adapter</exec_depend>    <!-- for dwb_local_planner -->
   <exec_depend>python3-matplotlib</exec_depend>
   <exec_depend>sbpl_lattice_planner</exec_depend>
-  <!-- <exec_depend>teb_local_planner</exec_depend> -->
+  <exec_depend>teb_local_planner</exec_depend> 
 </package>
