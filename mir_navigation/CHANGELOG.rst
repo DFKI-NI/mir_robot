@@ -2,6 +2,13 @@
 Changelog for package mir_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.1 (2021-02-11)
+------------------
+* Add optional namespace to launch files
+* Add prefix to start_planner.launch (`#67 <https://github.com/dfki-ric/mir_robot/issues/67>`_)
+* Update scripts to Python3 (Noetic)
+* Contributors: Martin Günther
+
 1.1.0 (2020-06-30)
 ------------------
 * Initial release into noetic

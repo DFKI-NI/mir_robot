@@ -2,6 +2,13 @@
 Changelog for package mir_dwb_critics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.1 (2021-02-11)
+------------------
+* Fix bug in path_dist_pruned
+  With some paths, the previous code crashed with "terminate called after throwing an instance
+  of 'std::bad_alloc'".
+* Contributors: Martin Günther
+
 1.1.0 (2020-06-30)
 ------------------
 * Initial release into noetic

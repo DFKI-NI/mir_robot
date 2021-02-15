@@ -2,6 +2,16 @@
 Changelog for package mir_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.1 (2021-02-11)
+------------------
+* mir_gazebo: Add model_name arg
+* Move joint_state_publisher to mir_gazebo_common.launch
+* Add optional namespace to launch files
+* Add prepend_prefix_to_laser_frame to URDF and launch files
+  Fixes `#65 <https://github.com/dfki-ric/mir_robot/issues/65>`_.
+* Add tf_prefix to URDF and launch files
+* Contributors: Martin Günther
+
 1.1.0 (2020-06-30)
 ------------------
 * Initial release into noetic

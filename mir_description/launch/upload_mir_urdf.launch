@@ -1,4 +1,7 @@
 <?xml version="1.0" ?>
 <launch>
-  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find mir_description)/urdf/mir.urdf.xacro" />
+  <arg name="tf_prefix" default="" doc="TF prefix to use for all of Mobipick's TF frames"/>
+  <arg name="prepend_prefix_to_laser_frame" default="false" doc="Set this to 'true' if you don't start the spawn_model node inside a namespace."/>
+
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find mir_description)/urdf/mir.urdf.xacro tf_prefix:=$(arg tf_prefix) prepend_prefix_to_laser_frame:=$(arg prepend_prefix_to_laser_frame)" />
 </launch>

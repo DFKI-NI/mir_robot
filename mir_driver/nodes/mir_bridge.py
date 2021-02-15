@@ -234,14 +234,16 @@ class PublisherWrapper(rospy.SubscribeListener):
 
 
     def peer_subscribe(self, topic_name, topic_publish, peer_publish):
-        if (self.pub.get_num_connections() == 1 and not self.connected) or self.topic_config.latch:
+        if not self.connected:
+            self.connected = True
             rospy.loginfo("[%s] starting to stream messages on topic '%s'", rospy.get_name(), self.topic_config.topic)
             self.robot.subscribe(topic=('/' + self.topic_config.topic), callback=self.callback)
 
     def peer_unsubscribe(self, topic_name, num_peers):
         pass
 ## doesn't work: once ubsubscribed, robot doesn't let us subscribe again
-#         if self.pub.get_num_connections() == 0:
+#         if self.connected and self.pub.get_num_connections() == 0 and not self.topic_config.latch:
+#             self.connected = False
 #             rospy.loginfo("[%s] stopping to stream messages on topic '%s'", rospy.get_name(), self.topic_config.topic)
 #             self.robot.unsubscribe(topic=('/' + self.topic_config.topic))
 

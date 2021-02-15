@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>sdc21x0</name>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
   <description>Message definitions for the sdc21x0 motor controller</description>
 
   <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
