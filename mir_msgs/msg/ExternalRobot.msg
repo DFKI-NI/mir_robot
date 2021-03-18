@@ -1,6 +1,11 @@
 Header header
 uint32 id
+uint32 MIR100=1
+uint32 MIR500=3
+uint32 type_id
 string name
+float64 robot_length
+float64 robot_width
 string footprint
 string ip
 uint32 map_id
