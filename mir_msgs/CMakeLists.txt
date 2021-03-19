@@ -35,7 +35,6 @@ add_message_files(
     JoystickVel.msg
     LocalMapStat.msg
     MirExtra.msg
-    MirStatus.msg
     MissionCtrlCommand.msg
     MissionCtrlState.msg
     PalletLifterStatus.msg
