@@ -166,7 +166,7 @@ Then you can run the simulation like this:
 roslaunch mir_gazebo mir_maze_world.launch tf_prefix:=mir
 
 # first MiR: start localization, navigation + rviz
-roslaunch mir_navigation amcl.launch initial_pose_x:=10.0 initial_pose_y:=10.0 tf_prefix:=mir#
+roslaunch mir_navigation amcl.launch initial_pose_x:=10.0 initial_pose_y:=10.0 tf_prefix:=mir
 roslaunch mir_navigation start_planner.launch \
         map_file:=$(rospack find mir_gazebo)/maps/maze.yaml \
         virtual_walls_map_file:=$(rospack find mir_gazebo)/maps/maze_virtual_walls.yaml prefix:=mir/
