@@ -2,8 +2,8 @@
 Changelog for package mir_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.2 (2021-05-12)
+------------------
 * Fix laser scan frame_id with gazebo_plugins 2.9.2
 * Contributors: Martin Günther
 

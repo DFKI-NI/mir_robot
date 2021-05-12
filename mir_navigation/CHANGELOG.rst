@@ -2,8 +2,8 @@
 Changelog for package mir_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.2 (2021-05-12)
+------------------
 * Uncomment available dependencies in noetic (`#79 <https://github.com/dfki-ric/mir_robot/issues/79>`_)
 * Contributors: Oscar Lima
 
