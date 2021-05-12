@@ -2,6 +2,11 @@
 Changelog for package mir_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Uncomment available dependencies in noetic (`#79 <https://github.com/dfki-ric/mir_robot/issues/79>`_)
+* Contributors: Oscar Lima
+
 1.1.1 (2021-02-11)
 ------------------
 * Add optional namespace to launch files

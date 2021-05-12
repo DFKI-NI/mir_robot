@@ -2,6 +2,9 @@
 Changelog for package mir_robot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.1.1 (2021-02-11)
 ------------------
 * Contributors: Martin Günther

@@ -2,6 +2,11 @@
 Changelog for package mir_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix laser scan frame_id with gazebo_plugins 2.9.2
+* Contributors: Martin Günther
+
 1.1.1 (2021-02-11)
 ------------------
 * Add prepend_prefix_to_laser_frame to URDF and launch files
