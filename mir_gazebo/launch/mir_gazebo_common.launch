@@ -5,7 +5,6 @@
   <arg name="robot_yaw" default="0.0" />
 
   <arg name="tf_prefix" default="" doc="tf_prefix to be used by gazebo plugins and in the robot's urdf etc." />
-  <arg name="prepend_prefix_to_laser_frame" default="false" doc="Set this to 'true' if you don't start the spawn_model node inside a namespace."/>
 
   <arg name="prefix" value="$(arg tf_prefix)/" if="$(eval tf_prefix != '')" /> <!-- $(arg prefix) is used in all the config files! TODO: For multiple robots, create groups when loading the parameters to overwrite the arg? -->
   <arg name="prefix" value=""                  unless="$(eval tf_prefix != '')" />
@@ -15,8 +14,7 @@
 
   <!-- Load URDF -->
   <include file="$(find mir_description)/launch/upload_mir_urdf.launch">
-    <arg name="tf_prefix"                     value="$(arg tf_prefix)" />
-    <arg name="prepend_prefix_to_laser_frame" value="$(arg prepend_prefix_to_laser_frame)" />
+    <arg name="tf_prefix" value="$(arg tf_prefix)" />
   </include>
 
   <!-- Spawn the robot into Gazebo -->

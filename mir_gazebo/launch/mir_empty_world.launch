@@ -34,7 +34,6 @@
         <arg name="robot_y"   value="$(arg robot_y)" />
         <arg name="robot_yaw" value="$(arg robot_yaw)" />
         <arg name="tf_prefix" value="$(arg tf_prefix)" />
-        <arg name="prepend_prefix_to_laser_frame" value="false" />
       </include>
     </group>
   </group>
@@ -60,7 +59,6 @@
       <arg name="robot_y"   value="$(arg robot_y)" />
       <arg name="robot_yaw" value="$(arg robot_yaw)" />
       <arg name="tf_prefix" value="$(arg tf_prefix)" />
-      <arg name="prepend_prefix_to_laser_frame" value="true" />
     </include>
   </group>
 </launch>
