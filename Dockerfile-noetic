@@ -2,10 +2,10 @@ FROM ros:noetic-ros-core
 
 # python3-osrf-pycommon has to be installed manually for python3-catkin-tools to work (see https://github.com/catkin/catkin_tools/issues/594)
 RUN apt-get update \
-    && apt-get install -y build-essential python3-rosdep python3-catkin-lint python3-catkin-tools python3-osrf-pycommon \
-    && rm -rf /var/lib/apt/lists/{apt,dpkg,cache,log} /tmp/* /var/tmp/*
+    && apt-get install -y --no-install-recommends build-essential python3-rosdep python3-catkin-lint python3-catkin-tools python3-osrf-pycommon \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN rosdep init && rosdep update 
+RUN rosdep init && rosdep update
 
 # Create ROS workspace
 COPY . /ws/src/mir_robot
