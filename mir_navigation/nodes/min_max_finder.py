@@ -20,8 +20,7 @@ def odom_cb(msg):
     if ang_max < msg.twist.twist.angular.z:
         ang_max = msg.twist.twist.angular.z
 
-    rospy.loginfo('linear: [%f, %f]   angular: [%f, %f]', lin_min, lin_max,
-                  ang_min, ang_max)
+    rospy.loginfo('linear: [%f, %f]   angular: [%f, %f]', lin_min, lin_max, ang_min, ang_max)
 
 
 def main():
