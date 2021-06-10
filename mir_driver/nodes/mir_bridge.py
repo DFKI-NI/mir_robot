@@ -24,7 +24,10 @@ import std_msgs.msg
 import tf2_msgs.msg
 import visualization_msgs.msg
 
+from collections import OrderedDict
+
 tf_prefix = ''
+static_transforms = OrderedDict()
 
 
 class TopicConfig(object):
@@ -78,6 +81,44 @@ def _tf_dict_filter(msg_dict):
     filtered_msg_dict = copy.deepcopy(msg_dict)
     for transform in filtered_msg_dict['transforms']:
         transform['child_frame_id'] = tf_prefix + '/' + transform['child_frame_id'].strip('/')
+    return filtered_msg_dict
+
+
+def _tf_static_dict_filter(msg_dict):
+    """
+    The tf_static topic needs special handling. Publishers on tf_static are *latched*, which means that the ROS master
+    caches the last message that was sent by each publisher on that topic, and will forward it to new subscribers.
+    However, since the mir_driver node appears to the ROS master as a single node with a single publisher on tf_static,
+    and there are multiple actual publishers hiding behind it on the MiR side, only one of those messages will be
+    cached. Therefore, we need to implement the caching ourselves and make sure that we always publish the full set of
+    transforms as a single message.
+    """
+    global static_transforms
+
+    # prepend tf_prefix
+    filtered_msg_dict = _tf_dict_filter(msg_dict)
+
+    # The following code was copied + modified from https://github.com/tradr-project/static_transform_mux .
+
+    # Process the incoming transforms, merge them with our cache.
+    for transform in filtered_msg_dict['transforms']:
+        key = transform['child_frame_id']
+        rospy.loginfo(
+            "[%s] tf_static: updated transform %s->%s.",
+            rospy.get_name(),
+            transform['header']['frame_id'],
+            transform['child_frame_id'],
+        )
+        static_transforms[key] = transform
+
+    # Return the cached messages.
+    filtered_msg_dict['transforms'] = static_transforms.values()
+    rospy.loginfo(
+        "[%s] tf_static: sent %i transforms: %s",
+        rospy.get_name(),
+        len(static_transforms),
+        str(static_transforms.keys()),
+    )
     return filtered_msg_dict
 
 
@@ -261,7 +302,7 @@ PUB_TOPICS = [
     # TopicConfig('session_importer_node/info', mirSessionImporter.msg.SessionImportInfo),
     # TopicConfig('set_mc_PID', std_msgs.msg.Float64MultiArray),
     TopicConfig('tf', tf2_msgs.msg.TFMessage, dict_filter=_tf_dict_filter),
-    TopicConfig('tf_static', tf2_msgs.msg.TFMessage, dict_filter=_tf_dict_filter),
+    TopicConfig('tf_static', tf2_msgs.msg.TFMessage, dict_filter=_tf_static_dict_filter, latch=True),
     # TopicConfig('traffic_map', nav_msgs.msg.OccupancyGrid),
     # TopicConfig('wifi_diagnostics', diagnostic_msgs.msg.DiagnosticArray),
     # TopicConfig('wifi_diagnostics/cur_ap', mir_wifi_msgs.msg.APInfo),
