@@ -433,7 +433,7 @@ class MiR100Bridge(object):
         # At least with software version 2.8 there were issues when forwarding a simple goal to the robot
         # This workaround converts it into an action. Check https://github.com/dfki-ric/mir_robot/issues/60 for details.
         self._move_base_client = SimpleActionClient('move_base', move_base_msgs.msg.MoveBaseAction)
-        rospy.Subscriber("/move_base_simple/goal", geometry_msgs.msg.PoseStamped, self._move_base_simple_goal_callback)
+        rospy.Subscriber("move_base_simple/goal", geometry_msgs.msg.PoseStamped, self._move_base_simple_goal_callback)
 
     def get_topics(self):
         srv_response = self.robot.callService('/rosapi/topics', msg={})
