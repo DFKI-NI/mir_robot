@@ -1,0 +1,85 @@
+# To use:
+#
+#     pre-commit run -a
+#
+# Or:
+#
+#     pre-commit install  # (runs every time you commit in git)
+#
+# To update this file:
+#
+#     pre-commit autoupdate
+#
+# See https://github.com/pre-commit/pre-commit
+
+repos:
+  # Standard hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: check-added-large-files
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+      - id: check-shebang-scripts-are-executable
+      - id: check-symlinks
+      - id: check-vcs-permalinks
+      - id: check-xml
+      - id: check-yaml
+        exclude: mobipick_description/config/joint_limits.yaml
+      - id: debug-statements
+      - id: end-of-file-fixer
+        exclude: &excludes |
+          (?x)^(
+              .*\.blend|
+              .*\.dae|
+              .*\.mtl|
+              .*\.obj|
+              .*\.pgm|
+              .*\.step|
+              .*\.stl
+          )$
+      - id: fix-byte-order-marker
+      - id: mixed-line-ending
+        exclude: *excludes
+      - id: trailing-whitespace
+        exclude: *excludes
+
+  - repo: https://github.com/psf/black
+    rev: 19.3b0
+    hooks:
+      - id: black
+
+  - repo: git://github.com/detailyang/pre-commit-shell
+    rev: v1.0.6
+    hooks:
+    - id: shell-lint
+      args: [--external-sources]
+
+  - repo: https://github.com/markdownlint/markdownlint
+    rev: v0.11.0
+    hooks:
+    - id: markdownlint
+
+  - repo: https://github.com/pryorda/dockerfilelint-precommit-hooks
+    rev: v0.1.0
+    hooks:
+    - id: dockerfilelint
+
+  - repo: local
+    hooks:
+      - id: clang-format
+        name: clang-format
+        description: Format files with ClangFormat.
+        entry: clang-format-10
+        language: system
+        files: \.(c|cc|cxx|cpp|frag|glsl|h|hpp|hxx|ih|ispc|ipp|java|js|m|proto|vert)$
+        args: [ "-fallback-style=none", "-i" ]
+      - id: catkin_lint
+        name: catkin_lint
+        description: Check package.xml and cmake files
+        entry: catkin_lint .
+        language: system
+        always_run: true
+        pass_filenames: false
+        args: [ "--strict", "--skip-pkg", "mobipick_moveit_config" ]   # have to skip this package because of the missing warehouse_ros_mongo dependency
