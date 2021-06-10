@@ -302,7 +302,7 @@ class PublisherWrapper(rospy.SubscribeListener):
         )
         # latched topics must be subscribed immediately
         if topic_config.latch:
-            self.peer_subscribe(None, None, None)
+            self.peer_subscribe("", None, None)
 
     def peer_subscribe(self, topic_name, topic_publish, peer_publish):
         if not self.connected:
