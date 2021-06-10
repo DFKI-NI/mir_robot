@@ -101,5 +101,5 @@ TebLocalPlannerROS:
   shrink_horizon_backup: true              # Allows the planner to shrink the horizon temporary (50%) in case of automatically detected issues.
   oscillation_recovery: true               # Try to detect and resolve oscillations between multiple solutions in the same equivalence class (robot frequently switches between left/right/forward/backwards).
 
-  odom_topic: odom_comb
-  map_frame: odom_comb
+  odom_topic: odom
+  map_frame: odom

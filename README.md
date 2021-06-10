@@ -166,7 +166,7 @@ Frame: /base_footprint published by unknown_publisher Average Delay: 3.34273 Max
 Frame: /base_link published by unknown_publisher Average Delay: 3.22751 Max Delay: 3.34844
 Frame: /front_laser_link published by unknown_publisher Average Delay: 3.22661 Max Delay: 3.34159
 Frame: /imu_link published by unknown_publisher Average Delay: 3.22739 Max Delay: 3.34738
-Frame: /odom_comb published by unknown_publisher Average Delay: 3.16493 Max Delay: 3.28667
+Frame: /odom published by unknown_publisher Average Delay: 3.16493 Max Delay: 3.28667
 [...]
 
 All Broadcasters:

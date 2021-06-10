@@ -1,5 +1,5 @@
 local_costmap:
-    global_frame: $(arg prefix)odom_comb
+    global_frame: $(arg prefix)odom
     static_map: false
     rolling_window: true
     raytrace_range: 6.0
