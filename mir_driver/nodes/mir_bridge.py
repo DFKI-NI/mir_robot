@@ -295,7 +295,7 @@ class PublisherWrapper(rospy.SubscribeListener):
             data_class=topic_config.topic_type,
             subscriber_listener=self,
             latch=topic_config.latch,
-            queue_size=1,
+            queue_size=10,
         )
         rospy.loginfo(
             "[%s] publishing topic '%s' [%s]", rospy.get_name(), topic_config.topic, topic_config.topic_type._type
@@ -331,7 +331,7 @@ class SubscriberWrapper(object):
         self.topic_config = topic_config
         self.robot = robot
         self.sub = rospy.Subscriber(
-            name=topic_config.topic, data_class=topic_config.topic_type, callback=self.callback, queue_size=1
+            name=topic_config.topic, data_class=topic_config.topic_type, callback=self.callback, queue_size=10
         )
         rospy.loginfo(
             "[%s] subscribing to topic '%s' [%s]", rospy.get_name(), topic_config.topic, topic_config.topic_type._type
