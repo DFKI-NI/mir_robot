@@ -7,4 +7,3 @@ uint8 ROBOT_MODE_CHANGING = 255		# a transition mode - to say that a transition 
 
 uint8 robotMode
 string robotModeString
-

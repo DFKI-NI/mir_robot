@@ -9,7 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
 ###################################
 ## catkin specific configuration ##
 ###################################
-catkin_package() 
+catkin_package()
 
 #############
 ## Install ##

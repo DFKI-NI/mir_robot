@@ -7,4 +7,3 @@ float64 charging_voltage
 uint32 charging_voltage_raw
 bool is_voltage_low
 float64 last_time_voltage
-
