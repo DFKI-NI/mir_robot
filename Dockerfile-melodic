@@ -1,8 +1,8 @@
 FROM ros:melodic-ros-core
 
 RUN apt-get update \
-    && apt-get install -y build-essential python-catkin-tools python-rosdep cmake python-catkin-lint \
-    && rm -rf /var/lib/apt/lists/{apt,dpkg,cache,log} /tmp/* /var/tmp/*
+    && apt-get install -y -qq --no-install-recommends build-essential python-catkin-tools python-rosdep cmake python-catkin-lint \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Create ROS workspace
 COPY . /ws/src/mir_robot
