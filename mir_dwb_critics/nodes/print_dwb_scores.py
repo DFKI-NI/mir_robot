@@ -3,6 +3,7 @@ import rospy
 
 from dwb_msgs.msg import LocalPlanEvaluation
 
+
 def eval_cb(msg):
     print '\n\n=========================================================\n\n'
     for heading, i in zip(['best trajectory', 'worst trajectory'], [msg.best_index, msg.worst_index]):

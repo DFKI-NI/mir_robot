@@ -65,7 +65,7 @@ def cmd_vel_cb(msg):
 
 def main():
     rospy.init_node('acc_finder', anonymous=True)
-    rospy.Subscriber('odom_comb', Odometry, odom_cb)
+    rospy.Subscriber('odom', Odometry, odom_cb)
     rospy.Subscriber('cmd_vel', Twist, cmd_vel_cb)
     rospy.loginfo('acc_finder node ready and listening. now use teleop to move your robot to the limits!')
     rospy.spin()

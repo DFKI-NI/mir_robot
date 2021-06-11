@@ -23,9 +23,9 @@ Changelog for package mir_description
 ------------------
 * Switch from Gazebo GPU laser to normal laser plugin
   The GPU laser plugin has caused multiple people problems before, because
-  it is not compatible with all GPUS: `#1 <https://github.com/dfki-ric/mir_robot/issues/1>`_ 
-  `#32 <https://github.com/dfki-ric/mir_robot/issues/32>`_ 
-  `#46 <https://github.com/dfki-ric/mir_robot/issues/46>`_ 
+  it is not compatible with all GPUS: `#1 <https://github.com/dfki-ric/mir_robot/issues/1>`_
+  `#32 <https://github.com/dfki-ric/mir_robot/issues/32>`_
+  `#46 <https://github.com/dfki-ric/mir_robot/issues/46>`_
   `#52 <https://github.com/dfki-ric/mir_robot/issues/52>`_
   The normal laser plugin directly uses the physics engine, so it doesn't
   depend on any specific GPU. Also, it doesn't slow down the simulation

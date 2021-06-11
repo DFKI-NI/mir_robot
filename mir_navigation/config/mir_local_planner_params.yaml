@@ -51,7 +51,7 @@ MIRPlannerROS:
   # Debugging
   publish_visualization: false
   publish_cost_grid_pc: false
-  global_frame_id: odom_comb
+  global_frame_id: odom
 
   # MiR specific parameters
   tau_p: 5.0  # The proportional value in the CTE PID tracking

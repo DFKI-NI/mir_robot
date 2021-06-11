@@ -5,6 +5,7 @@ from sensor_msgs.msg import LaserScan
 
 pub = None
 
+
 def callback(msg):
     """
     Convert laser scans to REP 117 standard:
@@ -27,6 +28,7 @@ def callback(msg):
     msg.ranges = ranges_out
     pub.publish(msg)
 
+
 def main():
     global pub
     rospy.init_node('rep117_filter')
@@ -34,6 +36,7 @@ def main():
     pub = rospy.Publisher('scan_filtered', LaserScan, queue_size=10)
     rospy.Subscriber('scan', LaserScan, callback)
     rospy.spin()
+
 
 if __name__ == '__main__':
     try:

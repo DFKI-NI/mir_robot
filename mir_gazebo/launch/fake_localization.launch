@@ -4,7 +4,7 @@
   <arg name="delta_x" default="0.0" />
   <arg name="delta_y" default="0.0" />
   <arg name="delta_yaw" default="0.0" />
-  <arg name="odom_frame_id" default="odom_comb"/>
+  <arg name="odom_frame_id" default="odom"/>
   <arg name="base_frame_id" default="base_footprint"/>
 
   <node name="fake_localization" pkg="fake_localization" type="fake_localization" output="screen">

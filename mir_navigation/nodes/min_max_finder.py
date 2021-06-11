@@ -20,13 +20,12 @@ def odom_cb(msg):
     if ang_max < msg.twist.twist.angular.z:
         ang_max = msg.twist.twist.angular.z
 
-    rospy.loginfo('linear: [%f, %f]   angular: [%f, %f]', lin_min, lin_max,
-                  ang_min, ang_max)
+    rospy.loginfo('linear: [%f, %f]   angular: [%f, %f]', lin_min, lin_max, ang_min, ang_max)
 
 
 def main():
     rospy.init_node('min_max_finder', anonymous=True)
-    rospy.Subscriber('odom_comb', Odometry, odom_cb)
+    rospy.Subscriber('odom', Odometry, odom_cb)
     rospy.loginfo('min_max_finde node ready and listening. now use teleop to move your robot to the limits!')
     rospy.spin()
 

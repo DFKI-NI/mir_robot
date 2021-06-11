@@ -24,7 +24,7 @@ mobile_base_controller:
 
   # frame_ids (same as real MiR platform)
   base_frame_id: $(arg prefix)base_footprint # default: base_link
-  odom_frame_id: $(arg prefix)odom_comb      # default: odom
+  odom_frame_id: $(arg prefix)odom           # default: odom
 
   # Velocity and acceleration limits
   # Whenever a min_* is unspecified, default to -max_*
