@@ -2,6 +2,15 @@
 Changelog for package mir_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'melodic-2.8' into noetic
+* Update BMSData msg to MiR software 2.8.3.1
+* Remove MirStatus
+  This message was removed in MiR software 2.0 (Renamed to RobotStatus).
+* Update mir_msgs to 2.8.2.2
+* Contributors: Felix, Martin Günther
+
 1.1.2 (2021-05-12)
 ------------------
 

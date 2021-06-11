@@ -2,6 +2,14 @@
 Changelog for package mir_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'melodic-2.8' into noetic
+* Rename tf frame and topic 'odom_comb' -> 'odom'
+  This is how they are called on the real MiR since MiR software 2.0.
+* Reformat python code using black
+* Contributors: Martin Günther
+
 1.1.2 (2021-05-12)
 ------------------
 * Uncomment available dependencies in noetic (`#79 <https://github.com/dfki-ric/mir_robot/issues/79>`_)

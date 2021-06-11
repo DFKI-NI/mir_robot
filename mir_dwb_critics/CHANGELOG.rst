@@ -2,6 +2,12 @@
 Changelog for package mir_dwb_critics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'melodic-2.8' into noetic
+* Reformat python code using black
+* Contributors: Martin Günther
+
 1.1.2 (2021-05-12)
 ------------------
 

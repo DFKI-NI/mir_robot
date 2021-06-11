@@ -2,6 +2,51 @@
 Changelog for package mir_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'melodic-2.8' into noetic
+* Subscribe to move_base_simple/goal in relative namespace
+* Use absolute topics for /tf, /tf_static, /map etc.
+* Rename tf frame and topic 'odom_comb' -> 'odom'
+  This is how they are called on the real MiR since MiR software 2.0.
+* Fix handling of tf_static topic
+  This does two things:
+  1. Make the tf_static topic latched.
+  2. Cache all transforms, publish as one message.
+* Increase queue_size for publishers + subscribers to 10
+  One case where this was a problem was the tf_static topic: Since
+  multiple messages are being published at once, the subscriber often
+  missed one. The tf_static topic will be fixed anyway in the next commit,
+  but let's increase the queue_size anyway to avoid such bugs in the
+  future.
+* Update topic list to 2.8.3.1
+* Reformat python code using black
+* Remove outdated topics
+  These topics don't exist on MiR software 2.8.3 any more (most of them
+  have been removed a long time ago).
+  Fixes `#37 <https://github.com/dfki-ric/mir_robot/issues/37>`_.
+* Remove MirStatus
+  This message was removed in MiR software 2.0 (Renamed to RobotStatus).
+* Use same MirMoveBase params as real MiR (2.8.3)
+  This shouldn't make a difference (it used to work before). Just removing
+  one more potential source of error.
+* Fix: Converts move_base_simple/goal into a move_base action. (`#62 <https://github.com/dfki-ric/mir_robot/issues/62>`_)
+  At least MIR software version 2.8 does not react properly to move_base_simple/goal messages. This implements a workaround.
+  Closes `#60 <https://github.com/dfki-ric/mir_robot/issues/60>`_.
+* Fix: Adds subscription to "tf_static". (`#58 <https://github.com/dfki-ric/mir_robot/issues/58>`_)
+  Some transformations are published on this topic and are needed to
+  obtain a full tf tree. E.g. "base_footprint" to "base_link"
+* Minor: Removes /particlecloud from the list of published topics. (`#57 <https://github.com/dfki-ric/mir_robot/issues/57>`_)
+* Fix: Add missing dict_filter keyword argument for cmd_vel msgs (`#56 <https://github.com/dfki-ric/mir_robot/issues/56>`_)
+* Remove relative_move_action (MiR => 2.4.0)
+  This action was merged into the generic MirMoveBaseAction in MiR
+  software 2.4.0.
+* Adjust to changed MirMoveBase action (MiR >= 2.4.0)
+  See `#45 <https://github.com/dfki-ric/mir_robot/issues/45>`_.
+* Adjust cmd_vel topic to TwistStamped (MiR >= 2.7)
+  See `#45 <https://github.com/dfki-ric/mir_robot/issues/45>`_.
+* Contributors: Martin Günther, matthias-mayr
+
 1.1.2 (2021-05-12)
 ------------------
 

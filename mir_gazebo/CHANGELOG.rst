@@ -2,6 +2,13 @@
 Changelog for package mir_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'melodic-2.8' into noetic
+* Rename tf frame and topic 'odom_comb' -> 'odom'
+  This is how they are called on the real MiR since MiR software 2.0.
+* Contributors: Martin Günther
+
 1.1.2 (2021-05-12)
 ------------------
 * Fix laser scan frame_id with gazebo_plugins 2.9.2
