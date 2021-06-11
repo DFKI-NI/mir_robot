@@ -17,14 +17,16 @@ RUN cd /tmp/pre-commit \
     && pre-commit install-hooks \
     && rm -rf /tmp/pre-commit
 
-RUN rosdep init && rosdep update
-
 # Create ROS workspace
 COPY . /ws/src/mir_robot
 WORKDIR /ws
 
 # Use rosdep to install all dependencies (including ROS itself)
-RUN DEBIAN_FRONTEND=noninteractive rosdep install --from-paths src -i -y --rosdistro noetic
+RUN rosdep init \
+    && rosdep update \
+    && apt-get update \
+    && DEBIAN_FRONTEND=noninteractive rosdep install --from-paths src -i -y --rosdistro noetic \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN /bin/bash -c "source /opt/ros/noetic/setup.bash && \
     catkin init && \
