@@ -2,8 +2,8 @@
 Changelog for package mir_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.8 (2021-06-11)
+------------------
 * Merge branch 'melodic-2.8' into melodic
 * Rename tf frame and topic 'odom_comb' -> 'odom'
   This is how they are called on the real MiR since MiR software 2.0.

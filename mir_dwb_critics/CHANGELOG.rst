@@ -2,8 +2,8 @@
 Changelog for package mir_dwb_critics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.8 (2021-06-11)
+------------------
 * Merge branch 'melodic-2.8' into melodic
 * Reformat python code using black
 * Contributors: Martin Günther
