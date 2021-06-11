@@ -215,8 +215,8 @@ PUB_TOPICS = [
     TopicConfig('laser_front/driver/parameter_descriptions', dynamic_reconfigure.msg.ConfigDescription),
     TopicConfig('laser_front/driver/parameter_updates', dynamic_reconfigure.msg.Config),
     # TopicConfig('localization_score', std_msgs.msg.Float64),
-    TopicConfig('map', nav_msgs.msg.OccupancyGrid, latch=True),
-    TopicConfig('map_metadata', nav_msgs.msg.MapMetaData),
+    TopicConfig('/map', nav_msgs.msg.OccupancyGrid, latch=True),
+    TopicConfig('/map_metadata', nav_msgs.msg.MapMetaData),
     # TopicConfig('marker_tracking_node/feedback', mir_marker_tracking.msg.MarkerTrackingActionFeedback),
     # TopicConfig(
     #     'marker_tracking_node/laser_line_extract/parameter_descriptions', dynamic_reconfigure.msg.ConfigDescription
@@ -293,16 +293,16 @@ PUB_TOPICS = [
     TopicConfig('robot_pose', geometry_msgs.msg.Pose),
     TopicConfig('robot_state', mir_msgs.msg.RobotState),
     # TopicConfig('robot_status', mir_msgs.msg.RobotStatus),
-    TopicConfig('rosout', rosgraph_msgs.msg.Log),
-    TopicConfig('rosout_agg', rosgraph_msgs.msg.Log),
+    TopicConfig('/rosout', rosgraph_msgs.msg.Log),
+    TopicConfig('/rosout_agg', rosgraph_msgs.msg.Log),
     TopicConfig('scan', sensor_msgs.msg.LaserScan),
     # TopicConfig('scan_filter/parameter_descriptions', dynamic_reconfigure.msg.ConfigDescription),
     # TopicConfig('scan_filter/parameter_updates', dynamic_reconfigure.msg.Config),
     TopicConfig('scan_filter/visualization_marker', visualization_msgs.msg.Marker),
     # TopicConfig('session_importer_node/info', mirSessionImporter.msg.SessionImportInfo),
     # TopicConfig('set_mc_PID', std_msgs.msg.Float64MultiArray),
-    TopicConfig('tf', tf2_msgs.msg.TFMessage, dict_filter=_tf_dict_filter),
-    TopicConfig('tf_static', tf2_msgs.msg.TFMessage, dict_filter=_tf_static_dict_filter, latch=True),
+    TopicConfig('/tf', tf2_msgs.msg.TFMessage, dict_filter=_tf_dict_filter),
+    TopicConfig('/tf_static', tf2_msgs.msg.TFMessage, dict_filter=_tf_static_dict_filter, latch=True),
     # TopicConfig('traffic_map', nav_msgs.msg.OccupancyGrid),
     # TopicConfig('wifi_diagnostics', diagnostic_msgs.msg.DiagnosticArray),
     # TopicConfig('wifi_diagnostics/cur_ap', mir_wifi_msgs.msg.APInfo),
@@ -331,6 +331,7 @@ class PublisherWrapper(rospy.SubscribeListener):
         self.topic_config = topic_config
         self.robot = robot
         self.connected = False
+        # Use topic_config.topic directly here. If it does not have a leading slash, it will use the private namespace.
         self.pub = rospy.Publisher(
             name=topic_config.topic,
             data_class=topic_config.topic_type,
@@ -349,7 +350,8 @@ class PublisherWrapper(rospy.SubscribeListener):
         if not self.connected:
             self.connected = True
             rospy.loginfo("[%s] starting to stream messages on topic '%s'", rospy.get_name(), self.topic_config.topic)
-            self.robot.subscribe(topic=('/' + self.topic_config.topic), callback=self.callback)
+            absolute_topic = '/' + self.topic_config.topic.lstrip('/')  # ensure exactly 1 leading slash for MiR comm
+            self.robot.subscribe(topic=absolute_topic, callback=self.callback)
 
     def peer_unsubscribe(self, topic_name, num_peers):
         pass
@@ -357,7 +359,8 @@ class PublisherWrapper(rospy.SubscribeListener):
         # if self.connected and self.pub.get_num_connections() == 0 and not self.topic_config.latch:
         #     self.connected = False
         #     rospy.loginfo("[%s] stopping to stream messages on topic '%s'", rospy.get_name(), self.topic_config.topic)
-        #     self.robot.unsubscribe(topic=('/' + self.topic_config.topic))
+        #     absolute_topic = '/' + self.topic_config.topic.lstrip('/')  # ensure exactly 1 leading slash for MiR comm
+        #     self.robot.unsubscribe(topic=absolute_topic)
 
     def callback(self, msg_dict):
         msg_dict = _prepend_tf_prefix_dict_filter(msg_dict)
@@ -371,6 +374,7 @@ class SubscriberWrapper(object):
     def __init__(self, topic_config, robot):
         self.topic_config = topic_config
         self.robot = robot
+        # Use topic_config.topic directly here. If it does not have a leading slash, it will use the private namespace.
         self.sub = rospy.Subscriber(
             name=topic_config.topic, data_class=topic_config.topic_type, callback=self.callback, queue_size=10
         )
@@ -383,7 +387,8 @@ class SubscriberWrapper(object):
         msg_dict = _remove_tf_prefix_dict_filter(msg_dict)
         if self.topic_config.dict_filter is not None:
             msg_dict = self.topic_config.dict_filter(msg_dict)
-        self.robot.publish('/' + self.topic_config.topic, msg_dict)
+        absolute_topic = '/' + self.topic_config.topic.lstrip('/')  # ensure exactly 1 leading slash for MiR comm
+        self.robot.publish(absolute_topic, msg_dict)
 
 
 class MiR100Bridge(object):
@@ -422,12 +427,14 @@ class MiR100Bridge(object):
 
         for pub_topic in PUB_TOPICS:
             PublisherWrapper(pub_topic, self.robot)
-            if ('/' + pub_topic.topic) not in published_topics:
+            absolute_topic = '/' + pub_topic.topic.lstrip('/')  # ensure exactly 1 leading slash for MiR comm
+            if absolute_topic not in published_topics:
                 rospy.logwarn("[%s] topic '%s' is not published by the MiR!", rospy.get_name(), pub_topic.topic)
 
         for sub_topic in SUB_TOPICS:
             SubscriberWrapper(sub_topic, self.robot)
-            if ('/' + sub_topic.topic) not in subscribed_topics:
+            absolute_topic = '/' + sub_topic.topic.lstrip('/')  # ensure exactly 1 leading slash for MiR comm
+            if absolute_topic not in subscribed_topics:
                 rospy.logwarn("[%s] topic '%s' is not yet subscribed to by the MiR!", rospy.get_name(), sub_topic.topic)
 
         # At least with software version 2.8 there were issues when forwarding a simple goal to the robot
