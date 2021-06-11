@@ -5,7 +5,6 @@ services:
 
 env:
   matrix:
-    - CI_ROS_DISTRO="kinetic"
     - CI_ROS_DISTRO="melodic"
 
 install:
