@@ -28,8 +28,7 @@ def main():
     tf_pub = rospy.Publisher('tf_out', tfMessage, queue_size=1)
 
     def tf_cb(msg):
-        msg.transforms = [t for t in msg.transforms
-                          if t.child_frame_id.lstrip('/') not in remove_frames]
+        msg.transforms = [t for t in msg.transforms if t.child_frame_id.lstrip('/') not in remove_frames]
         if len(msg.transforms) > 0:
             tf_pub.publish(msg)
 
@@ -39,8 +38,7 @@ def main():
     tf_static_pub = rospy.Publisher('tf_static_out', tfMessage, queue_size=1, latch=True)
 
     def tf_static_cb(msg):
-        msg.transforms = [t for t in msg.transforms
-                          if t.child_frame_id.lstrip('/') not in remove_frames]
+        msg.transforms = [t for t in msg.transforms if t.child_frame_id.lstrip('/') not in remove_frames]
         if len(msg.transforms) > 0:
             tf_static_pub.publish(msg)
 

@@ -21,3 +21,7 @@ string state_text
 int32 uptime
 Twist2D velocity
 mir_msgs/UserPrompt user_prompt
+bool safety_system_muted
+bool joystick_low_speed_mode_enabled
+string joystick_web_session_id
+string mode_key_state

@@ -15,7 +15,7 @@ PoseFollower:
     # set this to true if you're using a holonomic robot
     holonomic: false
 
-    # number of samples (scaling factors of our current desired twist) to check the validity of 
+    # number of samples (scaling factors of our current desired twist) to check the validity of
     samples: 10
 
     # go no faster than this

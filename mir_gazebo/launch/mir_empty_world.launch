@@ -15,7 +15,7 @@
     <group>
       <remap from="$(arg namespace)/joint_states"                   to="$(arg namespace)/mir/joint_states" />
       <remap from="$(arg namespace)/mobile_base_controller/cmd_vel" to="$(arg namespace)/cmd_vel" />
-      <remap from="$(arg namespace)/mobile_base_controller/odom"    to="$(arg namespace)/odom_comb" />
+      <remap from="$(arg namespace)/mobile_base_controller/odom"    to="$(arg namespace)/odom" />
 
       <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="world_name" value="$(arg world_name)"/>
@@ -44,7 +44,7 @@
     <group>
       <remap from="joint_states"                   to="mir/joint_states" />
       <remap from="mobile_base_controller/cmd_vel" to="cmd_vel" />
-      <remap from="mobile_base_controller/odom"    to="odom_comb" />
+      <remap from="mobile_base_controller/odom"    to="odom" />
 
       <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="world_name" value="$(arg world_name)"/>

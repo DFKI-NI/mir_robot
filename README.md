@@ -3,12 +3,28 @@ mir_driver
 
 This repo contains a ROS driver and ROS configuration files (URDF description,
 Gazebo launch files, move_base config, bringup launch files, message and action
-descriptions) for the [MiR 100 robot](http://www.mobile-industrial-robots.com/en/products/mir100/).
+descriptions) for the [MiR robots](http://www.mobile-industrial-robots.com/).
 This is a community project created by us ([DFKI](https://www.dfki.de/), the
 German Research Center for Artificial Intelligence) to use the MiR Robots with
 ROS. We are not affiliated with Mobile Industrial Robots. If you find a bug or
 missing feature in this software, please report it on the
 [issue tracker](https://github.com/dfki-ric/mir_robot/issues).
+
+Supported MiR robots and software versions
+------------------------------------------
+
+This repo has been confirmed to work with the following robots:
+
+* MiR 100
+* MiR 200
+* MiR 500
+
+It probably also works with the MiR250 and MiR1000. If you can test it on one
+of those, please let us know if it works.
+
+The only supported software version is **MiR software 2.8.3.1**. You can try if
+it works with other versions, but this is the one that is known to work.
+
 
 Package overview
 ----------------
@@ -28,8 +44,8 @@ Installation
 You can chose between binary and source install below. If you don't want to
 modify the source, the binary install is preferred (if `mir_robot` binary
 packages are available for your ROS distro). The instructions below use the ROS
-distro `kinetic` as an example; if you use a different distro (e.g.  `indigo`),
-replace all occurrences of the string `kinetic` by your distro name in the
+distro `melodic` as an example; if you use a different distro (e.g.  `noetic`),
+replace all occurrences of the string `melodic` by your distro name in the
 instructions.
 
 ### Preliminaries
@@ -48,7 +64,7 @@ sudo apt-get update -qq
 For a binary install, it suffices to run this command:
 
 ```bash
-sudo apt install ros-kinetic-mir-robot
+sudo apt install ros-melodic-mir-robot
 ```
 
 See the tables at the end of this README for a list of ROS distros for which
@@ -65,17 +81,17 @@ mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src/
 
 # clone mir_robot into the catkin workspace
-git clone -b kinetic https://github.com/dfki-ric/mir_robot.git
+git clone -b melodic https://github.com/dfki-ric/mir_robot.git
 
 # use rosdep to install all dependencies (including ROS itself)
 sudo apt-get update -qq
 sudo apt-get install -qq -y python-rosdep
 sudo rosdep init
 rosdep update
-rosdep install --from-paths ./ -i -y --rosdistro kinetic
+rosdep install --from-paths ./ -i -y --rosdistro melodic
 
 # build all packages in the catkin workspace
-source /opt/ros/kinetic/setup.bash
+source /opt/ros/melodic/setup.bash
 catkin_init_workspace
 cd ~/catkin_ws
 catkin_make -DCMAKE_BUILD_TYPE=RelWithDebugInfo
@@ -148,11 +164,11 @@ index 27b9159..7773fae 100644
 +++ w/mir_gazebo/launch/mir_empty_world.launch
 @@ -17,6 +17,10 @@
        <remap from="$(arg namespace)/mobile_base_controller/cmd_vel" to="$(arg namespace)/cmd_vel" />
-       <remap from="$(arg namespace)/mobile_base_controller/odom"    to="$(arg namespace)/odom_comb" />
- 
+       <remap from="$(arg namespace)/mobile_base_controller/odom"    to="$(arg namespace)/odom" />
+
 +      <remap from="mir2/joint_states"                   to="mir2/mir/joint_states" />
 +      <remap from="mir2/mobile_base_controller/cmd_vel" to="mir2/cmd_vel" />
-+      <remap from="mir2/mobile_base_controller/odom"    to="mir2/odom_comb" />
++      <remap from="mir2/mobile_base_controller/odom"    to="mir2/odom" />
 +
        <include file="$(find gazebo_ros)/launch/empty_world.launch">
          <arg name="world_name" value="$(arg world_name)"/>
@@ -215,7 +231,7 @@ Frame: /base_footprint published by unknown_publisher Average Delay: 3.34273 Max
 Frame: /base_link published by unknown_publisher Average Delay: 3.22751 Max Delay: 3.34844
 Frame: /front_laser_link published by unknown_publisher Average Delay: 3.22661 Max Delay: 3.34159
 Frame: /imu_link published by unknown_publisher Average Delay: 3.22739 Max Delay: 3.34738
-Frame: /odom_comb published by unknown_publisher Average Delay: 3.16493 Max Delay: 3.28667
+Frame: /odom published by unknown_publisher Average Delay: 3.16493 Max Delay: 3.28667
 [...]
 
 All Broadcasters:

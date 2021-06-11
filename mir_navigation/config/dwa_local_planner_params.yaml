@@ -18,7 +18,7 @@ DWAPlannerROS:
   max_rot_vel: 1.0  # choose slightly less than the base's capability
   min_rot_vel: 0.1  # this is the min angular velocity when there is negligible translational velocity
   rot_stopped_vel: 0.1
-  
+
   acc_lim_x: 1.5
   acc_lim_y: 0.0      # diff drive robot
   acc_limit_trans: 1.5
@@ -52,4 +52,4 @@ DWAPlannerROS:
   # Debugging
   publish_traj_pc : true
   publish_cost_grid_pc: true
-  global_frame_id: /odom_comb  # or <robot namespace>/odom_comb
+  global_frame_id: /odom  # or <robot namespace>/odom
