@@ -2,8 +2,8 @@
 Changelog for package mir_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.3 (2021-06-11)
+------------------
 * Merge branch 'melodic-2.8' into noetic
 * Rename tf frame and topic 'odom_comb' -> 'odom'
   This is how they are called on the real MiR since MiR software 2.0.
