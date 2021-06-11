@@ -3,12 +3,28 @@ mir_driver
 
 This repo contains a ROS driver and ROS configuration files (URDF description,
 Gazebo launch files, move_base config, bringup launch files, message and action
-descriptions) for the [MiR 100 robot](http://www.mobile-industrial-robots.com/en/products/mir100/).
+descriptions) for the [MiR robots](http://www.mobile-industrial-robots.com/).
 This is a community project created by us ([DFKI](https://www.dfki.de/), the
 German Research Center for Artificial Intelligence) to use the MiR Robots with
 ROS. We are not affiliated with Mobile Industrial Robots. If you find a bug or
 missing feature in this software, please report it on the
 [issue tracker](https://github.com/dfki-ric/mir_robot/issues).
+
+Supported MiR robots and software versions
+------------------------------------------
+
+This repo has been confirmed to work with the following robots:
+
+* MiR 100
+* MiR 200
+* MiR 500
+
+It probably also works with the MiR250 and MiR1000. If you can test it on one
+of those, please let us know if it works.
+
+The only supported software version is **MiR software 2.8.3.1**. You can try if
+it works with other versions, but this is the one that is known to work.
+
 
 Package overview
 ----------------
