@@ -1,3 +1,16 @@
+It is currently still under heavy development - to be used with caution!**
+This branch is still under heavy development - to be used with caution!**
+The following packages have been migrated to foxy:
+
+- [ ] mir_actions
+- [x] mir_description
+- [ ] mir_driver
+- [ ] mir_dwb_critics
+- [ ] mir_gazebo
+- [ ] mir_msgs
+- [ ] mir_navigation
+- [ ] sdc21x0
+
 mir_driver
 ==========
 
