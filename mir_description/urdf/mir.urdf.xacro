@@ -16,13 +16,14 @@
   </xacro:unless>
 
   <xacro:mir_100 prefix="${prefix}"/>
-  <xacro:controller_plugin_gazebo robot_namespace=""/>
 
-  <!-- instead of the controller_plugin_gazebo, you can use the diffdrive controller like this:
-    <xacro:diff_controller_plugin_gazebo prefix=""
-      left_wheel_joint="left_wheel_joint"
-      right_wheel_joint="right_wheel_joint"
-      wheel_separation="${2*mir_100_act_wheel_dy}"
-      wheel_radius="${mir_100_act_wheel_radius}"/>
+  <!--
+  <xacro:controller_plugin_gazebo robot_namespace=""/>
   -->
+  <xacro:diff_controller_plugin_gazebo prefix=""
+    left_wheel_joint="left_wheel_joint"
+    right_wheel_joint="right_wheel_joint"
+    wheel_separation="${2*mir_100_act_wheel_dy}"
+    wheel_radius="${mir_100_act_wheel_radius}"/>
+
 </robot>

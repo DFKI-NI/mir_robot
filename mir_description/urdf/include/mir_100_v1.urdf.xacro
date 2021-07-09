@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
+
   <xacro:include filename="$(find mir_description)/urdf/include/common_properties.urdf.xacro" />
   <xacro:include filename="$(find mir_description)/urdf/include/imu.gazebo.urdf.xacro" />
   <xacro:include filename="$(find mir_description)/urdf/include/mir_100.gazebo.xacro" />
@@ -71,6 +72,13 @@
       <dynamics damping="0.01" friction="0.0"/>
     </joint>
 
+    <gazebo>
+      <plugin name="joint_states" filename="libgazebo_ros_joint_state_publisher.so">
+        <update_rate>200.0</update_rate>
+        <joint_name>${prefix}${locationprefix}_caster_rotation_joint</joint_name>
+      </plugin>
+    </gazebo>
+
     <link name="${prefix}${locationprefix}_caster_rotation_link">
       <inertial>
         <!-- <origin xyz="0 0 -0.042500000044" rpy="${0.5 * pi} ${24 * deg_to_rad} ${1.5 * pi}" /> -->
@@ -109,6 +117,13 @@
       <child link="${prefix}${locationprefix}_caster_wheel_link" />
       <axis xyz="0 1 0" />
     </joint>
+
+    <gazebo>
+      <plugin name="joint_states" filename="libgazebo_ros_joint_state_publisher.so">
+        <update_rate>200.0</update_rate>
+        <joint_name>${prefix}${locationprefix}_caster_wheel_joint</joint_name>
+      </plugin>
+    </gazebo>
 
     <link name="${prefix}${locationprefix}_caster_wheel_link">
       <xacro:cylinder_inertial mass="${mir_100_caster_wheel_mass}" radius="${mir_100_caster_wheel_radius}" length="${mir_100_caster_wheel_width}">

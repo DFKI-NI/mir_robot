@@ -16,20 +16,72 @@
       <gravity>true</gravity>
       <sensor name="imu_sensor" type="imu">
         <always_on>true</always_on>
-        <update_rate>100</update_rate>  <!-- this is not the publish rate -->
+        <update_rate>${update_rate}</update_rate>
         <visualize>true</visualize>
-        <topic>__default_topic__</topic>
+        <imu>
+          <angular_velocity>
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>${stdev}</stddev>
+                <bias_mean>0.0000075</bias_mean>
+                <bias_stddev>0.0000008</bias_stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>${stdev}</stddev>
+                <bias_mean>0.0000075</bias_mean>
+                <bias_stddev>0.0000008</bias_stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>${stdev}</stddev>
+                <bias_mean>0.0000075</bias_mean>
+                <bias_stddev>0.0000008</bias_stddev>
+              </noise>
+            </z>
+          </angular_velocity>
+          <linear_acceleration>
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>${stdev}</stddev>
+                <bias_mean>0.1</bias_mean>
+                <bias_stddev>0.001</bias_stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>${stdev}</stddev>
+                <bias_mean>0.1</bias_mean>
+                <bias_stddev>0.001</bias_stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>${stdev}</stddev>
+                <bias_mean>0.1</bias_mean>
+                <bias_stddev>0.001</bias_stddev>
+              </noise>
+            </z>
+          </linear_acceleration>
+        </imu>
         <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
-          <topicName>${imu_topic}</topicName>
-          <bodyName>${link}</bodyName>
-          <updateRateHZ>${update_rate}</updateRateHZ>  <!-- this is the publish rate -->
-          <gaussianNoise>${stdev * stdev}</gaussianNoise>
-          <xyzOffset>0 0 0</xyzOffset>
-          <rpyOffset>0 0 0</rpyOffset>
-          <frameName>${imu_frame}</frameName>  <!-- from real MiR -->
+        <initial_orientation_as_reference>false</initial_orientation_as_reference>
+          <ros>
+            <namespace>/${imu_topic}</namespace>
+            <remapping>~/out:=data</remapping>
+            <frame_name>${imu_frame}</frame_name>  <!-- from real MiR -->
+          </ros>
         </plugin>
-        <pose>0 0 0 0 0 0</pose>
       </sensor>
+      -->
     </gazebo>
   </xacro:macro>
 </robot>

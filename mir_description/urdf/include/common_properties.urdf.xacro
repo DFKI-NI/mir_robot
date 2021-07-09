@@ -49,6 +49,11 @@
       <color rgba="0.79 0.82 0.93 1" />
     </material>
   </xacro:property>
+  <xacro:property name="material_red">
+    <material name="red">
+      <color rgba="1 0 0 1" />
+    </material>
+  </xacro:property>
 
   <!-- #################### inertials with origin #################### -->
   <!-- see https://secure.wikimedia.org/wikipedia/en/wiki/List_of_moment_of_inertia_tensors -->

@@ -1,32 +1,41 @@
-cmake_minimum_required(VERSION 3.5.1)
-cmake_policy(SET CMP0048 NEW)
+cmake_minimum_required(VERSION 3.5)
 project(mir_description)
 
-find_package(catkin REQUIRED COMPONENTS
-  roslaunch
+# Default to C99
+if(NOT CMAKE_C_STANDARD)
+  set(CMAKE_C_STANDARD 99)
+endif()
+
+# Default to C++14
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+# find dependencies
+find_package(ament_cmake REQUIRED)
+find_package(xacro REQUIRED)
+find_package(diff_drive_controller REQUIRED)
+find_package(joint_state_controller REQUIRED)
+find_package(position_controllers REQUIRED)
+find_package(robot_state_publisher REQUIRED)
+find_package(gazebo_ros REQUIRED)
+find_package(rviz2 REQUIRED)
+find_package(urdf REQUIRED)
+find_package(xacro REQUIRED)
+
+install(
+  DIRECTORY urdf rviz meshes config launch
+  DESTINATION share/${PROJECT_NAME}
 )
 
-###################################
-## catkin specific configuration ##
-###################################
-catkin_package()
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+endif()
 
-#############
-## Install ##
-#############
+ament_package()
 
-# Mark other files for installation (e.g. launch and bag files, etc.)
-install(DIRECTORY
-  config
-  launch
-  meshes
-  rviz
-  urdf
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
-
-#############
-## Testing ##
-#############
-
-roslaunch_add_file_check(launch)
