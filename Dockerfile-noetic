@@ -1,8 +1,7 @@
 FROM ros:noetic-ros-core
 
-# python3-osrf-pycommon has to be installed manually for python3-catkin-tools to work (see https://github.com/catkin/catkin_tools/issues/594)
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends build-essential python3-rosdep python3-catkin-lint python3-catkin-tools python3-osrf-pycommon \
+    && apt-get install -y --no-install-recommends build-essential python3-rosdep python3-catkin-lint python3-catkin-tools \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install pre-commit hooks to /root/.cache/pre-commit/
