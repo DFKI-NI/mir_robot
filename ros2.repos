@@ -1,0 +1,5 @@
+repositories:
+  mir_robot:
+    type: git
+    url: git@github.com:relffok/ira_laser_tools.git
+    version: ros2-devel

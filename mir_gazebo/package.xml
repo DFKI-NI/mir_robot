@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>mir_gazebo</name>
   <version>1.1.3</version>
   <description>Simulation specific launch and configuration files for the MiR100 robot.</description>
@@ -13,19 +13,25 @@
   <url type="repository">https://github.com/dfki-ric/mir_robot</url>
   <url type="bugtracker">https://github.com/dfki-ric/mir_robot/issues</url>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <build_depend>roslaunch</build_depend>
+  <depend>gazebo</depend>
+  <depend>gazebo_ros</depend>
+  <depend>rviz2</depend>
+  <depend>ira_laser_tools</depend>
+  <depend>teleop_twist_keyboard</depend>
+  <depend>xterm</depend>
+  <depend>xacro</depend>
+  <depend>mir_description</depend>
+  <depend>gazebo_ros_pkgs</depend>
+  <depend>gazebo_ros2_control</depend>
+  <depend>robot_localization</depend>
 
-  <exec_depend>controller_manager</exec_depend>
-  <exec_depend>fake_localization</exec_depend>
-  <exec_depend>gazebo_ros</exec_depend>
-  <exec_depend>joint_state_publisher</exec_depend>
-  <exec_depend>mir_description</exec_depend>
-  <exec_depend>mir_driver</exec_depend>
-  <exec_depend>robot_localization</exec_depend>
-  <exec_depend>robot_state_publisher</exec_depend>
-  <exec_depend>rostopic</exec_depend>
-  <exec_depend>rqt_robot_steering</exec_depend>
-  <exec_depend>topic_tools</exec_depend>
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+    <gazebo_ros gazebo_model_path="${prefix}/worlds/include"/>
+  </export>
 </package>
