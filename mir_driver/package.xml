@@ -2,7 +2,7 @@
 <package format="2">
   <name>mir_driver</name>
   <version>1.1.3</version>
-  <description>A reverse ROS bridge for the MiR100 robot</description>
+  <description>A reverse ROS2 bridge for the MiR100 robot</description>
 
   <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
   <author email="martin.guenther@dfki.de">Martin Günther</author>
@@ -14,27 +14,29 @@
   <url type="repository">https://github.com/dfki-ric/mir_robot</url>
   <url type="bugtracker">https://github.com/dfki-ric/mir_robot/issues</url>
 
-  <buildtool_depend>catkin</buildtool_depend>
-
-  <build_depend>roslaunch</build_depend>
-
-  <depend>actionlib_msgs</depend>
-  <depend>diagnostic_msgs</depend>
-  <depend>dynamic_reconfigure</depend>
   <depend>geometry_msgs</depend>
-  <depend>mir_actions</depend>
   <depend>mir_msgs</depend>
+  <depend>rclpy_message_converter</depend>
+  <depend>ira_laser_tools</depend>
   <depend>move_base_msgs</depend>
   <depend>nav_msgs</depend>
   <depend>python3-websocket</depend>
   <depend>rosgraph_msgs</depend>
-  <depend>rospy</depend>
-  <depend>rospy_message_converter</depend>
+  <depend>rclpy</depend>
   <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
-  <depend>tf</depend>
+  <depend>tf2_msgs</depend>
   <depend>visualization_msgs</depend>
 
+  <exec_depend>twist_stamper</exec_depend>
   <exec_depend>mir_description</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+
 </package>

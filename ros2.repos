@@ -1,5 +1,9 @@
 repositories:
-  mir_robot:
+  ira_laser_tools:
     type: git
-    url: git@github.com:relffok/ira_laser_tools.git
+    url: https://github.com/relffok/ira_laser_tools.git
     version: ros2-devel
+  rclpy_message_converter:
+    type: git
+    url: https://github.com/relffok/rospy_message_converter.git
+    version: foxy-devel

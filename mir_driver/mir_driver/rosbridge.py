@@ -9,7 +9,7 @@ import string
 import random
 
 
-class RosbridgeSetup:
+class RosbridgeSetup():
     def __init__(self, host, port):
         self.callbacks = {}
         self.service_callbacks = {}
@@ -50,10 +50,10 @@ class RosbridgeSetup:
     def callService(self, serviceName, callback=None, msg=None):
         id = self.generate_id()
         call = {"op": "call_service", "id": id, "service": serviceName}
-        if msg != None:
+        if msg is not None:
             call['args'] = msg
 
-        if callback == None:
+        if callback is None:
             self.resp = None
 
             def internalCB(msg):
@@ -63,7 +63,7 @@ class RosbridgeSetup:
             self.addServiceCallback(id, internalCB)
             self.send(call)
 
-            while self.resp == None:
+            while self.resp is None:
                 time.sleep(0.01)
 
             return self.resp
@@ -107,7 +107,7 @@ class RosbridgeSetup:
 
             if 'op' in obj:
                 option = obj['op']
-                if option == "publish":  # A message from a topic we have subscribed to..
+                if option == "publish": # A message from a topic we have subscribed to..
                     topic = obj["topic"]
                     msg = obj["msg"]
                     if topic in self.callbacks:
@@ -124,7 +124,7 @@ class RosbridgeSetup:
                         values = obj["values"]
                         if id in self.service_callbacks:
                             try:
-                                # print 'id:', id, 'func:', self.service_callbacks[id]
+                                #print 'id:', id, 'func:', self.service_callbacks[id]
                                 self.service_callbacks[id](values)
                             except:
                                 print("exception on callback ID:", id)
@@ -143,11 +143,12 @@ class RosbridgeSetup:
             raise
 
 
-class RosbridgeWSConnection:
+class RosbridgeWSConnection():
     def __init__(self, host, port):
-        self.ws = websocket.WebSocketApp(
-            ("ws://%s:%d/" % (host, port)), on_message=self.on_message, on_error=self.on_error, on_close=self.on_close
-        )
+        self.ws = websocket.WebSocketApp(("ws://%s:%d/" % (host, port)),
+                                         on_message=self.on_message,
+                                         on_error=self.on_error,
+                                         on_close=self.on_close)
         self.ws.on_open = self.on_open
         self.run_thread = threading.Thread(target=self.run)
         self.run_thread.start()
