@@ -10,9 +10,6 @@ int32 MOTOR_ERROR = 700
 int32 LASER_ERROR = 800
 int32 CAMERA_ERROR = 900
 int32 SAFETY_SYSTEM_ERROR = 1000
-int32 POWERBOARD_ERROR = 2000
-int32 POWERSUPPLY_ERROR = 2100
-int32 CANBUS_ERROR = 2200
 int32 HOOK_ERROR = 5000
 int32 HOOK_CAMERA_ERROR = 5100
 int32 HOOK_ACTUATOR_ERROR = 5200
@@ -26,7 +23,7 @@ int32 MAPPING_ERROR = 10300
 int32 ODOM_FUSION_ERROR = 10400
 
 
-time timestamp		# Timestamp for when the error occurred
+builtin_interfaces/Time timestamp		# Timestamp for when the error occurred
 int32 code 			# Error code
 string description 	# Error description
 string module		# Module in which the error occurred

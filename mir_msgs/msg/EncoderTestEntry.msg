@@ -1,6 +1,0 @@
-float64 command_velocity
-float64 command_distance
-float64 left_dist
-float64 right_dist
-string suggested_direction
-string user_direction
