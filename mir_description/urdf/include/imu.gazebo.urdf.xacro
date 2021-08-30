@@ -75,7 +75,7 @@
         <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
         <initial_orientation_as_reference>false</initial_orientation_as_reference>
           <ros>
-            <namespace>/${imu_topic}</namespace>
+            <namespace>${imu_topic}</namespace>
             <remapping>~/out:=data</remapping>
             <frame_name>${imu_frame}</frame_name>  <!-- from real MiR -->
           </ros>

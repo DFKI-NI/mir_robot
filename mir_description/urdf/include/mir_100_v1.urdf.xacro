@@ -30,7 +30,7 @@
 
   <xacro:property name="imu_stdev" value="0.00017" />
 
-  <xacro:macro name="actuated_wheel" params="prefix locationprefix locationright">
+  <xacro:macro name="actuated_wheel" params="prefix namespace locationprefix locationright">
     <joint name="${prefix}${locationprefix}_wheel_joint" type="continuous">
       <origin xyz="0.0 ${-mir_100_act_wheel_dy * locationright} ${mir_100_act_wheel_radius}" rpy="0 0 0" />
       <parent link="${prefix}base_link" />
@@ -73,7 +73,9 @@
     </joint>
 
     <gazebo>
-      <plugin name="joint_states" filename="libgazebo_ros_joint_state_publisher.so">
+      <plugin name="${locationprefix}_caster_rotation_joint_states" filename="libgazebo_ros_joint_state_publisher.so">
+        <ros>
+        </ros>
         <update_rate>200.0</update_rate>
         <joint_name>${prefix}${locationprefix}_caster_rotation_joint</joint_name>
       </plugin>
@@ -119,7 +121,10 @@
     </joint>
 
     <gazebo>
-      <plugin name="joint_states" filename="libgazebo_ros_joint_state_publisher.so">
+      <plugin name="${locationprefix}_caster_wheel_joint_states" filename="libgazebo_ros_joint_state_publisher.so">
+        <ros>
+          <namespace>${namespace}</namespace>
+        </ros>
         <update_rate>200.0</update_rate>
         <joint_name>${prefix}${locationprefix}_caster_wheel_joint</joint_name>
       </plugin>
@@ -148,7 +153,7 @@
     </gazebo>
   </xacro:macro>
 
-  <xacro:macro name="mir_100" params="prefix">
+  <xacro:macro name="mir_100" params="prefix namespace">
     <link name="${prefix}base_footprint" />
 
     <joint name="${prefix}base_joint" type="fixed">
@@ -188,7 +193,7 @@
 
     <link name="${prefix}imu_link" />
 
-    <xacro:imu_gazebo link="${prefix}imu_link" imu_topic="imu_data" update_rate="50.0" stdev="${imu_stdev}" />
+    <xacro:imu_gazebo link="${prefix}imu_link" imu_topic="${prefix}imu_data" update_rate="50.0" stdev="${imu_stdev}" />
 
     <!-- Create an alias for imu_link. This is necessary because the real MiR's
          TF has imu_link, but the imu_data topic is published in the imu_frame
@@ -207,7 +212,7 @@
       <child link="${prefix}front_laser_link" />
       <origin xyz="0.4288 0.2358 0.1914" rpy="0.0 0.0 ${0.25 * pi}" />  <!-- from visually matching up the meshes of the MiR and the laser scanner -->
     </joint>
-    <xacro:sick_s300 prefix="${prefix}" link="front_laser_link" topic="f_scan" />
+    <xacro:sick_s300 prefix="${prefix}" namespace="${namespace}" link="front_laser_link" topic="f_scan" />
 
     <joint name="${prefix}base_link_to_back_laser_joint" type="fixed">
       <parent link="${prefix}base_link" />
@@ -215,7 +220,7 @@
       <origin xyz="-0.3548 -0.2352 0.1914" rpy="0.0 0.0 ${-0.75 * pi}" />  <!-- from visually matching up the meshes of the MiR and the laser scanner -->
     </joint>
 
-    <xacro:sick_s300 prefix="${prefix}" link="back_laser_link" topic="b_scan" />
+    <xacro:sick_s300 prefix="${prefix}" namespace="${namespace}" link="back_laser_link" topic="b_scan" />
 
     <!-- Ultrasound sensors -->
     <joint name="${prefix}us_1_joint" type="fixed">   <!-- right ultrasound -->
@@ -235,8 +240,8 @@
     <link name="${prefix}us_2_frame" />
 
     <!-- wheels -->
-    <xacro:actuated_wheel prefix="${prefix}" locationprefix="left" locationright="-1"/>
-    <xacro:actuated_wheel prefix="${prefix}" locationprefix="right" locationright="1"/>
+    <xacro:actuated_wheel prefix="${prefix}" namespace="${namespace}" locationprefix="left" locationright="-1"/>
+    <xacro:actuated_wheel prefix="${prefix}" namespace="${namespace}" locationprefix="right" locationright="1"/>
     <xacro:caster_wheel prefix="${prefix}" locationprefix="fl" locationright="-1" wheel_base_dx="${mir_100_front_caster_wheel_base_dx}"/>
     <xacro:caster_wheel prefix="${prefix}" locationprefix="fr" locationright="1" wheel_base_dx="${mir_100_front_caster_wheel_base_dx}"/>
     <xacro:caster_wheel prefix="${prefix}" locationprefix="bl" locationright="-1" wheel_base_dx="${mir_100_back_caster_wheel_base_dx}"/>
@@ -256,6 +261,6 @@
     <!-- set the gazebo friction parameters for the wheels -->
     <xacro:set_all_wheel_frictions prefix="${prefix}"/>
 
-    <xacro:p3d_base_controller prefix="${prefix}" />
+    <xacro:p3d_base_controller prefix="${prefix}" namespace="${namespace}"/>
   </xacro:macro>
 </robot>
