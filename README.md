@@ -120,11 +120,16 @@ cd ~/ros2_ws
 colcon build
 ```
 
-You should add the following line to the end of your `~/.bashrc`, and then
-close and reopen all terminals:
+You must source the workspace in each terminal you want to work in:
 
 ```bash
 source ~/ros2_ws/install/setup.bash
+```
+Alternatively you can add the following line to the end of your `~/.bashrc`, and then
+close and reopen all terminals:
+
+```bash
+echo "source ~/ros2_ws/install/setup.bash" >> ~/.bashrc
 ```
 
 Gazebo demo (existing map)
@@ -132,25 +137,33 @@ Gazebo demo (existing map)
 
 ```bash
 ### gazebo:
-roslaunch mir_gazebo mir_maze_world.launch
-rosservice call /gazebo/unpause_physics   # or click the "start" button in the Gazebo GUI
+ros2 launch mir_gazebo mir_gazebo_launch.py world:=maze
 
+### (opt) Show possible launch arguments:
+ros2 launch mir_gazebo mir_gazebo_launch.py --show-args
+```
+
+<!-- ```bash
 ### localization:
 roslaunch mir_navigation amcl.launch initial_pose_x:=10.0 initial_pose_y:=10.0
-# or alternatively: roslaunch mir_gazebo fake_localization.launch delta_x:=-10.0 delta_y:=-10.0
 
 # navigation:
 roslaunch mir_navigation start_planner.launch \
     map_file:=$(rospack find mir_gazebo)/maps/maze.yaml \
     virtual_walls_map_file:=$(rospack find mir_gazebo)/maps/maze_virtual_walls.yaml
 rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
-```
+``` -->
 
-Now, you can use the "2D Nav Goal" tool in RViz to set a navigation goal for move_base.
+<!-- Now, you can use the "2D Nav Goal" tool in RViz to set a navigation goal for move_base.
 
 [![MiR100 robot: navigation in Gazebo (4x)](https://i.vimeocdn.com/video/859959481.jpg?mw=640)](https://vimeo.com/394184430)
 
-(Click image to see video)
+(Click image to see video) -->
+
+
+* **HEADLESS MODE:** To run the simulation without the gazebo graphical interface (performance improvement) add:
+
+        gui:=false
 
 
 Gazebo demo (mapping)
@@ -158,16 +171,14 @@ Gazebo demo (mapping)
 
 ```bash
 ### gazebo:
-roslaunch mir_gazebo mir_maze_world.launch
-rosservice call /gazebo/unpause_physics   # or click the "start" button in the Gazebo GUI
-
-### mapping:
-roslaunch mir_navigation hector_mapping.launch
-
-# navigation:
-roslaunch mir_navigation move_base.xml with_virtual_walls:=false
-rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
+ros2 launch mir_navigation mir_mapping_sim_launch.py
 ```
+
+* **NAVIGATION**: Navigation is disabled per default. If you like to teleop the robot using nav2 add: 
+
+         navigation_enabled:=true
+
+<!-- 
 
 Gazebo demo (multiple robots)
 -----------------------------
@@ -216,7 +227,7 @@ roslaunch mir_navigation start_planner.launch \
         map_file:=$(rospack find mir_gazebo)/maps/maze.yaml \
         virtual_walls_map_file:=$(rospack find mir_gazebo)/maps/maze_virtual_walls.yaml prefix:=mir2/
 ROS_NAMESPACE=mir2 rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
-```
+``` -->
 
 
 Running the driver on the real robot
@@ -234,23 +245,29 @@ Running the driver on the real robot
 * open mir.com (192.168.12.20) in Chrome (!)
 * log in (admin/mir4you)
 
-
 ### Synchronize system time
 
 The internal robot PC's is not synchronized (for example via NTP), so it tends
 to get out of sync quickly (about 1 second per day!). This causes TF transforms
 timing out etc. and can be seen using `tf_monitor` (the "Max Delay" is about
-3.3 seconds, but should be less than 0.1 seconds):
+3.3 seconds in the following example, but should be less than 0.1 seconds):
 
+#### **Using ROS1** (optional)
+
+Since MiR is running a roscore (ROS1), the following tf_monitor can be excecuted after sourcing ROS1 (i.e. noetic) first:
+
+```bash
+source /opt/ros/noetic/setup.bash
+export ROS_MASTER_URI=http://192.168.12.20:11311
 ```
+
+
+```bash
 $ rosrun tf tf_monitor
 Frames:
 Frame: /back_laser_link published by unknown_publisher Average Delay: 3.22686 Max Delay: 3.34766
 Frame: /base_footprint published by unknown_publisher Average Delay: 3.34273 Max Delay: 3.38062
 Frame: /base_link published by unknown_publisher Average Delay: 3.22751 Max Delay: 3.34844
-Frame: /front_laser_link published by unknown_publisher Average Delay: 3.22661 Max Delay: 3.34159
-Frame: /imu_link published by unknown_publisher Average Delay: 3.22739 Max Delay: 3.34738
-Frame: /odom published by unknown_publisher Average Delay: 3.16493 Max Delay: 3.28667
 [...]
 
 All Broadcasters:
@@ -258,11 +275,19 @@ Node: unknown_publisher 418.344 Hz, Average Delay: 0.827575 Max Delay: 3.35237
 Node: unknown_publisher(static) 465.362 Hz, Average Delay: 0 Max Delay: 0
 ```
 
-To fix this:
+#### **Using ROS2**
+
+If you don't have a ROS1 distro installed, you'll need to run the `mir_driver` first and execute the following once a connection is established: 
+
+```bash
+ros2 run tf2_ros tf2_monitor
+```
+
+
+#### **Fix time synchronization manually:**
 
 * go to "Service" -> "Configuration" -> "System settings" -> "Time settings" -> "Set device time on robot"
-
-Afterwards, the ROS software on the robot will restart, so you'll have to start `move_base` again (see below).
+Use **load from device** to sync with the system time!
 
 
 ### Start `move_base` on the robot
@@ -282,13 +307,83 @@ If the robot's localization is lost:
 * go to "Service" -> "Command view" -> "Set start position" and click + drag to current position of robot in the map
 * click "Adjust"
 
-
 ### Start the ROS driver
 
 ```bash
-roslaunch mir_driver mir.launch
+ros2 launch mir_driver mir_launch.py
 ```
 
+* The driver automatically launches **rviz** to visualize the topics and sensor messages. To disable use `rviz_enabled:=false` as a launch argument
+* The driver automatically launches a seperate **teleop** window to manually move the robot using your keyboard. To disable use `teleop_enabled:=false` as a launch argument
+
+
+Mapping
+------------------------------------
+
+In **Simulation** run:
+
+    ros2 launch mir_navigation mir_mapping_sim_launch.py
+
+On **MiR** run:
+
+    ros2 launch mir_navigation mir_mapping_launch.py
+
+Both commands launch the simulation / driver and SLAM node.
+
+To save the created map, use the rviz plugin **"Save Map"** and **"Serialize Map"**. From time to time segmentation faults or timeouts occur, so make sure your map is saved before shutting down the connection.
+
+![](doc/img/save_map.png)
+
+### Refine existing map
+The given launch commands will create a fresh new map of the environment. If you like to adapt an existing map (must be serialized!) you can **deserialize it** using the rviz slam_toolbox plugin. 
+
+Select map to deserialize | and continue mapping
+:--------------:|:--------------:
+![](doc/img/deseralize_map1.png) | ![](doc/img/deseralize_map2.png)
+
+
+###  Helpful launch arguments 
+
+* **NAVIGATION**: Navigation is disabled per default. If you like to teleoperate the robot using nav2 add: 
+
+         navigation_enabled:=true
+
+Mapping.. | ..using nav2
+:--------------:|:--------------:
+![](doc/img/mapping1.png) | ![](doc/img/mapping2.png)
+
+
+Localization and Navigation
+------------------------------------
+
+In **Simulation** run:
+
+    ros2 launch mir_navigation mir_nav_sim_launch.py
+
+On **MiR** run:
+
+    ros2 launch mir_navigation mir_nav_launch.py
+
+Both commands launch the simulation / driver and localization (amcl) using an existing map.
+
+###  Helpful launch arguments 
+* **MAP**: In Simulation the map defaults to the maze map. On the real robot a map should be passed via  the ``map`` argument
+
+         map:= {path_to_map_yaml}
+         world:={world_file} # simulation only: add respective world
+
+### Workflow
+
+Once the simulation / driver is running and rviz is started, you need to **set the initial pose** on the map. This doesnt have to be accurate, just a reference and amcl will do the refinement. To refine, **move the robot** around a little using the teleop window and the scan will eventually match the map.
+
+Initialize Pose | Drifted pose | Refined pose
+:--------------:|:--------------:|:--------------:
+![](doc/img/initial_pose1.png) |![](doc/img/initial_pose2.png)|![](doc/img/initial_pose3.png)
+
+
+
+<!--
+  
 Troubleshooting
 ---------------
 
@@ -298,7 +393,7 @@ Sometimes the move_base action will print the warning "Got a result when we
 were already in the DONE state". This is caused by a race condition between the
 `/move_base/result` and `/move_base/status` topics. When a status message with
 status `SUCCEEDED` arrives before the corresponding result message, this
-warning will be printed. It can be safely ignored.
+warning will be printed. It can be safely ignored. -->
 
 
 Travis - Continuous Integration
