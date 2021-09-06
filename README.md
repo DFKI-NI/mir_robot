@@ -135,8 +135,20 @@ echo "source ~/ros2_ws/install/setup.bash" >> ~/.bashrc
 Gazebo demo (existing map)
 --------------------------
 
+### Option 1: Launching the modules separately
+
 ```bash
 ### gazebo:
+ros2 launch mir_gazebo mir_gazebo_launch.py world:=maze
+
+### localization (existing map)
+ros2 launch mir_navigation amcl.py use_sim_time:=true map:=$(ros2 pkg prefix mir_navigation)/share/mir_navigation/maps/maze.yaml
+```
+
+### Option 2: Use combined launch file 
+
+```bash
+### combined launch file:
 ros2 launch mir_gazebo mir_gazebo_launch.py world:=maze
 
 ### (opt) Show possible launch arguments:
@@ -169,14 +181,32 @@ rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
 Gazebo demo (mapping)
 ---------------------
 
+### Option 1: Launching the modules separately
+
 ```bash
 ### gazebo:
+ros2 launch mir_gazebo mir_gazebo_launch.py
+
+### mapping (slam_toolbox)
+ros2 launch mir_navigation mapping.py use_sim_time:=true slam_params_file:=$(ros2 pkg prefix mir_navigation)/share/mir_navigation/config/mir_mapping_async_sim.yaml
+
+### navigation (optional)
+ros2 launch mir_navigation navigation.py use_sim_time:=true
+```
+
+### Option 2: Use combined launch file 
+
+Instead of launching the 3 modules seperately, you can also use a combined launch file: 
+
+```bash
+### combined launch file:
 ros2 launch mir_navigation mir_mapping_sim_launch.py
 ```
 
 * **NAVIGATION**: Navigation is disabled per default. If you like to teleop the robot using nav2 add: 
 
          navigation_enabled:=true
+
 
 <!-- 
 
@@ -316,9 +346,51 @@ ros2 launch mir_driver mir_launch.py
 * The driver automatically launches **rviz** to visualize the topics and sensor messages. To disable use `rviz_enabled:=false` as a launch argument
 * The driver automatically launches a seperate **teleop** window to manually move the robot using your keyboard. To disable use `teleop_enabled:=false` as a launch argument
 
+### Mapping on MiR
 
-Mapping
+### Option 1: Launching the modules separately
+
+```bash
+### driver:
+ros2 launch mir_driver mir_launch.py
+
+### mapping (slam_toolbox)
+ros2 launch mir_navigation mapping.py use_sim_time:=false slam_params_file:=$(ros2 pkg prefix mir_navigation)/share/mir_navigation/config/mir_mapping_async.yaml
+
+### navigation (optional)
+ros2 launch mir_navigation navigation.py use_sim_time:=false
+```
+
+### Option 2: Use combined launch file 
+```bash
+### combined launch file:
+ros2 launch mir_navigation mir_mapping_launch.py
+```
+
+### Navigation on MiR
+
+### Option 1: Launching the modules separately
+
+```bash
+### driver:
+ros2 launch mir_driver mir_launch.py
+
+### localization (amcl)
+ros2 launch mir_navigation amcl.py use_sim_time:=false map:={path to existing map}
+
+### navigation
+ros2 launch mir_navigation navigation.py use_sim_time:=false
+```
+
+### Option 2: Use combined launch file 
+```bash
+### combined launch file:
+ros2 launch mir_navigation mir_nav_launch.py map:={path to /name of existing map}
+```
+
+On Mapping
 ------------------------------------
+As mentioned before, you can launch the differnet modules seperately or use the combined launch commands below: 
 
 In **Simulation** run:
 
@@ -330,6 +402,7 @@ On **MiR** run:
 
 Both commands launch the simulation / driver and SLAM node.
 
+## How to map
 To save the created map, use the rviz plugin **"Save Map"** and **"Serialize Map"**. From time to time segmentation faults or timeouts occur, so make sure your map is saved before shutting down the connection.
 
 ![](doc/img/save_map.png)
@@ -353,8 +426,9 @@ Mapping.. | ..using nav2
 ![](doc/img/mapping1.png) | ![](doc/img/mapping2.png)
 
 
-Localization and Navigation
+On Localization and Navigation
 ------------------------------------
+As mentioned before, you can launch the differnet modules seperately or use the combined launch commands below: 
 
 In **Simulation** run:
 
@@ -362,7 +436,7 @@ In **Simulation** run:
 
 On **MiR** run:
 
-    ros2 launch mir_navigation mir_nav_launch.py
+    ros2 launch mir_navigation mir_nav_launch.py map:={path to existing map}
 
 Both commands launch the simulation / driver and localization (amcl) using an existing map.
 
