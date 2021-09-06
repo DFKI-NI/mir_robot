@@ -29,6 +29,7 @@ def generate_launch_description():
 
     namespace = LaunchConfiguration('namespace')
     use_sim_time = LaunchConfiguration('use_sim_time')
+    command_topic = LaunchConfiguration('cmd_vel_topic')
     autostart = LaunchConfiguration('autostart')
     params_file = LaunchConfiguration('params_file')
     default_bt_xml_filename = LaunchConfiguration('default_bt_xml_filename')
@@ -47,14 +48,14 @@ def generate_launch_description():
     # TODO(orduno) Substitute with `PushNodeRemapping`
     #              https://github.com/ros2/launch_ros/issues/56
     remappings = [('/tf', 'tf'),
-                  ('/tf_static', 'tf_static')]
+                  ('/tf_static', 'tf_static'),
+                  ('cmd_vel', command_topic)]
 
     # Create our own temporary YAML files that include substitutions
     param_substitutions = {
         'use_sim_time': use_sim_time,
         'default_bt_xml_filename': default_bt_xml_filename,
         'autostart': autostart,
-        'command_topic': 'cmd_vel',
         'map_subscribe_transient_local': map_subscribe_transient_local}
 
     configured_params = RewrittenYaml(
@@ -74,6 +75,10 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'use_sim_time', default_value='false',
             description='Use simulation (Gazebo) clock if true'),
+
+        DeclareLaunchArgument(
+            'cmd_vel_topic', default_value='mobile_base_controller/cmd_vel',
+            description='Define cmd_vel topic'),
 
         DeclareLaunchArgument(
             'autostart', default_value='true',
