@@ -90,6 +90,12 @@ def generate_launch_description():
         )
     )
 
+    launch_mir_gazebo_common = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(mir_gazebo_dir, 'launch', 'include', 'mir_gazebo_common.py')
+        )
+    )
+
     spawn_robot = Node(
         package='gazebo_ros',
         executable='spawn_entity.py',
@@ -97,23 +103,6 @@ def generate_launch_description():
         arguments=['-entity', 'mir_robot', '-topic', 'robot_description'],
         namespace = LaunchConfiguration('namespace'),
         # TODO: add spawning position
-        output='screen')
-
-    # TODO: check add namespace remapping
-    launch_laser_scan_merger = Node(
-        package='ira_laser_tools',
-        name='mir_laser_scan_merger',
-        namespace=LaunchConfiguration('namespace'),
-        executable='laserscan_multi_merger',
-        parameters=[
-            {'laserscan_topics': "b_scan f_scan",
-             'destination_frame': "virtual_laser_link",
-             'scan_destination_topic': 'scan',
-             'cloud_destination_topic': 'scan_cloud',
-             'max_completion_time': 0.05,
-             'max_merge_time_diff': 0.005,
-             'use_sim_time': LaunchConfiguration('use_sim_time'),
-             'best_effort': False}],
         output='screen')
 
     launch_rviz = Node(
@@ -146,7 +135,7 @@ def generate_launch_description():
 
     ld.add_action(launch_gazebo_world)
     ld.add_action(launch_mir_description)
-    ld.add_action(launch_laser_scan_merger)
+    ld.add_action(launch_mir_gazebo_common)
     ld.add_action(spawn_robot)
     ld.add_action(launch_rviz)
     ld.add_action(launch_teleop)
