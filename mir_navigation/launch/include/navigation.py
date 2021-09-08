@@ -77,7 +77,7 @@ def generate_launch_description():
             description='Use simulation (Gazebo) clock if true'),
 
         DeclareLaunchArgument(
-            'cmd_vel_topic', default_value='mobile_base_controller/cmd_vel',
+            'cmd_vel_topic', default_value='cmd_vel',
             description='Define cmd_vel topic'),
 
         DeclareLaunchArgument(

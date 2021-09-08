@@ -116,7 +116,6 @@ def generate_launch_description():
         condition=IfCondition(LaunchConfiguration("teleop_enabled")),
         package='teleop_twist_keyboard',
         executable='teleop_twist_keyboard',
-        remappings=[('cmd_vel', 'mobile_base_controller/cmd_vel')],
         namespace=LaunchConfiguration('namespace'),
         output='screen',
         prefix='xterm -e')

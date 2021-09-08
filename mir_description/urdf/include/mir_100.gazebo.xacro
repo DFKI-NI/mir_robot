@@ -16,7 +16,7 @@
 
       <plugin name="diff_drive_controller" filename="libgazebo_ros_diff_drive.so">
         <ros>
-          <namespace>${prefix}mobile_base_controller</namespace>
+          <namespace>${prefix}</namespace>
         </ros>
 
         <legacy_mode>false</legacy_mode>
