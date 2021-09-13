@@ -18,7 +18,6 @@
   <depend>mir_msgs</depend>
   <depend>rclpy_message_converter</depend>
   <depend>ira_laser_tools</depend>
-  <depend>move_base_msgs</depend>
   <depend>nav_msgs</depend>
   <depend>python3-websocket</depend>
   <depend>rosgraph_msgs</depend>
