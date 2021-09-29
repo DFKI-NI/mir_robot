@@ -18,8 +18,6 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(xacro REQUIRED)
-find_package(diff_drive_controller REQUIRED)
-find_package(joint_state_controller REQUIRED)
 find_package(robot_state_publisher REQUIRED)
 find_package(gazebo_ros REQUIRED)
 find_package(rviz2 REQUIRED)

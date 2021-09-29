@@ -7,3 +7,7 @@ repositories:
     type: git
     url: https://github.com/relffok/rospy_message_converter.git
     version: foxy-devel
+  twist_stamper:
+    type: git
+    url: https://github.com/joshnewans/twist_stamper.git
+    version: 0.0.2
