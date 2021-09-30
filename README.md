@@ -1,8 +1,8 @@
 # Disclaimer
 
-**This package is intended to be a migration package of [mir_robot using ros1](https://github.com/dfki-ric/mir_robot) to [ros foxy](https://docs.ros.org/en/foxy/Installation.html). 
+**This package is intended to be a migration package of [mir_robot using ros1](https://github.com/dfki-ric/mir_robot) to [ros galactic](https://docs.ros.org/en/galactic/Installation.html). 
 It is currently still under heavy development - to be used with caution!**
-The following packages have been migrated to foxy:
+The following packages have been migrated to galactic:
 
 - [ ] mir_actions
 - [x] mir_description
@@ -65,7 +65,7 @@ instructions. -->
 
 ### Preliminaries
 
-If you haven't already [installed ROS2](https://docs.ros.org/en/foxy/Installation/Ubuntu-Install-Debians.html) on your PC, you need to add the ROS2 apt
+If you haven't already [installed ROS2](https://docs.ros.org/en/galactic/Installation/Ubuntu-Install-Debians.html) on your PC, you need to add the ROS2 apt
 repository. This step is necessary for either binary or source install.
 
 ```
@@ -77,7 +77,7 @@ sudo echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/
 Install ROS2 Binary
 ```
 sudo apt update
-sudo apt install ros-foxy-desktop
+sudo apt install ros-galactic-desktop
 sudo apt-get install python3-vcstool
 ```
 
@@ -103,7 +103,7 @@ mkdir -p ~/ros2_ws/src
 cd ~/ros2_ws/
 
 # clone mir_robot into the ros2 workspace
-git clone -b foxy-devel https://github.com/relffok/mir_robot src/mir_robot
+git clone -b galactic-devel https://github.com/relffok/mir_robot src/mir_robot
 
 # use vcs to fetch linked repos
 vcs import < src/mir_robot/ros2.repos src --recursive
@@ -112,10 +112,10 @@ vcs import < src/mir_robot/ros2.repos src --recursive
 sudo apt update
 sudo apt install -y python3-rosdep
 rosdep update
-rosdep install --from-paths src --ignore-src -r -y --rosdistro foxy
+rosdep install --from-paths src --ignore-src -r -y --rosdistro galactic
 
 # build all packages in the workspace
-source /opt/ros/foxy/setup.bash
+source /opt/ros/galactic/setup.bash
 cd ~/ros2_ws
 colcon build
 ```
