@@ -23,7 +23,7 @@ find_package(rviz2)
 
 
 install(DIRECTORY
-  config launch rviz maps
+  config launch rviz maps behavior_trees
   DESTINATION share/${PROJECT_NAME}
 )
 

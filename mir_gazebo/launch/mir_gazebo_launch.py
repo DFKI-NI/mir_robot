@@ -66,7 +66,7 @@ def generate_launch_description():
 
     declare_rviz_config_arg = DeclareLaunchArgument(
         'rviz_config_file',
-        default_value=os.path.join(mir_gazebo_dir, 'rviz', 'mir_visualization.rviz'),
+        default_value=os.path.join(mir_description_dir, 'rviz', 'mir_visu_full.rviz'),
         description='Define rviz config file to be used.')
 
     declare_gui_arg = DeclareLaunchArgument(
