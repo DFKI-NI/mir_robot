@@ -65,23 +65,13 @@ instructions. -->
 
 ### Preliminaries
 
+#### ROS2 
 If you haven't already [installed ROS2](https://docs.ros.org/en/galactic/Installation/Ubuntu-Install-Debians.html) on your PC, you need to add the ROS2 apt
 repository. This step is necessary for either binary or source install.
 
-```
-sudo apt update && sudo apt install curl gnupg2 lsb-release
-sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o /usr/share/keyrings/ros-archive-keyring.gpg
-sudo echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
-```
+<!-- Package not released yet!
 
-Install ROS2 Binary
-```
-sudo apt update
-sudo apt install ros-galactic-desktop
-sudo apt-get install python3-vcstool
-```
-
-<!-- ### Binary install
+### Binary install
 
 For a binary install, it suffices to run this command:
 
@@ -90,7 +80,9 @@ sudo apt install ros-noetic-mir-robot
 ```
 
 See the tables at the end of this README for a list of ROS distros for which
-binary packages are available. -->
+binary packages are available. 
+
+-->
 
 ### Source install
 
@@ -138,18 +130,21 @@ Gazebo demo (existing map)
 ### Option 1: Launching the modules separately
 
 ```bash
-### gazebo:
+### gazebo
 ros2 launch mir_gazebo mir_gazebo_launch.py world:=maze
 
 ### localization (existing map)
 ros2 launch mir_navigation amcl.py use_sim_time:=true map:=$(ros2 pkg prefix mir_navigation)/share/mir_navigation/maps/maze.yaml
+
+### navigation
+ros2 launch mir_navigation navigation.py use_sim_time:=true
 ```
 
 ### Option 2: Use combined launch file 
 
 ```bash
-### combined launch file:
-ros2 launch mir_gazebo mir_gazebo_launch.py world:=maze
+### combined launch file
+ros2 launch mir_navigation mir_nav_sim_launch.py world:=maze
 
 ### (opt) Show possible launch arguments:
 ros2 launch mir_gazebo mir_gazebo_launch.py --show-args
@@ -178,6 +173,9 @@ rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
         gui:=false
 
 
+Initialize the position with "2D Pose Estimate". You should see sensor inputs and costmap by now. 
+Now, you can use the "2D Goal Pose" tool in RViz to set a navigation goal for move_base
+
 Gazebo demo (mapping)
 ---------------------
 
@@ -185,7 +183,7 @@ Gazebo demo (mapping)
 
 ```bash
 ### gazebo:
-ros2 launch mir_gazebo mir_gazebo_launch.py
+ros2 launch mir_gazebo mir_gazebo_launch.py world:=maze
 
 ### mapping (slam_toolbox)
 ros2 launch mir_navigation mapping.py use_sim_time:=true slam_params_file:=$(ros2 pkg prefix mir_navigation)/share/mir_navigation/config/mir_mapping_async_sim.yaml
