@@ -16,6 +16,7 @@ from geometry_msgs.msg import TwistStamped
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 from tf2_msgs.msg import TFMessage
+from std_srvs.srv import Trigger
 
 tf_prefix = ''
 
@@ -364,6 +365,10 @@ class SubscriberWrapper(object):
 class MiR100BridgeNode(Node):
     def __init__(self):
         super().__init__('mir_bridge')
+        
+        self.mir_bridge_ready = False #state
+        self.srv_mir_ready = self.create_service(Trigger, 'mir_bridge_ready', self.mir_bridge_ready_poll_callback)
+        
         try:
             hostname = self.declare_parameter('hostname', '192.168.12.20').value
         except KeyError:
@@ -409,6 +414,9 @@ class MiR100BridgeNode(Node):
             if ('/' + sub_topic.topic) not in subscribed_topics:
                 self.get_logger().warn(
                     "Topic '%s' is not yet subscribed to by the MiR!" % sub_topic.topic)
+        
+        self.mir_bridge_ready = True
+        
 
     def get_topics(self):
         srv_response = self.robot.callService('/rosapi/topics', msg={})
@@ -438,6 +446,13 @@ class MiR100BridgeNode(Node):
                 print((' * %s [%s]' % (topic_name, topic_type)))
 
         return topics
+    
+    def mir_bridge_ready_poll_callback(self, request, response):
+        self.get_logger().info('Checked for readiness')
+        response.success = self.mir_bridge_ready
+        response.message = ""
+        return response
+
 
 
 def main(args=None):
@@ -445,6 +460,7 @@ def main(args=None):
     node = MiR100BridgeNode()
     rclpy.spin(node)
     rclpy.shutdown()
+
 
 
 if __name__ == '__main__':
