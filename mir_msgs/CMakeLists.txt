@@ -21,6 +21,7 @@ add_message_files(
     Device.msg
     Devices.msg
     Encoders.msg
+    EncoderTestEntry.msg
     Error.msg
     Event.msg
     Events.msg
@@ -44,6 +45,7 @@ add_message_files(
     PlanSegments.msg
     Pose2D.msg
     PowerBoardMotorStatus.msg
+    PrecisionDockingStatus.msg
     Proximity.msg
     ResourcesState.msg
     ResourceState.msg
@@ -52,6 +54,7 @@ add_message_files(
     RobotStatus.msg
     SafetyStatus.msg
     Serial.msg
+    SoundEvent.msg
     StampedEncoders.msg
     Trolley.msg
     Twist2D.msg
