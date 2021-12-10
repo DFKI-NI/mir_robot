@@ -2,8 +2,8 @@
 Changelog for package mir_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.4 (2021-12-10)
+------------------
 * Remove outdated comment
 * Contributors: Martin Günther
 

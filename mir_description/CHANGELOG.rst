@@ -2,8 +2,8 @@
 Changelog for package mir_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.4 (2021-12-10)
+------------------
 * Replace gazebo_plugins IMU with hector_gazebo_plugins
 * Use cylinders instead of STLs for wheel collision geometries
   Fixes `#99 <https://github.com/dfki-ric/mir_robot/issues/99>`_.
