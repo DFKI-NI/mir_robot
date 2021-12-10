@@ -2,6 +2,11 @@
 Changelog for package mir_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Remove outdated comment
+* Contributors: Martin Günther
+
 1.1.3 (2021-06-11)
 ------------------
 * Merge branch 'melodic-2.8' into noetic

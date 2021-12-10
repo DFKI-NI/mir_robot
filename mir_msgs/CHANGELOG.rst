@@ -2,6 +2,11 @@
 Changelog for package mir_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* mir_msgs: Build all messages (`#98 <https://github.com/dfki-ric/mir_robot/issues/98>`_)
+* Contributors: Martin Günther
+
 1.1.3 (2021-06-11)
 ------------------
 * Merge branch 'melodic-2.8' into noetic

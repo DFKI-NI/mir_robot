@@ -2,6 +2,9 @@
 Changelog for package mir_actions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.1.3 (2021-06-11)
 ------------------
 * Merge branch 'melodic-2.8' into noetic

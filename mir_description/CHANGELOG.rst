@@ -2,6 +2,14 @@
 Changelog for package mir_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Replace gazebo_plugins IMU with hector_gazebo_plugins
+* Use cylinders instead of STLs for wheel collision geometries
+  Fixes `#99 <https://github.com/dfki-ric/mir_robot/issues/99>`_.
+* mir_debug_urdf.launch: Fix GUI display
+* Contributors: Martin Günther
+
 1.1.3 (2021-06-11)
 ------------------
 * Merge branch 'melodic-2.8' into noetic
