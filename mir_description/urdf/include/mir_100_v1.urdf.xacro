@@ -27,8 +27,6 @@
   <xacro:property name="mir_100_caster_wheel_base_dy" value="0.203" />
   <xacro:property name="mir_100_caster_wheel_base_dz" value="${mir_100_caster_wheel_radius-mir_100_caster_wheel_dz}" />
 
-  <xacro:property name="imu_stdev" value="0.00017" />
-
   <xacro:macro name="actuated_wheel" params="prefix locationprefix locationright">
     <joint name="${prefix}${locationprefix}_wheel_joint" type="continuous">
       <origin xyz="0.0 ${-mir_100_act_wheel_dy * locationright} ${mir_100_act_wheel_radius}" rpy="0 0 0" />
@@ -173,7 +171,7 @@
 
     <link name="${prefix}imu_link" />
 
-    <xacro:imu_gazebo link="${prefix}imu_link" imu_topic="imu_data" update_rate="50.0" stdev="${imu_stdev}" />
+    <xacro:imu_gazebo link="${prefix}imu_link" imu_topic="imu_data" update_rate="50.0" />
 
     <!-- Create an alias for imu_link. This is necessary because the real MiR's
          TF has imu_link, but the imu_data topic is published in the imu_frame
