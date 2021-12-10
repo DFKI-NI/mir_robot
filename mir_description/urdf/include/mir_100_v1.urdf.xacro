@@ -50,9 +50,9 @@
         <xacro:insert_block name="material_dark_grey" />
       </visual>
       <collision>
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
         <geometry>
-          <mesh filename="package://mir_description/meshes/visual/wheel.stl" />
+          <cylinder radius="${mir_100_act_wheel_radius}" length="${mir_100_act_wheel_width}" />
         </geometry>
       </collision>
     </link>
@@ -122,9 +122,9 @@
         <xacro:insert_block name="material_dark_grey" />
       </visual>
       <collision>
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
         <geometry>
-          <mesh filename="package://mir_description/meshes/visual/wheel.stl" />
+          <cylinder radius="${mir_100_caster_wheel_radius}" length="${mir_100_caster_wheel_width}" />
         </geometry>
       </collision>
     </link>
