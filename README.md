@@ -4,14 +4,11 @@
 It is currently still under heavy development - to be used with caution!**
 The following packages have been migrated to galactic:
 
-- [ ] mir_actions
 - [x] mir_description
 - [x] mir_driver
-- [ ] mir_dwb_critics
 - [x] mir_gazebo
 - [x] mir_msgs
 - [x] mir_navigation
-- [ ] sdc21x0
 
 mir_driver
 ==========
