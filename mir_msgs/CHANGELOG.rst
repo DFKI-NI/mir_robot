@@ -2,6 +2,9 @@
 Changelog for package mir_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.1.4 (2021-12-10)
 ------------------
 * mir_msgs: Build all messages (`#98 <https://github.com/dfki-ric/mir_robot/issues/98>`_)

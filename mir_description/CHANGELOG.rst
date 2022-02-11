@@ -2,6 +2,20 @@
 Changelog for package mir_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Remove xacro comment to work around xacro bug
+  Since xacro 1.14.11, xacro now also evaluates expressions in comments
+  and throws an error if the substition argument is undefined. In xacro
+  1.14.12, this error was changed to a warning.
+  This commit removes that warning.
+  Workaround for https://github.com/ros/xacro/issues/309 .
+* xacro: drop --inorder option
+  In-order processing became default in ROS Melodic.
+* Add gazebo_plugins to dependency list (`#103 <https://github.com/dfki-ric/mir_robot/issues/103>`_)
+  This is needed for the ground truth pose via p3d plugin.
+* Contributors: Martin Günther, moooeeeep
+
 1.1.4 (2021-12-10)
 ------------------
 * Replace gazebo_plugins IMU with hector_gazebo_plugins
