@@ -2,8 +2,8 @@
 Changelog for package mir_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.5 (2022-02-11)
+------------------
 * Remove xacro comment to work around xacro bug
   Since xacro 1.14.11, xacro now also evaluates expressions in comments
   and throws an error if the substition argument is undefined. In xacro
