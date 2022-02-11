@@ -16,7 +16,6 @@
     <gazebo>
       <plugin name="imu_plugin" filename="libhector_gazebo_ros_imu.so">
         <updateRate>${update_rate}</updateRate>
-        <!-- <robotNamespace>$(arg robot_namespace)</robotNamespace> -->
         <bodyName>${link}</bodyName>
         <frameId>${imu_frame}</frameId>  <!-- from real MiR -->
         <topicName>${imu_topic}</topicName>
