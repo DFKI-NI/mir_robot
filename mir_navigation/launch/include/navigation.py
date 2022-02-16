@@ -17,7 +17,8 @@ import os
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, SetEnvironmentVariable
+from launch.actions import DeclareLaunchArgument, SetEnvironmentVariable, OpaqueFunction, \
+                           SetLaunchConfiguration
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from nav2_common.launch import RewrittenYaml
@@ -27,9 +28,8 @@ def generate_launch_description():
     # Get the launch directory
     mir_nav_dir = get_package_share_directory('mir_navigation')
 
-    namespace = LaunchConfiguration('namespace')
     use_sim_time = LaunchConfiguration('use_sim_time')
-    command_topic = LaunchConfiguration('cmd_vel_topic')
+    command_topic = LaunchConfiguration('cmd_vel_w_prefix')
     autostart = LaunchConfiguration('autostart')
     params_file = LaunchConfiguration('params_file')
     default_nav_to_pose_bt_xml = LaunchConfiguration('default_nav_to_pose_bt_xml')
@@ -62,9 +62,18 @@ def generate_launch_description():
 
     configured_params = RewrittenYaml(
             source_file=params_file,
-            root_key=namespace,
+            root_key='',
             param_rewrites=param_substitutions,
             convert_types=True)
+
+    def add_prefix_to_cmd_vel(context):
+        topic = context.launch_configurations['cmd_vel_topic']
+        try:
+            namespace = context.launch_configurations['namespace']
+            topic = namespace + '/' + topic
+        except KeyError:
+            pass
+        return [SetLaunchConfiguration('cmd_vel_w_prefix', topic)]
 
     return LaunchDescription([
         # Set env var to print messages to stdout immediately
@@ -101,12 +110,15 @@ def generate_launch_description():
             'map_subscribe_transient_local', default_value='true',
             description='Whether to set the map subscriber QoS to transient local'),
 
+        OpaqueFunction(function=add_prefix_to_cmd_vel),
+
         Node(
             package='nav2_controller',
             executable='controller_server',
             output='screen',
             parameters=[configured_params],
-            remappings=remappings),
+            remappings=remappings
+        ),
 
         Node(
             package='nav2_planner',
@@ -114,7 +126,8 @@ def generate_launch_description():
             name='planner_server',
             output='screen',
             parameters=[configured_params],
-            remappings=remappings),
+            remappings=remappings
+        ),
 
         Node(
             package='nav2_recoveries',
@@ -122,7 +135,8 @@ def generate_launch_description():
             name='recoveries_server',
             output='screen',
             parameters=[configured_params],
-            remappings=remappings),
+            remappings=remappings
+        ),
 
         Node(
             package='nav2_bt_navigator',
@@ -132,7 +146,8 @@ def generate_launch_description():
             parameters=[
                 configured_params, 
                 {'default_nav_to_pose_bt_xml' : default_nav_to_pose_bt_xml}],
-            remappings=remappings),
+            remappings=remappings
+        ),
 
         Node(
             package='nav2_waypoint_follower',
@@ -140,7 +155,8 @@ def generate_launch_description():
             name='waypoint_follower',
             output='screen',
             parameters=[configured_params],
-            remappings=remappings),
+            remappings=remappings
+        ),
 
         Node(
             package='nav2_lifecycle_manager',
@@ -149,5 +165,5 @@ def generate_launch_description():
             output='screen',
             parameters=[{'use_sim_time': use_sim_time},
                         {'autostart': autostart},
-                        {'node_names': lifecycle_nodes}]),
+                        {'node_names': lifecycle_nodes}])
     ])

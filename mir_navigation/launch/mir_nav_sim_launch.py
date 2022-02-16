@@ -20,6 +20,11 @@ def generate_launch_description():
         elif (os.path.isfile(map_arg)):
             return[SetLaunchConfiguration('map_file', map_arg)]
 
+    declare_namespace_arg = DeclareLaunchArgument(
+        'namespace',
+        default_value='',
+        description='Namespace to push all topics into.')
+
     declare_world_argument = DeclareLaunchArgument(
         'world',
         default_value='maze',
@@ -66,6 +71,7 @@ def generate_launch_description():
 
     ld = LaunchDescription()
 
+    ld.add_action(declare_namespace_arg)
     ld.add_action(declare_world_argument)
     ld.add_action(declare_map_file_argument)
     ld.add_action(declare_use_sim_time_argument)

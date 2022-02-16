@@ -22,6 +22,11 @@ def generate_launch_description():
             config_file = os.path.join(mir_nav_dir, 'rviz', 'mir_mapping.rviz')
         return [SetLaunchConfiguration('rviz_config_file', config_file)]
 
+    declare_namespace_arg = DeclareLaunchArgument(
+        'namespace',
+        default_value='',
+        description='Namespace to push all topics into.')
+
     declare_world_argument = DeclareLaunchArgument(
         'world',
         default_value='maze',
@@ -67,6 +72,7 @@ def generate_launch_description():
 
     ld = LaunchDescription()
 
+    ld.add_action(declare_namespace_arg)
     ld.add_action(declare_world_argument)
     ld.add_action(declare_use_sim_time_argument)
     ld.add_action(declare_nav_argument)

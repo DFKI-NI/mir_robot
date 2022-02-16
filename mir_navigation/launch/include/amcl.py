@@ -27,7 +27,6 @@ def generate_launch_description():
     # Get the launch directory
     mir_nav_dir = get_package_share_directory('mir_navigation')
 
-    namespace = LaunchConfiguration('namespace')
     map_yaml_file = LaunchConfiguration('map')
     use_sim_time = LaunchConfiguration('use_sim_time')
     autostart = LaunchConfiguration('autostart')
@@ -50,7 +49,7 @@ def generate_launch_description():
 
     configured_params = RewrittenYaml(
         source_file=params_file,
-        root_key=namespace,
+        root_key='',
         param_rewrites=param_substitutions,
         convert_types=True)
 
@@ -59,15 +58,12 @@ def generate_launch_description():
         SetEnvironmentVariable('RCUTILS_LOGGING_BUFFERED_STREAM', '1'),
 
         DeclareLaunchArgument(
-            'namespace', default_value='',
-            description='Top-level namespace'),
-
-        DeclareLaunchArgument(
             'map',
+            default_value=os.path.join(mir_nav_dir, 'maps', 'maze.yaml'),
             description='Full path to map yaml file to load'),
 
         DeclareLaunchArgument(
-            'use_sim_time', default_value='true',
+            'use_sim_time', default_value='false',
             description='Use simulation (Gazebo) clock if true'),
 
         DeclareLaunchArgument(

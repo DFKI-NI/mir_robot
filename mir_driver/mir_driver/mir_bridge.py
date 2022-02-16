@@ -21,7 +21,7 @@ from std_srvs.srv import Trigger
 tf_prefix = ''
 
 class TopicConfig(object):
-    def __init__(self, topic, topic_type, topic_renamed=None, latch=False, dict_filter=None):
+    def __init__(self, topic, topic_type, topic_renamed=None, latch=False, dict_filter=None, qos_profile=None):
         self.topic = topic
         if (topic_renamed):
             self.topic_ros2_name = topic_renamed
@@ -30,12 +30,16 @@ class TopicConfig(object):
         self.topic_type = topic_type
         self.latch = latch
         self.dict_filter = dict_filter
-        self.qos_profile = qos_profile_system_default
+        if qos_profile is not None:
+            self.qos_profile = qos_profile
+        else:
+            self.qos_profile = qos_profile_system_default
 
 
 def _odom_dict_filter(msg_dict,  to_ros2):
     filtered_msg_dict = copy.deepcopy(msg_dict)
     filtered_msg_dict['header'] = _convert_ros_header(filtered_msg_dict['header'], to_ros2)
+    filtered_msg_dict['child_frame_id'] = tf_prefix + filtered_msg_dict['child_frame_id'].strip('/')
     return filtered_msg_dict
 
 
@@ -43,7 +47,7 @@ def _tf_dict_filter(msg_dict, to_ros2):
     filtered_msg_dict = copy.deepcopy(msg_dict)
 
     for transform in filtered_msg_dict['transforms']:
-        transform['child_frame_id'] = transform['child_frame_id'].strip('/')
+        transform['child_frame_id'] = tf_prefix + transform['child_frame_id'].strip('/')
         transform['header'] = _convert_ros_header(transform['header'], to_ros2)
     return filtered_msg_dict
 
@@ -82,11 +86,13 @@ def _convert_ros_header(header_msg_dict, to_ros2):
     header_dict['stamp'] = _convert_ros_time(header_dict['stamp'], to_ros2)
     if to_ros2:
         del header_dict['seq']
+        frame_id = header_dict['frame_id'].strip('/')
+        header_dict['frame_id'] = tf_prefix + frame_id
     else:  # to ros1
         header_dict['seq'] = 0
+        # remove tf_prefix to frame_id
 
     return header_dict
-
 
 def _prepend_tf_prefix_dict_filter(msg_dict):
     # filtered_msg_dict = copy.deepcopy(msg_dict)
@@ -138,11 +144,6 @@ def _remove_tf_prefix_dict_filter(msg_dict):
                 _remove_tf_prefix_dict_filter(item)
     return msg_dict
 
-
-
-
-
-
 # topics we want to publish to ROS (and subscribe to from the MiR)
 PUB_TOPICS = [
     # TopicConfig('LightCtrl/bms_data', mir_msgs.msg.BMSData),
@@ -160,7 +161,7 @@ PUB_TOPICS = [
     # TopicConfig('active_mapping_guid', std_msgs.msg.String),
     # TopicConfig('amcl_pose', geometry_msgs.msg.PoseWithCovarianceStamped),
     # TopicConfig('b_raw_scan', sensor_msgs.msg.LaserScan),
-    TopicConfig('b_scan', LaserScan, dict_filter=_laser_scan_filter),
+    TopicConfig('b_scan', LaserScan, dict_filter=_laser_scan_filter, qos_profile=qos_profile_sensor_data),
     # TopicConfig('camera_floor/background', sensor_msgs.msg.PointCloud2),
     # TopicConfig('camera_floor/depth/parameter_descriptions', dynamic_reconfigure.msg.ConfigDescription),
     # TopicConfig('camera_floor/depth/parameter_updates', dynamic_reconfigure.msg.Config),
@@ -179,7 +180,7 @@ PUB_TOPICS = [
     # TopicConfig('diagnostics_agg', diagnostic_msgs.msg.DiagnosticArray),
     # TopicConfig('diagnostics_toplevel_state', diagnostic_msgs.msg.DiagnosticStatus),
     # TopicConfig('f_raw_scan', sensor_msgs.msg.LaserScan),
-    TopicConfig('f_scan', LaserScan, dict_filter=_laser_scan_filter),
+    TopicConfig('f_scan', LaserScan, dict_filter=_laser_scan_filter, qos_profile=qos_profile_sensor_data),
     # TopicConfig('imu_data', sensor_msgs.msg.Imu),
     # TopicConfig('laser_back/driver/parameter_descriptions', dynamic_reconfigure.msg.ConfigDescription),
     # TopicConfig('laser_back/driver/parameter_updates', dynamic_reconfigure.msg.Config),
@@ -272,7 +273,7 @@ PUB_TOPICS = [
     # TopicConfig('scan_filter/visualization_marker', visualization_msgs.msg.Marker),
     # TopicConfig('session_importer_node/info', mirSessionImporter.msg.SessionImportInfo),
     # TopicConfig('set_mc_PID', std_msgs.msg.Float64MultiArray),
-    TopicConfig('tf', TFMessage, dict_filter=_tf_dict_filter),
+    TopicConfig('tf', TFMessage, dict_filter=_tf_dict_filter, topic_renamed='/tf'), #let /tf be /tf if namespaced
     # TopicConfig('/tf_static', tf2_msgs.msg.TFMessage, dict_filter=_tf_static_dict_filter, latch=True),
     # TopicConfig('traffic_map', nav_msgs.msg.OccupancyGrid),
     # TopicConfig('wifi_diagnostics', diagnostic_msgs.msg.DiagnosticArray),
@@ -308,12 +309,12 @@ class PublisherWrapper(object):
         )
         self.pub = nh.create_publisher(
             msg_type=topic_config.topic_type,
-            topic=topic_config.topic,
+            topic=topic_config.topic_ros2_name,
             qos_profile=topic_config.qos_profile
         )
 
         nh.get_logger().info("Publishing topic '%s' [%s]" %
-                             (topic_config.topic, topic_config.topic_type.__module__))
+                             (topic_config.topic_ros2_name, topic_config.topic_type.__module__))
         # latched topics must be subscribed immediately
         # if topic_config.latch:
         self.peer_subscribe(None, None, None, nh)
@@ -378,7 +379,10 @@ class MiR100BridgeNode(Node):
         assert isinstance(port, int), 'port parameter must be an integer'
 
         global tf_prefix
-        tf_prefix = self.declare_parameter('~tf_prefix', '').value.strip('/')
+        self.declare_parameter('tf_prefix', '')
+        tf_prefix = self.get_parameter('tf_prefix').get_parameter_value().string_value.strip('/')
+        if tf_prefix != "":
+            tf_prefix = tf_prefix + '/'
 
         self.get_logger().info('Trying to connect to %s:%i...' % (hostname, port))
         self.robot = mir_driver.rosbridge.RosbridgeSetup(hostname, port)

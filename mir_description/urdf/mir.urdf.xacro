@@ -5,30 +5,24 @@
   <!-- MiR100 base -->
   <xacro:include filename="$(find mir_description)/urdf/include/mir_100_v1.urdf.xacro" />
   <xacro:include filename="$(find mir_description)/urdf/include/common.gazebo.xacro" />
+  <xacro:include filename="$(find mir_description)/urdf/include/mir_100.gazebo.xacro" />
 
-  <xacro:arg name="namespace" default=""/>
   <xacro:arg name="tf_prefix" default="" />
 
-  <xacro:property name="tf_prefix_val" value="$(arg tf_prefix)" />
-
-  <xacro:if value="${tf_prefix_val == ''}">
+  <!-- prefix can not start with a slash like a global namespace! results in TF errors -->
+  <xacro:property name="ns" value="$(arg tf_prefix)" />
+  <xacro:if value="${ns == ''}">
     <xacro:property name="prefix" value="" />
-    <xacro:property name="namespace" value=""/>
   </xacro:if>
-  <xacro:unless value="${tf_prefix_val == ''}">
-    <xacro:property name="prefix" value="${tf_prefix_val}/" />
-    <xacro:property name="namespace" value="${tf_prefix_val}"/>
+  <xacro:unless value="${ns == ''}">
+    <xacro:property name="prefix" value="${ns}/" />
   </xacro:unless>
 
-  <xacro:mir_100 prefix="${prefix}" namespace="${namespace}"/>
+  <xacro:mir_100 prefix="${prefix}" ns="${ns}"/>
 
-  <!--
-  <xacro:controller_plugin_gazebo robot_namespace=""/>
-  -->
-  <xacro:diff_controller_plugin_gazebo prefix="${prefix}" namespace="${namespace}"
+  <xacro:diff_controller_plugin_gazebo prefix="${prefix}" ns="${ns}"
     left_wheel_joint="${prefix}left_wheel_joint"
     right_wheel_joint="${prefix}right_wheel_joint"
     wheel_separation="${2*mir_100_act_wheel_dy}"
     wheel_radius="${mir_100_act_wheel_radius}"/>
-
 </robot>

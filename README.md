@@ -450,6 +450,14 @@ Initialize Pose | Drifted pose | Refined pose
 ![](doc/img/initial_pose1.png) |![](doc/img/initial_pose2.png)|![](doc/img/initial_pose3.png)
 
 
+Using a namespace
+------------------------------------
+
+When using a namespace for your robot, add the ``--ros-args -p namespace:=my_namespace`` to the launch files.
+The driver, description and gazebo packages work out of the box. 
+However, to use the navigation stack the corresponding config.yaml files need to be adapted to match the renamed topic.
+
+The navigation ``cmd_vel`` topic is automatically remapped by adding the namespace in the ``navigation.py`` launch file.
 
 <!--
   

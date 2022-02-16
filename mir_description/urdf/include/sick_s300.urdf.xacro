@@ -8,7 +8,7 @@
   <xacro:property name="laser_z" value="0.185" />
   <xacro:property name="laser_mass" value="2.0" />
 
-  <xacro:macro name="sick_s300" params="link topic prefix namespace">
+  <xacro:macro name="sick_s300" params="link topic prefix">
     <link name="${prefix}${link}">
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="${pi} 0 0" />
@@ -60,8 +60,7 @@
         </ray>
         <plugin name="gazebo_ros_${link}_controller" filename="libgazebo_ros_ray_sensor.so">    
           <ros>
-            <remapping>~/out:=${topic}</remapping>
-            <namespace>${namespace}</namespace>
+            <remapping>~/out:=${prefix}${topic}</remapping>
           </ros>
           <output_type>sensor_msgs/LaserScan</output_type>
           <frame_name>${prefix}${link}</frame_name>

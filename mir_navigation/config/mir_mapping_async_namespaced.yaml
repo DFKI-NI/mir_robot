@@ -10,10 +10,10 @@ slam_toolbox:
     ceres_loss_function: None
 
     # ROS Parameters
-    odom_frame: odom
+    odom_frame: namespace/odom
     map_frame: map
-    base_frame: base_footprint
-    scan_topic: /scan
+    base_frame: namespace/base_footprint
+    scan_topic: /namespace/scan
     mode: mapping #localization
 
     # if you'd like to immediately start continuing a map at a given pose
