@@ -3,7 +3,8 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.conditions import IfCondition
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction, SetLaunchConfiguration
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction, \
+                           SetLaunchConfiguration
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
@@ -66,7 +67,8 @@ def generate_launch_description():
 
     declare_rviz_config_arg = DeclareLaunchArgument(
         'rviz_config_file',
-        default_value=os.path.join(mir_description_dir, 'rviz', 'mir_visu_full.rviz'),
+        default_value=os.path.join(
+            mir_description_dir, 'rviz', 'mir_visu_full.rviz'),
         description='Define rviz config file to be used.')
 
     declare_gui_arg = DeclareLaunchArgument(
@@ -92,7 +94,8 @@ def generate_launch_description():
 
     launch_mir_gazebo_common = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(mir_gazebo_dir, 'launch', 'include', 'mir_gazebo_common.py')
+            os.path.join(mir_gazebo_dir, 'launch',
+                         'include', 'mir_gazebo_common.py')
         )
     )
 
@@ -108,10 +111,9 @@ def generate_launch_description():
     spawn_robot = Node(
         package='gazebo_ros',
         executable='spawn_entity.py',
-        arguments=['-entity', LaunchConfiguration('robot_name'), 
+        arguments=['-entity', LaunchConfiguration('robot_name'),
                    '-topic', 'robot_description',
-                   '-b', # bond node to gazebo model,
-                ],
+                   '-b'],  # bond node to gazebo model,
         namespace=LaunchConfiguration('namespace'),
         output='screen')
 

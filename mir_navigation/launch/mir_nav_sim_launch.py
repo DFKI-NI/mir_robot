@@ -2,7 +2,7 @@ import os
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction, \
-                           SetLaunchConfiguration
+    SetLaunchConfiguration
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from ament_index_python.packages import get_package_share_directory
@@ -54,7 +54,8 @@ def generate_launch_description():
     launch_simulation = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(mir_gazebo_dir, 'launch', 'mir_gazebo_launch.py')),
-        launch_arguments={'rviz_config_file': LaunchConfiguration('rviz_config_file')}.items()
+        launch_arguments={'rviz_config_file': LaunchConfiguration(
+            'rviz_config_file')}.items()
     )
 
     launch_amcl = IncludeLaunchDescription(
@@ -65,7 +66,7 @@ def generate_launch_description():
 
     launch_navigation = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-          os.path.join(mir_nav_dir, 'launch', 'include', 'navigation.py')),
+            os.path.join(mir_nav_dir, 'launch', 'include', 'navigation.py')),
         launch_arguments={'map_subscribe_transient_local': 'true'}.items()
     )
 

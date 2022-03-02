@@ -32,8 +32,10 @@ def generate_launch_description():
     command_topic = LaunchConfiguration('cmd_vel_w_prefix')
     autostart = LaunchConfiguration('autostart')
     params_file = LaunchConfiguration('params_file')
-    default_nav_to_pose_bt_xml = LaunchConfiguration('default_nav_to_pose_bt_xml')
-    map_subscribe_transient_local = LaunchConfiguration('map_subscribe_transient_local')
+    default_nav_to_pose_bt_xml = LaunchConfiguration(
+        'default_nav_to_pose_bt_xml')
+    map_subscribe_transient_local = LaunchConfiguration(
+        'map_subscribe_transient_local')
 
     lifecycle_nodes = ['controller_server',
                        'planner_server',
@@ -52,7 +54,8 @@ def generate_launch_description():
                   ('cmd_vel', command_topic)]
 
     # Create our own temporary YAML files that include substitutions
-    # Watch out for parameters that don't exist in yaml - will not be substituted of course (default_nav_to_pose_bt_xml)
+    # Watch out for parameters that don't exist in yaml - will not be substituted of course
+    # (default_nav_to_pose_bt_xml)
     # TODO: Needs to be addressed in nav2
     param_substitutions = {
         'use_sim_time': use_sim_time,
@@ -97,7 +100,8 @@ def generate_launch_description():
 
         DeclareLaunchArgument(
             'params_file',
-            default_value=os.path.join(mir_nav_dir, 'config', 'mir_nav_params.yaml'),
+            default_value=os.path.join(
+                mir_nav_dir, 'config', 'mir_nav_params.yaml'),
             description='Full path to the ROS2 parameters file to use'),
 
         DeclareLaunchArgument(
@@ -144,8 +148,8 @@ def generate_launch_description():
             name='bt_navigator',
             output='screen',
             parameters=[
-                configured_params, 
-                {'default_nav_to_pose_bt_xml' : default_nav_to_pose_bt_xml}],
+                configured_params,
+                {'default_nav_to_pose_bt_xml': default_nav_to_pose_bt_xml}],
             remappings=remappings
         ),
 

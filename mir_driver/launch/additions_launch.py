@@ -5,7 +5,6 @@ from launch_ros.actions import Node
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
-from launch_ros.actions import Node
 
 
 def generate_launch_description():
@@ -23,15 +22,15 @@ def generate_launch_description():
         ),
 
         DeclareLaunchArgument(
-        'rviz_config_file',
-        default_value= os.path.join(mir_description_dir, 'rviz', 'mir_visu_full.rviz'),
-        description='Define rviz config to be used'
+            'rviz_config_file',
+            default_value=os.path.join(mir_description_dir, 'rviz', 'mir_visu_full.rviz'),
+            description='Define rviz config to be used'
         ),
 
         Node(
             package='teleop_twist_keyboard',
             executable='teleop_twist_keyboard',
-            namespace=LaunchConfiguration('namespace'),
+            namespace=namespace,
             prefix='xterm -e'),
 
         Node(

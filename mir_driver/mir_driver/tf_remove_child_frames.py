@@ -28,10 +28,10 @@ class remove_child_frames_node(Node):
         super().__init__('tf_remove_child_frames')
         remove_frames = self.declare_parameter('remove_frames', []).value
         tf_pub = self.create_publisher(
-                msg_type=TFMessage,
-                topic='tf_out',
-                qos_profile=QoSProfile(depth=1)
-            )
+            msg_type=TFMessage,
+            topic='tf_out',
+            qos_profile=QoSProfile(depth=1)
+        )
 
         def tf_cb(msg):
             msg.transforms = [t for t in msg.transforms
@@ -40,18 +40,18 @@ class remove_child_frames_node(Node):
                 tf_pub.publish(msg)
 
         self.create_subscription(
-                msg_type=TFMessage,
-                topic="tf",
-                callback=tf_cb,
-                qos_profile=qos_profile_system_default
+            msg_type=TFMessage,
+            topic="tf",
+            callback=tf_cb,
+            qos_profile=qos_profile_system_default
         )
 
         tf_static_pub = self.create_publisher(
-                msg_type=TFMessage,
-                topic='tf_static_out',
-                qos_profile=QoSProfile(depth=1)
-                # latch
-            )
+            msg_type=TFMessage,
+            topic='tf_static_out',
+            qos_profile=QoSProfile(depth=1)
+            # latch
+        )
 
         def tf_static_cb(msg):
             msg.transforms = [t for t in msg.transforms
@@ -60,10 +60,10 @@ class remove_child_frames_node(Node):
                 tf_static_pub.publish(msg)
 
         self.create_subscription(
-                msg_type=TFMessage,
-                topic="tf_static",
-                callback=tf_static_cb,
-                qos_profile=qos_profile_system_default
+            msg_type=TFMessage,
+            topic="tf_static",
+            callback=tf_static_cb,
+            qos_profile=qos_profile_system_default
         )
 
 

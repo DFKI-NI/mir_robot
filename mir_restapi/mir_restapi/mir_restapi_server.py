@@ -23,16 +23,17 @@ class MirRestAPIServer(Node):
         self.add_on_set_parameters_callback(self.parameters_callback)
 
         self.api_handle = None
-        
+
         self.setup_api_handle()
-        
-        if self.api_handle == None:
+
+        if self.api_handle is None:
             self.get_logger().warn("""
-            Hostname and API token are not set! Run as follows: 
-            
-            ros2 run mir_restapi mir_restapi_server --ros-args -p mir_hostname:='MIR_IP_ADDR' -p mir_restapi_auth:='YOUR_API_KEY'
+            Hostname and API token are not set! Run as follows:
+
+            ros2 run mir_restapi mir_restapi_server
+            --ros-args -p mir_hostname:='MIR_IP_ADDR' -p mir_restapi_auth:='YOUR_API_KEY'
             """)
-    
+
     def setup_api_handle(self):
         if self.hostname != "" and self.auth != "":
             self.api_handle = mir_restapi.mir_restapi_lib.MirRestAPI(
@@ -40,7 +41,7 @@ class MirRestAPIServer(Node):
             self.get_logger().info("created MirRestAPI handle")
             self.create_services()
             self.get_logger().info("created services")
-    
+
     def parameters_callback(self, params):
         for param in params:
             if param.name == "mir_restapi_auth":
@@ -51,7 +52,7 @@ class MirRestAPIServer(Node):
                 self.hostname = param.value
         self.setup_api_handle()
         return SetParametersResult(successful=True)
-    
+
     def create_services(self):
         self.create_service(
             Trigger,
@@ -100,11 +101,11 @@ class MirRestAPIServer(Node):
             'mir_100_get_settings',
             self.get_settings_callback)
         self.get_logger().info("Listening on 'mir_100_get_settings'")
-    
+
     def test_api_connection(self):
-        if self.api_handle == None:
+        if self.api_handle is None:
             return -1
-        
+
         self.get_logger().info('REST API: Waiting for connection')
         i = 1
         while not self.api_handle.is_connected():
@@ -116,19 +117,19 @@ class MirRestAPIServer(Node):
             i += 1
             time.sleep(1)
         return 1
-    
+
     def reponse_api_handle_not_exists(self, response):
         response.success = False
         response.message = 'API token and/or hostname not set yet'
         self.get_logger().error(response.message)
         return response
-    
+
     def call_restapi_function(self, service_fct, request, response, args=None):
         if self.test_api_connection() == -1:
             response = self.reponse_api_handle_not_exists(response)
             return response
         if self.api_handle.is_connected(print=False):
-            if args==None:
+            if args is None:
                 response.message = str(service_fct())
             else:
                 response.message = str(service_fct(args))
@@ -152,19 +153,19 @@ class MirRestAPIServer(Node):
         self.get_logger().info('Getting status from REST API...')
         response = self.call_restapi_function(self.api_handle.get_status, request, response)
         return response
-    
+
     def get_sounds_callback(self, request, response):
         self.get_logger().info('Getting sounds from REST API...')
         response = self.call_restapi_function(self.api_handle.get_sounds, request, response)
         return response
-    
+
     def is_emergency_halt_callback(self, request, response):
         self.get_logger().info('Checking REST API for emergency halt...')
         response = self.call_restapi_function(self.api_handle.get_state_id, request, response)
-        
+
         if response.success:
             state_id = int(response.message)
-            #self.get_logger().info("Returned state_id as %i" % state_id)
+            #  self.get_logger().info("Returned state_id as %i" % state_id)
             STATE_ID_EMERGENCY = 10
             if state_id == STATE_ID_EMERGENCY:
                 response.message = str(True)
@@ -173,12 +174,12 @@ class MirRestAPIServer(Node):
                 response.message = str(False)
                 # self.get_logger().info("no emergency halt")
         return response
-    
+
     def get_missions_callback(self, request, response):
         self.get_logger().info('Getting missions from REST API...')
         response = self.call_restapi_function(self.api_handle.get_missions, request, response)
         return response
-    
+
     def honk_callback(self, request, response):
         self.get_logger().info('Honking horn over REST API...')
 
@@ -190,8 +191,9 @@ class MirRestAPIServer(Node):
             self.get_logger().error(response.message)
             response.success = False
             return response
-        self.get_logger().info("Put honk mission into queue with mission_queue_id={}".format(mission_queue_id))
-        
+        self.get_logger().info("Put honk mission into queue with mission_queue_id={}".format(
+            mission_queue_id))
+
         emerg_response = self.is_emergency_halt_callback(request, response)
         if emerg_response.message == str(True):
             response.message = "Can't honk, emergency halt"
@@ -202,17 +204,17 @@ class MirRestAPIServer(Node):
             self.get_logger().info(response.message)
             STATE_ID_RUN_MISSION = 3
             STATE_ID_PAUSE = 4
-            
+
             self.api_handle.set_state_id(STATE_ID_RUN_MISSION)
-            
+
             while not self.api_handle.is_mission_done(mission_queue_id):
                 time.sleep(1)
-            
+
             self.api_handle.set_state_id(STATE_ID_PAUSE)
             self.api_handle.http.__del__()
             response.success = True
         return response
-    
+
     def get_system_info_callback(self, request, response):
         self.get_logger().info('Getting system info from REST API...')
         response = self.call_restapi_function(self.api_handle.get_system_info, request, response)

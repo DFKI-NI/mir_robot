@@ -12,7 +12,6 @@ from launch_ros.actions import Node
 def generate_launch_description():
 
     mir_description_dir = get_package_share_directory('mir_description')
-    rviz_config_file = LaunchConfiguration('rviz_config_file')
     use_sim_time = LaunchConfiguration('use_sim_time')
 
     return LaunchDescription([
@@ -47,9 +46,10 @@ def generate_launch_description():
                 os.path.join(mir_description_dir, 'launch', 'mir_launch.py')),
             launch_arguments={
                 'joint_state_publisher_enabled': 'false',
-                'namespace' : LaunchConfiguration('namespace')
+                'namespace': LaunchConfiguration('namespace')
             }.items(),
-            condition=IfCondition(LaunchConfiguration('robot_state_publisher_enabled'))
+            condition=IfCondition(LaunchConfiguration(
+                'robot_state_publisher_enabled'))
         ),
 
         Node(
@@ -92,7 +92,8 @@ def generate_launch_description():
                          'cloud_destination_topic': 'scan_cloud',
                          'min_height': -0.25,
                          'max_merge_time_diff': 0.05,
-                         'max_delay_scan_time': 2.5,  # driver (msg converter) delay
+                         # driver (msg converter) delay
+                         'max_delay_scan_time': 2.5,
                          'max_completion_time': 0.1,
                          'alow_scan_delay': True,
                          'use_sim_time': use_sim_time,

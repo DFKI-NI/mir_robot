@@ -15,16 +15,14 @@ def generate_launch_description():
     mir_description_dir = get_package_share_directory('mir_description')
 
     def create_robot_description(context):
-      ns = context.launch_configurations['namespace']
-      if ns.startswith('/'):
-        ns = ns[1:]
-
-      prefix = context.launch_configurations['prefix']
-      urdf_dir = os.path.join(mir_description_dir, 'urdf')
-      xacro_file = os.path.join(urdf_dir, 'mir.urdf.xacro')
-      doc = xacro.process_file(xacro_file, mappings={'tf_prefix' : ns})
-      robot_desc = doc.toprettyxml(indent='  ')
-      return [SetLaunchConfiguration('robot_description', robot_desc)]
+        ns = context.launch_configurations['namespace']
+        if ns.startswith('/'):
+            ns = ns[1:]
+        urdf_dir = os.path.join(mir_description_dir, 'urdf')
+        xacro_file = os.path.join(urdf_dir, 'mir.urdf.xacro')
+        doc = xacro.process_file(xacro_file, mappings={'tf_prefix': ns})
+        robot_desc = doc.toprettyxml(indent='  ')
+        return [SetLaunchConfiguration('robot_description', robot_desc)]
 
     return LaunchDescription([
 
@@ -50,8 +48,8 @@ def generate_launch_description():
         executable='robot_state_publisher',
         name='robot_state_publisher',
         output='both',
-        parameters=[{'use_sim_time': use_sim_time, 
-                      'robot_description': LaunchConfiguration('robot_description')}],
+        parameters=[{'use_sim_time': use_sim_time,
+                    'robot_description': LaunchConfiguration('robot_description')}],
         namespace=LaunchConfiguration('namespace'),
       ),
 

@@ -2,7 +2,7 @@ import os
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction, \
-                           SetLaunchConfiguration
+    SetLaunchConfiguration
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration
@@ -17,7 +17,8 @@ def generate_launch_description():
     def declare_rviz_config(context):
         nav_enabled = context.launch_configurations['navigation_enabled']
         if (nav_enabled == 'true'):
-            config_file = os.path.join(mir_nav_dir, 'rviz', 'mir_mapping_nav.rviz')
+            config_file = os.path.join(
+                mir_nav_dir, 'rviz', 'mir_mapping_nav.rviz')
         else:
             config_file = os.path.join(mir_nav_dir, 'rviz', 'mir_mapping.rviz')
         return [SetLaunchConfiguration('rviz_config_file', config_file)]
@@ -51,7 +52,8 @@ def generate_launch_description():
     launch_simulation = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(mir_gazebo_dir, 'launch', 'mir_gazebo_launch.py')),
-        launch_arguments={'rviz_config_file': LaunchConfiguration('rviz_config_file')}.items()
+        launch_arguments={'rviz_config_file': LaunchConfiguration(
+            'rviz_config_file')}.items()
     )
 
     launch_mapping = IncludeLaunchDescription(

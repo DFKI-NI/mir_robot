@@ -75,12 +75,13 @@ class RosbridgeSetup():
     def send(self, obj):
         try:
             self.connection.sendString(json.dumps(obj))
-        except:
+        except Exception:
             traceback.print_exc()
             raise
 
     def generate_id(self, chars=16):
-        return ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(chars))
+        return ''.join(random.SystemRandom().choice(
+            string.ascii_letters + string.digits) for _ in range(chars))
 
     def addServiceCallback(self, id, callback):
         self.service_callbacks[id] = callback
@@ -107,15 +108,16 @@ class RosbridgeSetup():
 
             if 'op' in obj:
                 option = obj['op']
-                if option == "publish": # A message from a topic we have subscribed to..
+                if option == "publish":  # A message from a topic we have subscribed to..
                     topic = obj["topic"]
                     msg = obj["msg"]
                     if topic in self.callbacks:
                         for callback in self.callbacks[topic]:
                             try:
                                 callback(msg)
-                            except:
-                                print("exception on callback", callback, "from", topic)
+                            except Exception:
+                                print("exception on callback",
+                                      callback, "from", topic)
                                 traceback.print_exc()
                                 raise
                 elif option == "service_response":
@@ -124,9 +126,9 @@ class RosbridgeSetup():
                         values = obj["values"]
                         if id in self.service_callbacks:
                             try:
-                                #print 'id:', id, 'func:', self.service_callbacks[id]
+                                # print 'id:', id, 'func:', self.service_callbacks[id]
                                 self.service_callbacks[id](values)
-                            except:
+                            except Exception:
                                 print("exception on callback ID:", id)
                                 traceback.print_exc()
                                 raise
@@ -136,7 +138,7 @@ class RosbridgeSetup():
                     print("Recieved unknown option - it was: ", option)
             else:
                 print("No OP key!")
-        except:
+        except Exception:
             print("exception in onMessageReceived")
             print("message", message)
             traceback.print_exc()

@@ -18,7 +18,7 @@ class fake_mir_joint_publisher(Node):
 
         pub = self.create_publisher(
                 msg_type=JointState,
-                topic = 'joint_states', # no prefix to joint states, just namespace
+                topic='joint_states',  # no prefix to joint states, just namespace
                 qos_profile=qos_profile_system_default  # TODO Check QoS Settings
         )
 

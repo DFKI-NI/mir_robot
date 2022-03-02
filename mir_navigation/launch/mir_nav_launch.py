@@ -2,7 +2,7 @@ import os
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction, \
-                           SetLaunchConfiguration
+    SetLaunchConfiguration
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from ament_index_python.packages import get_package_share_directory
@@ -43,7 +43,8 @@ def generate_launch_description():
     start_driver_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(mir_driver_dir, 'launch', 'mir_launch.py')),
-        launch_arguments={'rviz_config_file': LaunchConfiguration('rviz_config_file')}.items()
+        launch_arguments={'rviz_config_file': LaunchConfiguration(
+            'rviz_config_file')}.items()
     )
 
     launch_amcl = IncludeLaunchDescription(

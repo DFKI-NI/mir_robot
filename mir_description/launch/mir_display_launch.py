@@ -11,28 +11,30 @@ from launch_ros.actions import Node
 def generate_launch_description():
 
     mir_description_dir = get_package_share_directory('mir_description')
-    rviz_config_file = os.path.join(mir_description_dir, 'rviz', 'mir_description.rviz')
+    rviz_config_file = os.path.join(
+        mir_description_dir, 'rviz', 'mir_description.rviz')
 
     return LaunchDescription([
 
-      DeclareLaunchArgument(
-        'joint_state_publisher_enabled',
-        default_value='true',
-        description='Enable to publish joint states using joint state publisher'),
+        DeclareLaunchArgument(
+            'joint_state_publisher_enabled',
+            default_value='true',
+            description='Enable to publish joint states using joint state publisher'),
 
-      IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-          os.path.join(mir_description_dir, 'launch', 'mir_launch.py')),
-        launch_arguments={
-          'joint_state_publisher_enabled': LaunchConfiguration('joint_state_publisher_enabled'),
-        }.items()
-      ),
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                os.path.join(mir_description_dir, 'launch', 'mir_launch.py')),
+            launch_arguments={
+                'joint_state_publisher_enabled':
+                LaunchConfiguration('joint_state_publisher_enabled'),
+            }.items()
+        ),
 
-      Node(
-        package='rviz2',
-        executable='rviz2',
-        arguments=['-d', rviz_config_file],
-        parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}]
-      )
+        Node(
+            package='rviz2',
+            executable='rviz2',
+            arguments=['-d', rviz_config_file],
+            parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}]
+        )
 
     ])
