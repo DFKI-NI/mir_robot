@@ -277,7 +277,7 @@ to get out of sync quickly (about 1 second per day!). This causes TF transforms
 timing out etc. and can be seen using `tf_monitor` (the "Max Delay" is about
 3.3 seconds in the following example, but should be less than 0.1 seconds):
 
-#### **Using ROS1** (optional)
+#### **Determine delay using ROS1** (optional)
 
 Since MiR is running a roscore (ROS1), the following tf_monitor can be excecuted after sourcing ROS1 (i.e. noetic) first:
 
@@ -300,7 +300,7 @@ Node: unknown_publisher 418.344 Hz, Average Delay: 0.827575 Max Delay: 3.35237
 Node: unknown_publisher(static) 465.362 Hz, Average Delay: 0 Max Delay: 0
 ```
 
-#### **Using ROS2**
+#### **Determine delay using ROS2**
 
 If you don't have a ROS1 distro installed, you'll need to run the `mir_driver` first and execute the following once a connection is established: 
 
@@ -311,8 +311,22 @@ ros2 run tf2_ros tf2_monitor
 
 #### **Fix time synchronization manually:**
 
-* go to "Service" -> "Configuration" -> "System settings" -> "Time settings" -> "Set device time on robot"
+* In the Mir dashboard (mir.com in the Mir-Wifi), go to "Service" -> "Configuration" -> "System settings" -> "Time settings" -> "Set device time on robot"
 Use **load from device** to sync with the system time!
+
+#### **Fix time synchronization using ROS2:**
+
+From the package `mir_restapi` a node called `mir_restapi_server` can be run, which can execute a time sync REST API call from the driver's host machine to the Mir's host. 
+* Launch the node with the API key and mir hostname's IP address
+
+        ros2 run mir_restapi mir_restapi_server --ros-args -p mir_hostname:='MIR_IP_ADDR' -p mir_restapi_auth:='YOUR_API_KEY'
+* Call the time sync service from terminal by invoking
+        
+        ros2 service call /mir_100_sync_time std_srvs/Trigger
+
+#### **After time sync**
+
+Keep in mind, that the time sync causes the mir_bridge to freeze. Therefore online time syncs are not recommended.
 
 
 ### Start `move_base` on the robot
