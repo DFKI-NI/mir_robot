@@ -1,4 +1,4 @@
-image: ros:kinetic
+image: ros:noetic
 
 before_script:
   # Install ssh-agent if not already installed
@@ -25,7 +25,7 @@ build:
   script:
     - export LANG="en_US.UTF-8"
     - export LC_ALL=$LANG
-    - export CI_ROS_DISTRO="kinetic"
+    - export CI_ROS_DISTRO="noetic"
     - export CATKIN_WS=~/catkin_ws
     - export CATKIN_WS_SRC=${CATKIN_WS}/src
     - export CATKIN_PROJECT_DIR=$CATKIN_WS_SRC/mir_robot
