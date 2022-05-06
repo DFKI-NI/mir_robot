@@ -15,11 +15,12 @@
 repos:
   # Standard hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
+    rev: v4.1.0
     hooks:
       - id: check-added-large-files
       - id: check-case-conflict
       - id: check-executables-have-shebangs
+      - id: check-docstring-first
       - id: check-merge-conflict
       - id: check-shebang-scripts-are-executable
       - id: check-symlinks
@@ -46,11 +47,11 @@ repos:
         exclude: *excludes
 
   - repo: https://github.com/psf/black
-    rev: 19.3b0
+    rev: 22.3.0
     hooks:
       - id: black
 
-  - repo: git://github.com/detailyang/pre-commit-shell
+  - repo: https://github.com/detailyang/pre-commit-shell.git
     rev: v1.0.6
     hooks:
     - id: shell-lint
