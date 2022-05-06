@@ -375,7 +375,6 @@ def genmprim_unicycle(outfilename, visualize=False, separate_plots=False):
             if visualize:
                 plt.plot(intermcells_m[:, 0], intermcells_m[:, 1], linestyle="-", marker="o")
                 plt.text(endpt[0], endpt[1], '{:2.0f}'.format(endpose_c[2]))
-                plt.hold(True)
         # if (visualize):
         #    plt.waitforbuttonpress()  # uncomment to plot each primitive set one at a time
 
