@@ -5,6 +5,7 @@ publish_frequency: 1.0
 obstacle_range: 3.0
 #mark_threshold: 1
 publish_voxel_map: true
+footprint_padding: 0.0
 navigation_map:
   map_topic: /map
 obstacles:
