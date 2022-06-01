@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:arg name="mir_type" default="mir_100" />      <!-- The MiR variant. Can be "mir_100" or "mir_250" for now.-->
+  <xacro:property name="mir_type" value="$(arg mir_type)" />  <!-- necessary because args cannot be accessed inside ${} expressions -->
+
   <xacro:include filename="$(find mir_description)/urdf/include/common_properties.urdf.xacro" />
   <xacro:include filename="$(find mir_description)/urdf/include/imu.gazebo.urdf.xacro" />
   <xacro:include filename="$(find mir_description)/urdf/include/mir.gazebo.xacro" />
@@ -136,7 +139,7 @@
     </gazebo>
   </xacro:macro>
 
-  <xacro:macro name="mir" params="prefix">
+  <xacro:macro name="mir" params="mir_type prefix">
     <link name="${prefix}base_footprint" />
 
     <joint name="${prefix}base_joint" type="fixed">
@@ -152,14 +155,14 @@
       <visual>
         <origin xyz="${mir_act_wheel_dx} 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://mir_description/meshes/visual/mir_100_base.stl" />
+          <mesh filename="package://mir_description/meshes/visual/${mir_type}_base.stl" />
         </geometry>
         <xacro:insert_block name="material_white" />
       </visual>
       <collision>
         <origin xyz="${mir_act_wheel_dx} 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://mir_description/meshes/collision/mir_100_base.stl" />
+          <mesh filename="package://mir_description/meshes/collision/${mir_type}_base.stl" />
         </geometry>
       </collision>
     </link>
