@@ -11,9 +11,11 @@ mobile_base_controller:
 
   # Wheel separation and diameter. These are both optional.
   # diff_drive_controller will attempt to read either one or both from the
-  # URDF if not specified as a parameter
-  wheel_separation : 0.445208
-  wheel_radius : 0.0625
+  # URDF if not specified as a parameter.
+  # We don't set the value here because it's different for each MiR type (100, 250, ...), and
+  # the plugin figures out the correct values.
+  #wheel_separation : 0.445208
+  #wheel_radius : 0.0625
 
   # Wheel separation and radius multipliers
   wheel_separation_multiplier: 1.0 # default: 1.0
