@@ -50,7 +50,7 @@
         <geometry>
           <cylinder radius="${mir_act_wheel_radius}" length="${mir_act_wheel_width}" />
         </geometry>
-        <xacro:insert_block name="material_dark_grey" />
+        <xacro:insert_block name="material_black" />
       </visual>
       <collision>
         <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
@@ -60,7 +60,7 @@
       </collision>
     </link>
     <gazebo reference="${prefix}${locationprefix}_wheel_link">
-      <material>Gazebo/DarkGrey</material>
+      <material>Gazebo/FlatBlack</material>
     </gazebo>
   </xacro:macro>
 
@@ -122,7 +122,7 @@
         <geometry>
           <cylinder radius="${mir_caster_wheel_radius}" length="${mir_caster_wheel_width}" />
         </geometry>
-        <xacro:insert_block name="material_dark_grey" />
+        <xacro:insert_block name="material_black" />
       </visual>
       <collision>
         <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
@@ -132,7 +132,7 @@
       </collision>
     </link>
     <gazebo reference="${prefix}${locationprefix}_caster_wheel_link">
-      <material>Gazebo/DarkGrey</material>
+      <material>Gazebo/FlatBlack</material>
     </gazebo>
   </xacro:macro>
 
