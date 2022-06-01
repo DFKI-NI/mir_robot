@@ -13,11 +13,21 @@
 
   <xacro:property name="mir_base_mass" value="58.0" />
 
-  <xacro:property name="mir_act_wheel_radius" value="0.0625" />
-  <xacro:property name="mir_act_wheel_width" value="0.032" />
-  <xacro:property name="mir_act_wheel_mass" value="1.0" />
-  <xacro:property name="mir_act_wheel_dx" value="0.037646" />
-  <xacro:property name="mir_act_wheel_dy" value="0.222604" />
+  <xacro:if value="${mir_type == 'mir_100'}">
+    <xacro:property name="mir_act_wheel_radius" value="0.0625" />
+    <xacro:property name="mir_act_wheel_width" value="0.032" />
+    <xacro:property name="mir_act_wheel_mass" value="1.0" />
+    <xacro:property name="mir_act_wheel_dx" value="0.037646" />
+    <xacro:property name="mir_act_wheel_dy" value="0.222604" />
+  </xacro:if>
+
+  <xacro:if value="${mir_type == 'mir_250'}">
+    <xacro:property name="mir_act_wheel_radius" value="0.100" />
+    <xacro:property name="mir_act_wheel_width" value="0.038" />
+    <xacro:property name="mir_act_wheel_mass" value="1.0" />
+    <xacro:property name="mir_act_wheel_dx" value="-0.004485" />
+    <xacro:property name="mir_act_wheel_dy" value="0.2015" />
+  </xacro:if>
 
   <xacro:property name="mir_caster_wheel_radius" value="0.0625" />
   <xacro:property name="mir_caster_wheel_width" value="0.032" />
@@ -26,13 +36,27 @@
   <xacro:property name="mir_caster_wheel_dy" value="0" />
   <xacro:property name="mir_caster_wheel_dz" value="-0.094" />
   <xacro:property name="mir_front_caster_wheel_base_dx" value="0.3037" />
-  <xacro:property name="mir_back_caster_wheel_base_dx"  value="0.3078" />
-  <xacro:property name="mir_caster_wheel_base_dy" value="0.203" />
+  <xacro:if value="${mir_type == 'mir_100'}">
+    <xacro:property name="mir_back_caster_wheel_base_dx"  value="0.3078" />
+    <xacro:property name="mir_caster_wheel_base_dy" value="0.203" />
+  </xacro:if>
+
+  <xacro:if value="${mir_type == 'mir_250'}">
+    <xacro:property name="mir_back_caster_wheel_base_dx"  value="0.296" />
+    <xacro:property name="mir_caster_wheel_base_dy" value="0.188" />
+  </xacro:if>
   <xacro:property name="mir_caster_wheel_base_dz" value="${mir_caster_wheel_radius - mir_caster_wheel_dz}" />
 
   <!-- from visually matching up the meshes of the MiR and the laser scanner -->
-  <xacro:property name="laser_dx" value="0.392" />
-  <xacro:property name="laser_dy" value="0.2358" />
+  <xacro:if value="${mir_type == 'mir_100'}">
+    <xacro:property name="laser_dx" value="0.392" />
+    <xacro:property name="laser_dy" value="0.2358" />
+  </xacro:if>
+
+  <xacro:if value="${mir_type == 'mir_250'}">
+    <xacro:property name="laser_dx" value="0.315" />
+    <xacro:property name="laser_dy" value="0.205" />
+  </xacro:if>
   <xacro:property name="laser_dz" value="0.1914" />
 
   <xacro:macro name="actuated_wheel" params="prefix locationprefix locationright">
@@ -95,7 +119,12 @@
         <geometry>
           <mesh filename="package://mir_description/meshes/visual/caster_wheel_base.stl" />
         </geometry>
-        <xacro:insert_block name="material_silver" />
+        <xacro:if value="${mir_type == 'mir_100'}">
+          <xacro:insert_block name="material_silver" />
+        </xacro:if>
+        <xacro:if value="${mir_type == 'mir_250'}">
+          <xacro:insert_block name="material_black" />
+        </xacro:if>
       </visual>
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
@@ -105,7 +134,12 @@
       </collision>
     </link>
     <gazebo reference="${prefix}${locationprefix}_caster_rotation_link">
-      <material>Gazebo/Grey</material>
+      <xacro:if value="${mir_type == 'mir_100'}">
+        <material>Gazebo/Grey</material>
+      </xacro:if>
+      <xacro:if value="${mir_type == 'mir_250'}">
+        <material>Gazebo/FlatBlack</material>
+      </xacro:if>
     </gazebo>
 
     <!-- caster wheel -->
@@ -139,7 +173,7 @@
     </gazebo>
   </xacro:macro>
 
-  <xacro:macro name="mir" params="mir_type prefix">
+  <xacro:macro name="mir" params="prefix">
     <link name="${prefix}base_footprint" />
 
     <joint name="${prefix}base_joint" type="fixed">
@@ -157,7 +191,12 @@
         <geometry>
           <mesh filename="package://mir_description/meshes/visual/${mir_type}_base.stl" />
         </geometry>
-        <xacro:insert_block name="material_white" />
+        <xacro:if value="${mir_type == 'mir_100'}">
+          <xacro:insert_block name="material_white" />
+        </xacro:if>
+        <xacro:if value="${mir_type == 'mir_250'}">
+          <xacro:insert_block name="material_dark_grey" />
+        </xacro:if>
       </visual>
       <collision>
         <origin xyz="${mir_act_wheel_dx} 0 0" rpy="0 0 0" />
@@ -167,7 +206,12 @@
       </collision>
     </link>
     <gazebo reference="${prefix}base_link">
-      <material>Gazebo/White</material>
+      <xacro:if value="${mir_type == 'mir_100'}">
+        <material>Gazebo/White</material>
+      </xacro:if>
+      <xacro:if value="${mir_type == 'mir_250'}">
+        <material>Gazebo/DarkGrey</material>
+      </xacro:if>
     </gazebo>
 
     <!-- IMU -->
