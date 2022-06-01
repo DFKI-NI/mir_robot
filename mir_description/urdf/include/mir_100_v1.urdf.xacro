@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro"
+       name="mir_100" >
+
+  <!-- This file is only for backward compatibility before the "mir_100" to "mir" rename. -->
+
+  <xacro:include filename="$(find mir_description)/urdf/include/mir_v1.urdf.xacro" />
+
+  <xacro:macro name="mir_100" params="prefix">
+    <xacro:mir prefix="${prefix}" />
+  </xacro:macro>
+</robot>
