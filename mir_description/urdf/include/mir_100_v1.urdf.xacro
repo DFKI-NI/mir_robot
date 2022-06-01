@@ -16,16 +16,21 @@
   <xacro:property name="mir_100_act_wheel_dx" value="0.037646" />
   <xacro:property name="mir_100_act_wheel_dy" value="0.222604" />
 
-  <xacro:property name="mir_100_caster_wheel_radius" value="${mir_100_act_wheel_radius}" />
-  <xacro:property name="mir_100_caster_wheel_width" value="${mir_100_act_wheel_width}" />
-  <xacro:property name="mir_100_caster_wheel_mass" value="${mir_100_act_wheel_mass}" />
+  <xacro:property name="mir_100_caster_wheel_radius" value="0.0625" />
+  <xacro:property name="mir_100_caster_wheel_width" value="0.032" />
+  <xacro:property name="mir_100_caster_wheel_mass" value="1.0" />
   <xacro:property name="mir_100_caster_wheel_dx" value="-0.0382" />
   <xacro:property name="mir_100_caster_wheel_dy" value="0" />
   <xacro:property name="mir_100_caster_wheel_dz" value="-0.094" />
-  <xacro:property name="mir_100_front_caster_wheel_base_dx" value="0.341346" />
-  <xacro:property name="mir_100_back_caster_wheel_base_dx" value="-0.270154" />
+  <xacro:property name="mir_100_front_caster_wheel_base_dx" value="0.3037" />
+  <xacro:property name="mir_100_back_caster_wheel_base_dx"  value="0.3078" />
   <xacro:property name="mir_100_caster_wheel_base_dy" value="0.203" />
-  <xacro:property name="mir_100_caster_wheel_base_dz" value="${mir_100_caster_wheel_radius-mir_100_caster_wheel_dz}" />
+  <xacro:property name="mir_100_caster_wheel_base_dz" value="${mir_100_caster_wheel_radius - mir_100_caster_wheel_dz}" />
+
+  <!-- from visually matching up the meshes of the MiR and the laser scanner -->
+  <xacro:property name="laser_dx" value="0.392" />
+  <xacro:property name="laser_dy" value="0.2358" />
+  <xacro:property name="laser_dz" value="0.1914" />
 
   <xacro:macro name="actuated_wheel" params="prefix locationprefix locationright">
     <joint name="${prefix}${locationprefix}_wheel_joint" type="continuous">
@@ -41,9 +46,9 @@
         <origin xyz="0 0 0" rpy="${0.5 * pi} 0 0" />
       </xacro:cylinder_inertial>
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
         <geometry>
-          <mesh filename="package://mir_description/meshes/visual/wheel.stl" />
+          <cylinder radius="${mir_100_act_wheel_radius}" length="${mir_100_act_wheel_width}" />
         </geometry>
         <xacro:insert_block name="material_dark_grey" />
       </visual>
@@ -113,9 +118,9 @@
         <origin xyz="0 0 0" rpy="${0.5 * pi} 0 0" />
       </xacro:cylinder_inertial>
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
         <geometry>
-          <mesh filename="package://mir_description/meshes/visual/wheel.stl" />
+          <cylinder radius="${mir_100_caster_wheel_radius}" length="${mir_100_caster_wheel_width}" />
         </geometry>
         <xacro:insert_block name="material_dark_grey" />
       </visual>
@@ -188,14 +193,14 @@
     <joint name="${prefix}base_link_to_front_laser_joint" type="fixed">
       <parent link="${prefix}base_link" />
       <child link="${prefix}front_laser_link" />
-      <origin xyz="0.4288 0.2358 0.1914" rpy="0.0 0.0 ${0.25 * pi}" />  <!-- from visually matching up the meshes of the MiR and the laser scanner -->
+      <origin xyz="${laser_dx + mir_100_act_wheel_dx} ${laser_dy} ${laser_dz}" rpy="0.0 0.0 ${0.25 * pi}" />
     </joint>
     <xacro:sick_s300 prefix="${prefix}" link="front_laser_link" topic="f_scan" />
 
     <joint name="${prefix}base_link_to_back_laser_joint" type="fixed">
       <parent link="${prefix}base_link" />
       <child link="${prefix}back_laser_link" />
-      <origin xyz="-0.3548 -0.2352 0.1914" rpy="0.0 0.0 ${-0.75 * pi}" />  <!-- from visually matching up the meshes of the MiR and the laser scanner -->
+      <origin xyz="${-laser_dx + mir_100_act_wheel_dx} ${-laser_dy} ${laser_dz}" rpy="0.0 0.0 ${-0.75 * pi}" />
     </joint>
 
     <xacro:sick_s300 prefix="${prefix}" link="back_laser_link" topic="b_scan" />
@@ -220,10 +225,10 @@
     <!-- wheels -->
     <xacro:actuated_wheel prefix="${prefix}" locationprefix="left" locationright="-1"/>
     <xacro:actuated_wheel prefix="${prefix}" locationprefix="right" locationright="1"/>
-    <xacro:caster_wheel prefix="${prefix}" locationprefix="fl" locationright="-1" wheel_base_dx="${mir_100_front_caster_wheel_base_dx}"/>
-    <xacro:caster_wheel prefix="${prefix}" locationprefix="fr" locationright="1" wheel_base_dx="${mir_100_front_caster_wheel_base_dx}"/>
-    <xacro:caster_wheel prefix="${prefix}" locationprefix="bl" locationright="-1" wheel_base_dx="${mir_100_back_caster_wheel_base_dx}"/>
-    <xacro:caster_wheel prefix="${prefix}" locationprefix="br" locationright="1" wheel_base_dx="${mir_100_back_caster_wheel_base_dx}"/>
+    <xacro:caster_wheel prefix="${prefix}" locationprefix="fl" locationright="-1" wheel_base_dx="${mir_100_front_caster_wheel_base_dx + mir_100_act_wheel_dx}"/>
+    <xacro:caster_wheel prefix="${prefix}" locationprefix="fr" locationright="1" wheel_base_dx="${mir_100_front_caster_wheel_base_dx + mir_100_act_wheel_dx}"/>
+    <xacro:caster_wheel prefix="${prefix}" locationprefix="bl" locationright="-1" wheel_base_dx="${-mir_100_back_caster_wheel_base_dx + mir_100_act_wheel_dx}"/>
+    <xacro:caster_wheel prefix="${prefix}" locationprefix="br" locationright="1" wheel_base_dx="${-mir_100_back_caster_wheel_base_dx + mir_100_act_wheel_dx}"/>
 
     <joint name="${prefix}base_link_surface_joint" type="fixed">
       <origin xyz="${mir_100_act_wheel_dx} 0 0.352" rpy="0 0 0" />
