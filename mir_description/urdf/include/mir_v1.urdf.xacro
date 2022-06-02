@@ -11,12 +11,15 @@
 
   <xacro:property name="deg_to_rad" value="0.017453293" />
 
-  <xacro:property name="mir_base_inertial_x" value="0.0" />
+  <!-- The inertia for the MiR platform is intentionally chosen to be smaller than
+       the bounding box and also shifted a bit to the back, because most of the mass
+       is in the lower center back (because of the batteries). -->
+  <xacro:property name="mir_base_inertial_x" value="-0.05" />
   <xacro:property name="mir_base_inertial_y" value="0.0" />
-  <xacro:property name="mir_base_inertial_z" value="0.20" />
-  <xacro:property name="mir_base_inertial_x_length" value="0.9" />
-  <xacro:property name="mir_base_inertial_y_length" value="0.58" />
-  <xacro:property name="mir_base_inertial_z_length" value="0.3" />
+  <xacro:property name="mir_base_inertial_z" value="0.15" />
+  <xacro:property name="mir_base_inertial_x_length" value="0.50" />
+  <xacro:property name="mir_base_inertial_y_length" value="0.30" />
+  <xacro:property name="mir_base_inertial_z_length" value="0.20" />
 
   <xacro:if value="${mir_type == 'mir_100'}">
     <xacro:property name="mir_base_mass" value="77.0" />
