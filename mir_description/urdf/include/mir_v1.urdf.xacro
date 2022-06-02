@@ -11,6 +11,12 @@
 
   <xacro:property name="deg_to_rad" value="0.017453293" />
 
+  <xacro:property name="mir_base_inertial_x" value="0.0" />
+  <xacro:property name="mir_base_inertial_y" value="0.0" />
+  <xacro:property name="mir_base_inertial_z" value="0.20" />
+  <xacro:property name="mir_base_inertial_x_length" value="0.9" />
+  <xacro:property name="mir_base_inertial_y_length" value="0.58" />
+  <xacro:property name="mir_base_inertial_z_length" value="0.3" />
 
   <xacro:if value="${mir_type == 'mir_100'}">
     <xacro:property name="mir_base_mass" value="77.0" />
@@ -184,8 +190,8 @@
     </joint>
 
     <link name="${prefix}base_link">
-      <xacro:box_inertial mass="${mir_base_mass}" x="0.9" y="0.58" z="0.3">
-        <origin xyz="${mir_act_wheel_dx} 0 0.20" rpy="0 0 0" />
+      <xacro:box_inertial mass="${mir_base_mass}" x="${mir_base_inertial_x_length}" y="${mir_base_inertial_y_length}" z="${mir_base_inertial_z_length}">
+        <origin xyz="${mir_base_inertial_x + mir_act_wheel_dx} ${mir_base_inertial_y} ${mir_base_inertial_z}" rpy="0 0 0" />
       </xacro:box_inertial>
       <visual>
         <origin xyz="${mir_act_wheel_dx} 0 0" rpy="0 0 0" />
