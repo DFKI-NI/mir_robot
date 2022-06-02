@@ -148,6 +148,30 @@ roslaunch mir_navigation move_base.xml with_virtual_walls:=false
 rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
 ```
 
+Gazebo demo (MiR 250 in warehouse Gazebo world)
+-----------------------------------------------
+
+https://user-images.githubusercontent.com/320188/171613044-639f3ab2-fe84-4839-acfc-d0642f8869b3.mp4
+
+This repo contains URDF descriptions for the MiR 100 (default) and the MiR 250.
+You can switch to the MiR 250 by adding **`mir_type:=mir_250`** to the gazebo
+roslaunch command. You can also select another Gazebo world using the
+**`world_name`** argument. For example, the video above was generated using the
+following commands:
+
+```bash
+cd <your catkin workspace>
+git clone -b ros1 https://github.com/aws-robotics/aws-robomaker-small-warehouse-world.git
+catkin build
+
+roslaunch mir_gazebo mir_empty_world.launch \
+        world_name:=$(rospack find aws_robomaker_small_warehouse_world)/worlds/no_roof_small_warehouse.world \
+        mir_type:=mir_250
+```
+
+... and then running the remaining commands from the "mapping" section above.
+
+
 Gazebo demo (multiple robots)
 -----------------------------
 
