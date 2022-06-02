@@ -11,9 +11,9 @@
 
   <xacro:property name="deg_to_rad" value="0.017453293" />
 
-  <xacro:property name="mir_base_mass" value="58.0" />
 
   <xacro:if value="${mir_type == 'mir_100'}">
+    <xacro:property name="mir_base_mass" value="77.0" />
     <xacro:property name="mir_act_wheel_radius" value="0.0625" />
     <xacro:property name="mir_act_wheel_width" value="0.032" />
     <xacro:property name="mir_act_wheel_mass" value="1.0" />
@@ -22,6 +22,7 @@
   </xacro:if>
 
   <xacro:if value="${mir_type == 'mir_250'}">
+    <xacro:property name="mir_base_mass" value="97.0" />
     <xacro:property name="mir_act_wheel_radius" value="0.100" />
     <xacro:property name="mir_act_wheel_width" value="0.038" />
     <xacro:property name="mir_act_wheel_mass" value="1.0" />
