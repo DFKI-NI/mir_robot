@@ -2,6 +2,27 @@
 Changelog for package mir_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* navigation: Reduce footprint to actual size
+  This reduces the footprint:
+  * 18 mm in front
+  * 42 mm in the back
+  * 27 mm at the sides
+  Now the footprint exactly matches the bounding box of the mesh, with no
+  padding. This should make navigation in tight spaces easier; let's hope
+  it doesn't lead to collisions.
+* navigation: Move footprint_padding to proper namespace
+  The footprint_padding parameter in the upper namespace was ignored,
+  needed to be moved into local_costmap/global_costmap to take effect.
+* genmprim: Remove obsolete plt.hold()
+  This fixes the following error:
+  AttributeError: module 'matplotlib.pyplot' has no attribute 'hold'
+* mir_navigation: Remove static_map parameter
+  This fixes the following warning:
+  [ WARN] local_costmap: Pre-Hydro parameter "static_map" unused since "plugins" is provided
+* Contributors: Martin Günther
+
 1.1.5 (2022-02-11)
 ------------------
 
