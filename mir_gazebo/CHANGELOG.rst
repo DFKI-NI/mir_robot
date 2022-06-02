@@ -2,8 +2,8 @@
 Changelog for package mir_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.6 (2022-06-02)
+------------------
 * Add arg mir_type to launch files and urdfs
 * Rename mir_100 -> mir
   This is in preparation of mir_250 support.

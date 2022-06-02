@@ -2,8 +2,8 @@
 Changelog for package mir_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.6 (2022-06-02)
+------------------
 * navigation: Reduce footprint to actual size
   This reduces the footprint:
   * 18 mm in front

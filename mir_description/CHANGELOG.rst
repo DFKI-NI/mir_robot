@@ -2,8 +2,8 @@
 Changelog for package mir_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.6 (2022-06-02)
+------------------
 * URDF: Downsize inertia box, move to lower back
 * URDF: Pull out inertia properties
 * URDF: Update masses according to data sheet
