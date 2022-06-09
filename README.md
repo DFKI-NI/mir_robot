@@ -267,6 +267,8 @@ To fix this:
 
 Afterwards, the ROS software on the robot will restart, so you'll have to start `move_base` again (see below).
 
+If you have an external PC on the MiR platform, you can use `chrony` to automatically synchronize system time (see below).
+
 
 ### Start `move_base` on the robot
 
@@ -291,6 +293,35 @@ If the robot's localization is lost:
 ```bash
 roslaunch mir_driver mir.launch
 ```
+
+Advanced
+--------
+
+### Installing chrony to synchronize system time automatically
+
+If you have an external PC integrated into your robot that is on the same wired
+network as the MiR PC, you can use `chrony` to automatically synchronize the
+MiR's system time. Unfortunately, this method is not easy to install.
+
+Let's call the external PC `external-pc`. That PC's clock is our reference
+clock. It is synced to an NTP clock whenever the `external-pc` has access to
+the internet. To implement this synchronization solution, install `chrony` on
+both the `external-pc` and the internal PC of the MiR, and set up the
+`external-pc` as the chrony server and the internal MiR PC as the chrony
+client. This way, the clocks on these systems always stay in sync without any
+manual interaction.
+
+To install things on the internal MiR PC:
+
+* connect a monitor and keyboard to the ports that are exposed on one corner of the MiR
+* boot into a live USB linux system
+* `chroot` into the MiR PC
+* download `chrony_2.1.1-1ubuntu0.1_amd64.deb`,
+  `libtomcrypt0_1.17-7ubuntu0.1_amd64.deb`, `libtommath0_0.42.0-1.2_amd64.deb`
+  and `timelimit_1.8-1_amd64.deb` from a PC that has internet and install them
+  in the `chroot` environment onto the MiR PC using `dpkg -i`
+* set up `/etc/chrony/chrony.conf`
+
 
 Troubleshooting
 ---------------
