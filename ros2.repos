@@ -9,5 +9,5 @@ repositories:
     version: foxy-devel
   twist_stamper:
     type: git
-    url: https://github.com/niemsoen/twist_stamper.git
-    version: dd3c2b9035bc95558241f4e166c468a6b1abff5f
+    url: https://github.com/joshnewans/twist_stamper.git
+    version: 32e0eed68c76d9d3fa64b54e8313aa9a6d6bd99d
