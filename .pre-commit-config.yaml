@@ -51,6 +51,11 @@ repos:
     hooks:
       - id: black
 
+  - repo: https://gitlab.com/pycqa/flake8
+    rev: 3.7.9
+    hooks:
+    - id: flake8
+
   - repo: https://github.com/detailyang/pre-commit-shell.git
     rev: v1.0.6
     hooks:

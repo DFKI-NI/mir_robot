@@ -1,0 +1,10 @@
+[flake8]
+# The line length here has to match the black config in pyproject.toml
+max-line-length = 120
+exclude =
+    .git,
+    __pycache__
+extend-ignore =
+    # See https://github.com/PyCQA/pycodestyle/issues/373
+    E203,
+    E741,
