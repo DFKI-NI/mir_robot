@@ -53,71 +53,81 @@ def matrix_size(mat, elem=None):
 def genmprim_unicycle(outfilename, visualize=False, separate_plots=False):
     visualize = matplotlib_found and visualize  # Plot the primitives
 
-    # Local Variables: basemprimendpts22p5_c, endtheta_c, endx_c, baseendpose_c, additionalactioncostmult, fout, numofsamples, basemprimendpts45_c, primind, basemprimendpts0_c, rv, angle, outfilename, numberofangles, startpt, UNICYCLE_MPRIM_16DEGS, sidestepcostmult, rotation_angle, basemprimendpts_c, forwardandturncostmult, forwardcostmult, turninplacecostmult, endpose_c, backwardcostmult, interpfactor, S, R, tvoverrv, dtheta, intermcells_m, tv, dt, currentangle, numberofprimsperangle, resolution, currentangle_36000int, l, iind, errorxy, interind, endy_c, angleind, endpt
-    # Function calls: plot, cos, pi, grid, figure, genmprim_unicycle, text, int2str, basemprimendpts33p75_c, pause, axis, sin, pinv, basemprimendpts11p25_c, fprintf, fclose, rem, zeros, fopen, round, size
-    #%
-    #%generates motion primitives and saves them into file
-    #%
-    #%written by Maxim Likhachev
-    #%---------------------------------------------------
-    #%
-    #%defines
+    # Local Variables: basemprimendpts22p5_c, endtheta_c, endx_c,
+    #   baseendpose_c, additionalactioncostmult, fout, numofsamples,
+    #   basemprimendpts45_c, primind, basemprimendpts0_c, rv, angle, outfilename,
+    #   numberofangles, startpt, UNICYCLE_MPRIM_16DEGS, sidestepcostmult,
+    #   rotation_angle, basemprimendpts_c, forwardandturncostmult,
+    #   forwardcostmult, turninplacecostmult, endpose_c, backwardcostmult,
+    #   interpfactor, S, R, tvoverrv, dtheta, intermcells_m, tv, dt,
+    #   currentangle, numberofprimsperangle, resolution, currentangle_36000int,
+    #   l, iind, errorxy, interind, endy_c, angleind, endpt
+    # Function calls: plot, cos, pi, grid, figure, genmprim_unicycle, text,
+    #   int2str, pause, axis, sin, pinv, fprintf, fclose, rem, zeros, fopen,
+    #   round, size
+    # %
+    # %generates motion primitives and saves them into file
+    # %
+    # %written by Maxim Likhachev
+    # %---------------------------------------------------
+    # %
+    # %defines
     UNICYCLE_MPRIM_16DEGS = 1.0
     if UNICYCLE_MPRIM_16DEGS == 1.0:
         resolution = 0.05
         numberofangles = 16
-        #%preferably a power of 2, definitely multiple of 8
+        # %preferably a power of 2, definitely multiple of 8
         numberofprimsperangle = 7
-        #%multipliers (multiplier is used as costmult*cost)
+        # %multipliers (multiplier is used as costmult*cost)
         forwardcostmult = 1.0
         backwardcostmult = 40.0
         forwardandturncostmult = 2.0
-        sidestepcostmult = 10.0
+        # sidestepcostmult = 10.0
         turninplacecostmult = 20.0
-        #%note, what is shown x,y,theta changes (not absolute numbers)
-        #%0 degreees
+        # %note, what is shown x,y,theta changes (not absolute numbers)
+        # %0 degreees
         basemprimendpts0_c = np.zeros((numberofprimsperangle, 4))
-        #%x,y,theta,costmult
-        #%x aligned with the heading of the robot, angles are positive
-        #%counterclockwise
-        #%0 theta change
+        # %x,y,theta,costmult
+        # %x aligned with the heading of the robot, angles are positive
+        # %counterclockwise
+        # %0 theta change
         basemprimendpts0_c[0, :] = np.array(np.hstack((1.0, 0.0, 0.0, forwardcostmult)))
         basemprimendpts0_c[1, :] = np.array(np.hstack((8.0, 0.0, 0.0, forwardcostmult)))
         basemprimendpts0_c[2, :] = np.array(np.hstack((-1.0, 0.0, 0.0, backwardcostmult)))
-        #%1/16 theta change
+        # %1/16 theta change
         basemprimendpts0_c[3, :] = np.array(np.hstack((8.0, 1.0, 1.0, forwardandturncostmult)))
         basemprimendpts0_c[4, :] = np.array(np.hstack((8.0, -1.0, -1.0, forwardandturncostmult)))
-        #%turn in place
+        # %turn in place
         basemprimendpts0_c[5, :] = np.array(np.hstack((0.0, 0.0, 1.0, turninplacecostmult)))
         basemprimendpts0_c[6, :] = np.array(np.hstack((0.0, 0.0, -1.0, turninplacecostmult)))
-        #%45 degrees
+        # %45 degrees
         basemprimendpts45_c = np.zeros((numberofprimsperangle, 4))
-        #%x,y,theta,costmult (multiplier is used as costmult*cost)
-        #%x aligned with the heading of the robot, angles are positive
-        #%counterclockwise
-        #%0 theta change
+        # %x,y,theta,costmult (multiplier is used as costmult*cost)
+        # %x aligned with the heading of the robot, angles are positive
+        # %counterclockwise
+        # %0 theta change
         basemprimendpts45_c[0, :] = np.array(np.hstack((1.0, 1.0, 0.0, forwardcostmult)))
         basemprimendpts45_c[1, :] = np.array(np.hstack((6.0, 6.0, 0.0, forwardcostmult)))
         basemprimendpts45_c[2, :] = np.array(np.hstack((-1.0, -1.0, 0.0, backwardcostmult)))
-        #%1/16 theta change
+        # %1/16 theta change
         basemprimendpts45_c[3, :] = np.array(np.hstack((5.0, 7.0, 1.0, forwardandturncostmult)))
         basemprimendpts45_c[4, :] = np.array(np.hstack((7.0, 5.0, -1.0, forwardandturncostmult)))
-        #%turn in place
+        # %turn in place
         basemprimendpts45_c[5, :] = np.array(np.hstack((0.0, 0.0, 1.0, turninplacecostmult)))
         basemprimendpts45_c[6, :] = np.array(np.hstack((0.0, 0.0, -1.0, turninplacecostmult)))
-        #%22.5 degrees
+        # %22.5 degrees
         basemprimendpts22p5_c = np.zeros((numberofprimsperangle, 4))
-        #%x,y,theta,costmult (multiplier is used as costmult*cost)
-        #%x aligned with the heading of the robot, angles are positive
-        #%counterclockwise
-        #%0 theta change
+        # %x,y,theta,costmult (multiplier is used as costmult*cost)
+        # %x aligned with the heading of the robot, angles are positive
+        # %counterclockwise
+        # %0 theta change
         basemprimendpts22p5_c[0, :] = np.array(np.hstack((2.0, 1.0, 0.0, forwardcostmult)))
         basemprimendpts22p5_c[1, :] = np.array(np.hstack((6.0, 3.0, 0.0, forwardcostmult)))
         basemprimendpts22p5_c[2, :] = np.array(np.hstack((-2.0, -1.0, 0.0, backwardcostmult)))
-        #%1/16 theta change
+        # %1/16 theta change
         basemprimendpts22p5_c[3, :] = np.array(np.hstack((5.0, 4.0, 1.0, forwardandturncostmult)))
         basemprimendpts22p5_c[4, :] = np.array(np.hstack((7.0, 2.0, -1.0, forwardandturncostmult)))
-        #%turn in place
+        # %turn in place
         basemprimendpts22p5_c[5, :] = np.array(np.hstack((0.0, 0.0, 1.0, turninplacecostmult)))
         basemprimendpts22p5_c[6, :] = np.array(np.hstack((0.0, 0.0, -1.0, turninplacecostmult)))
     else:
@@ -125,11 +135,11 @@ def genmprim_unicycle(outfilename, visualize=False, separate_plots=False):
         return []
 
     fout = open(outfilename, 'w')
-    #%write the header
+    # %write the header
     fout.write('resolution_m: %f\n' % (resolution))
     fout.write('numberofangles: %d\n' % (numberofangles))
     fout.write('totalnumberofprimitives: %d\n' % (numberofprimsperangle * numberofangles))
-    #%iterate over angles
+    # %iterate over angles
     for angleind in np.arange(1.0, (numberofangles) + 1):
         currentangle = ((angleind - 1) * 2.0 * np.pi) / numberofangles
         currentangle_36000int = np.round((angleind - 1) * 36000.0 / numberofangles)
@@ -152,12 +162,12 @@ def genmprim_unicycle(outfilename, visualize=False, separate_plots=False):
             ax.grid(which='minor', alpha=0.5)
             ax.grid(which='major', alpha=0.9)
 
-        #%iterate over primitives
+        # %iterate over primitives
         for primind in np.arange(1.0, (numberofprimsperangle) + 1):
             fout.write('primID: %d\n' % (primind - 1))
             fout.write('startangle_c: %d\n' % (angleind - 1))
-            #%current angle
-            #%compute which template to use
+            # %current angle
+            # %compute which template to use
             if (currentangle_36000int % 9000) == 0:
                 basemprimendpts_c = basemprimendpts0_c[int(primind) - 1, :]
                 angle = currentangle
@@ -165,63 +175,78 @@ def genmprim_unicycle(outfilename, visualize=False, separate_plots=False):
                 basemprimendpts_c = basemprimendpts45_c[int(primind) - 1, :]
                 angle = currentangle - 45.0 * np.pi / 180.0
 
-            elif ((currentangle_36000int - 7875) % 9000) == 0:
-                basemprimendpts_c = (
-                    1 * basemprimendpts33p75_c[primind, :]
-                )  # 1* to force deep copy to avoid reference update below
-                basemprimendpts_c[0] = basemprimendpts33p75_c[primind, 1]
-                #%reverse x and y
-                basemprimendpts_c[1] = basemprimendpts33p75_c[primind, 0]
-                basemprimendpts_c[2] = -basemprimendpts33p75_c[primind, 2]
-                #%reverse the angle as well
-                angle = currentangle - (78.75 * np.pi) / 180.0
-                print('78p75\n')
+            # commented out because basemprimendpts33p75_c is undefined
+            # elif ((currentangle_36000int - 7875) % 9000) == 0:
+            #     basemprimendpts_c = (
+            #         1 * basemprimendpts33p75_c[primind, :]
+            #     )  # 1* to force deep copy to avoid reference update below
+            #     basemprimendpts_c[0] = basemprimendpts33p75_c[primind, 1]
+            #     # %reverse x and y
+            #     basemprimendpts_c[1] = basemprimendpts33p75_c[primind, 0]
+            #     basemprimendpts_c[2] = -basemprimendpts33p75_c[primind, 2]
+            #     # %reverse the angle as well
+            #     angle = currentangle - (78.75 * np.pi) / 180.0
+            #     print('78p75\n')
 
             elif ((currentangle_36000int - 6750) % 9000) == 0:
                 basemprimendpts_c = (
                     1 * basemprimendpts22p5_c[int(primind) - 1, :]
                 )  # 1* to force deep copy to avoid reference update below
                 basemprimendpts_c[0] = basemprimendpts22p5_c[int(primind) - 1, 1]
-                #%reverse x and y
+                # %reverse x and y
                 basemprimendpts_c[1] = basemprimendpts22p5_c[int(primind) - 1, 0]
                 basemprimendpts_c[2] = -basemprimendpts22p5_c[int(primind) - 1, 2]
-                #%reverse the angle as well
-                # print('%d : %d %d %d onto %d %d %d\n'%(primind-1,basemprimendpts22p5_c[int(primind)-1,0], basemprimendpts22p5_c[int(primind)-1,1], basemprimendpts22p5_c[int(primind)-1,2], basemprimendpts_c[0], basemprimendpts_c[1], basemprimendpts_c[2]))
+                # %reverse the angle as well
+                # print(
+                #     '%d : %d %d %d onto %d %d %d\n'
+                #     % (
+                #         primind - 1,
+                #         basemprimendpts22p5_c[int(primind) - 1, 0],
+                #         basemprimendpts22p5_c[int(primind) - 1, 1],
+                #         basemprimendpts22p5_c[int(primind) - 1, 2],
+                #         basemprimendpts_c[0],
+                #         basemprimendpts_c[1],
+                #         basemprimendpts_c[2],
+                #     )
+                # )
                 angle = currentangle - (67.5 * np.pi) / 180.0
                 print('67p5\n')
 
-            elif ((currentangle_36000int - 5625) % 9000) == 0:
-                basemprimendpts_c = (
-                    1 * basemprimendpts11p25_c[primind, :]
-                )  # 1* to force deep copy to avoid reference update below
-                basemprimendpts_c[0] = basemprimendpts11p25_c[primind, 1]
-                #%reverse x and y
-                basemprimendpts_c[1] = basemprimendpts11p25_c[primind, 0]
-                basemprimendpts_c[2] = -basemprimendpts11p25_c[primind, 2]
-                #%reverse the angle as well
-                angle = currentangle - (56.25 * np.pi) / 180.0
-                print('56p25\n')
+            # commented out because basemprimendpts11p25_c is undefined
+            # elif ((currentangle_36000int - 5625) % 9000) == 0:
+            #     basemprimendpts_c = (
+            #         1 * basemprimendpts11p25_c[primind, :]
+            #     )  # 1* to force deep copy to avoid reference update below
+            #     basemprimendpts_c[0] = basemprimendpts11p25_c[primind, 1]
+            #     # %reverse x and y
+            #     basemprimendpts_c[1] = basemprimendpts11p25_c[primind, 0]
+            #     basemprimendpts_c[2] = -basemprimendpts11p25_c[primind, 2]
+            #     # %reverse the angle as well
+            #     angle = currentangle - (56.25 * np.pi) / 180.0
+            #     print('56p25\n')
 
-            elif ((currentangle_36000int - 3375) % 9000) == 0:
-                basemprimendpts_c = basemprimendpts33p75_c[int(primind), :]
-                angle = currentangle - (33.75 * np.pi) / 180.0
-                print('33p75\n')
+            # commented out because basemprimendpts33p75_c is undefined
+            # elif ((currentangle_36000int - 3375) % 9000) == 0:
+            #     basemprimendpts_c = basemprimendpts33p75_c[int(primind), :]
+            #     angle = currentangle - (33.75 * np.pi) / 180.0
+            #     print('33p75\n')
 
             elif ((currentangle_36000int - 2250) % 9000) == 0:
                 basemprimendpts_c = basemprimendpts22p5_c[int(primind) - 1, :]
                 angle = currentangle - (22.5 * np.pi) / 180.0
                 print('22p5\n')
 
-            elif ((currentangle_36000int - 1125) % 9000) == 0:
-                basemprimendpts_c = basemprimendpts11p25_c[int(primind), :]
-                angle = currentangle - (11.25 * np.pi) / 180.0
-                print('11p25\n')
+            # commented out because basemprimendpts11p25_c is undefined
+            # elif ((currentangle_36000int - 1125) % 9000) == 0:
+            #     basemprimendpts_c = basemprimendpts11p25_c[int(primind), :]
+            #     angle = currentangle - (11.25 * np.pi) / 180.0
+            #     print('11p25\n')
 
             else:
                 print('ERROR: invalid angular resolution. angle = %d\n' % currentangle_36000int)
                 return []
 
-            #%now figure out what action will be
+            # %now figure out what action will be
             baseendpose_c = basemprimendpts_c[0:3]
             additionalactioncostmult = basemprimendpts_c[3]
             endx_c = np.round((baseendpose_c[0] * np.cos(angle)) - (baseendpose_c[1] * np.sin(angle)))
@@ -231,10 +256,10 @@ def genmprim_unicycle(outfilename, visualize=False, separate_plots=False):
             print("endpose_c=", endpose_c)
             print(('rotation angle=%f\n' % (angle * 180.0 / np.pi)))
             # if np.logical_and(baseendpose_c[1] == 0., baseendpose_c[2] == 0.):
-            #%fprintf(1, 'endpose=%d %d %d\n', endpose_c(1), endpose_c(2), endpose_c(3));
+            # %fprintf(1, 'endpose=%d %d %d\n', endpose_c(1), endpose_c(2), endpose_c(3));
 
-            #%generate intermediate poses (remember they are w.r.t 0,0 (and not
-            #%centers of the cells)
+            # %generate intermediate poses (remember they are w.r.t 0,0 (and not
+            # %centers of the cells)
             numofsamples = 10
             intermcells_m = np.zeros((numofsamples, 3))
             if UNICYCLE_MPRIM_16DEGS == 1.0:
@@ -256,7 +281,7 @@ def genmprim_unicycle(outfilename, visualize=False, separate_plots=False):
                 print("endpt   =", endpt)
                 intermcells_m = np.zeros((numofsamples, 3))
                 if np.logical_or(np.logical_and(endx_c == 0.0, endy_c == 0.0), baseendpose_c[2] == 0.0):
-                    #%turn in place or move forward
+                    # %turn in place or move forward
                     for iind in np.arange(1.0, (numofsamples) + 1):
                         fraction = float(iind - 1) / (numofsamples - 1)
                         intermcells_m[int(iind) - 1, :] = np.array(
@@ -271,7 +296,7 @@ def genmprim_unicycle(outfilename, visualize=False, separate_plots=False):
                         # print " ",iind,"  of ",numofsamples," fraction=",fraction," rotation=",rotation_angle
 
                 else:
-                    #%unicycle-based move forward or backward  (http://sbpl.net/node/53)
+                    # %unicycle-based move forward or backward  (http://sbpl.net/node/53)
                     R = np.array(
                         np.vstack(
                             (
@@ -299,19 +324,19 @@ def genmprim_unicycle(outfilename, visualize=False, separate_plots=False):
                         print(('WARNING: l = %f < 0 -> bad action start/end points\n' % (l)))
                         l = 0.0
 
-                    #%compute rv
-                    #%rv = baseendpose_c(3)*2*pi/numberofangles;
-                    #%compute tv
-                    #%tvx = (endpt(1) - startpt(1))*rv/(sin(endpt(3)) - sin(startpt(3)))
-                    #%tvy = -(endpt(2) - startpt(2))*rv/(cos(endpt(3)) - cos(startpt(3)))
-                    #%tv = (tvx + tvy)/2.0;
-                    #%generate samples
+                    # %compute rv
+                    # %rv = baseendpose_c(3)*2*pi/numberofangles;
+                    # %compute tv
+                    # %tvx = (endpt(1) - startpt(1))*rv/(sin(endpt(3)) - sin(startpt(3)))
+                    # %tvy = -(endpt(2) - startpt(2))*rv/(cos(endpt(3)) - cos(startpt(3)))
+                    # %tv = (tvx + tvy)/2.0;
+                    # %generate samples
                     for iind in np.arange(1, numofsamples + 1):
                         dt = (iind - 1) / (numofsamples - 1)
-                        #%dtheta = rv*dt + startpt(3);
-                        #%intermcells_m(iind,:) = [startpt(1) + tv/rv*(sin(dtheta) - sin(startpt(3))) ...
-                        #%                        startpt(2) - tv/rv*(cos(dtheta) - cos(startpt(3))) ...
-                        #%                        dtheta];
+                        # %dtheta = rv*dt + startpt(3);
+                        # %intermcells_m(iind,:) = [startpt(1) + tv/rv*(sin(dtheta) - sin(startpt(3))) ...
+                        # %                        startpt(2) - tv/rv*(cos(dtheta) - cos(startpt(3))) ...
+                        # %                        dtheta];
                         if (dt * tv) < l:
                             intermcells_m[int(iind) - 1, :] = np.array(
                                 np.hstack(
@@ -338,7 +363,7 @@ def genmprim_unicycle(outfilename, visualize=False, separate_plots=False):
                                 )
                             )
 
-                    #%correct
+                    # %correct
                     errorxy = np.array(
                         np.hstack(
                             (
@@ -358,7 +383,7 @@ def genmprim_unicycle(outfilename, visualize=False, separate_plots=False):
                     intermcells_m[:, 0] = intermcells_m[:, 0] + errorxy[0] * interpfactor.conj().T
                     intermcells_m[:, 1] = intermcells_m[:, 1] + errorxy[1] * interpfactor.conj().T
 
-            #%write out
+            # %write out
             fout.write('endpose_c: %d %d %d\n' % (endpose_c[0], endpose_c[1], endpose_c[2]))
             fout.write('additionalactioncostmult: %d\n' % (additionalactioncostmult))
             fout.write('intermediateposes: %d\n' % (matrix_size(intermcells_m, 1.0)))

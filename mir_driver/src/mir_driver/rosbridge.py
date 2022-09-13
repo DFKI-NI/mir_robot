@@ -50,10 +50,10 @@ class RosbridgeSetup:
     def callService(self, serviceName, callback=None, msg=None):
         id = self.generate_id()
         call = {"op": "call_service", "id": id, "service": serviceName}
-        if msg != None:
+        if msg is not None:
             call['args'] = msg
 
-        if callback == None:
+        if callback is None:
             self.resp = None
 
             def internalCB(msg):
@@ -63,7 +63,7 @@ class RosbridgeSetup:
             self.addServiceCallback(id, internalCB)
             self.send(call)
 
-            while self.resp == None:
+            while self.resp is None:
                 time.sleep(0.01)
 
             return self.resp
@@ -75,7 +75,7 @@ class RosbridgeSetup:
     def send(self, obj):
         try:
             self.connection.sendString(json.dumps(obj))
-        except:
+        except Exception:
             traceback.print_exc()
             raise
 
@@ -114,7 +114,7 @@ class RosbridgeSetup:
                         for callback in self.callbacks[topic]:
                             try:
                                 callback(msg)
-                            except:
+                            except Exception:
                                 print("exception on callback", callback, "from", topic)
                                 traceback.print_exc()
                                 raise
@@ -126,7 +126,7 @@ class RosbridgeSetup:
                             try:
                                 # print 'id:', id, 'func:', self.service_callbacks[id]
                                 self.service_callbacks[id](values)
-                            except:
+                            except Exception:
                                 print("exception on callback ID:", id)
                                 traceback.print_exc()
                                 raise
@@ -136,7 +136,7 @@ class RosbridgeSetup:
                     print("Recieved unknown option - it was: ", option)
             else:
                 print("No OP key!")
-        except:
+        except Exception:
             print("exception in onMessageReceived")
             print("message", message)
             traceback.print_exc()

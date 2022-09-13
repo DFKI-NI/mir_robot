@@ -253,7 +253,7 @@ PUB_TOPICS = [
     # TopicConfig('move_base_node/MIRPlannerROS/visualization_marker', visualization_msgs.msg.MarkerArray),
     TopicConfig('move_base_node/SBPLLatticePlanner/plan', nav_msgs.msg.Path),
     # TopicConfig(
-    #     'move_base_node/SBPLLatticePlanner/sbpl_lattice_planner_stats', sbpl_lattice_planner.msg.SBPLLatticePlannerStats
+    #   'move_base_node/SBPLLatticePlanner/sbpl_lattice_planner_stats', sbpl_lattice_planner.msg.SBPLLatticePlannerStats
     # ),
     # TopicConfig('move_base_node/SBPLLatticePlanner/visualization_marker', visualization_msgs.msg.MarkerArray),
     TopicConfig('move_base_node/current_goal', geometry_msgs.msg.PoseStamped),
