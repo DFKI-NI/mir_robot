@@ -53,7 +53,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://mir_description/meshes/visual/wheel.stl" />
+          <cylinder radius="${mir_100_act_wheel_radius}" length="${mir_100_act_wheel_width}" />
         </geometry>
       </collision>
     </link>
@@ -105,7 +105,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://mir_description/meshes/collision/caster_wheel_base.stl" />
+          <cylinder radius="${mir_100_caster_wheel_radius}" length="${mir_100_caster_wheel_width}" />
         </geometry>
       </collision>
     </link>
