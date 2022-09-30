@@ -90,6 +90,13 @@ repos:
           - --license-filepath
           - LICENSE
 
+  - repo: https://github.com/pycqa/pydocstyle
+    rev: 6.1.1
+    hooks:
+      - id: pydocstyle
+        args:
+        - --ignore=D100,D101,D102,D103,D104,D105,D106,D107,D203,D212,D404   # same as https://github.com/ament/ament_lint/blob/bbdaa17224f3b8dfece53662b65d7d18b7404b6a/ament_pep257/ament_pep257/main.py#L43-L55
+
   - repo: local
     hooks:
       - id: clang-format
