@@ -95,7 +95,9 @@ def _move_base_result_dict_filter(msg_dict):
 
 def _cmd_vel_dict_filter(msg_dict):
     """
-    Converts a geometry_msgs/Twist message dict (as sent from the ROS side) to
+    Convert Twist to TwistStamped.
+
+    Convert a geometry_msgs/Twist message dict (as sent from the ROS side) to
     a geometry_msgs/TwistStamped message dict (as expected by the MiR on
     software version >=2.7).
     """
@@ -116,6 +118,8 @@ def _tf_dict_filter(msg_dict):
 
 def _tf_static_dict_filter(msg_dict):
     """
+    Cache tf_static messages (simulate latching).
+
     The tf_static topic needs special handling. Publishers on tf_static are *latched*, which means that the ROS master
     caches the last message that was sent by each publisher on that topic, and will forward it to new subscribers.
     However, since the mir_driver node appears to the ROS master as a single node with a single publisher on tf_static,

@@ -38,8 +38,9 @@ pub = None
 
 def callback(msg):
     """
-    Convert laser scans to REP 117 standard:
-    http://www.ros.org/reps/rep-0117.html
+    Convert laser scans to REP 117 standard.
+
+    See http://www.ros.org/reps/rep-0117.html
     """
     ranges_out = []
     for dist in msg.ranges:
