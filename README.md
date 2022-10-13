@@ -1,5 +1,5 @@
-mir_driver
-==========
+mir_robot
+=========
 
 This repo contains a ROS driver and ROS configuration files (URDF description,
 Gazebo launch files, move_base config, bringup launch files, message and action
