@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.5.1)
-cmake_policy(SET CMP0048 NEW)
 project(sdc21x0)
 
 find_package(catkin REQUIRED COMPONENTS

@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.5.1)
-cmake_policy(SET CMP0048 NEW)
 project(mir_description)
 
 find_package(catkin REQUIRED COMPONENTS
