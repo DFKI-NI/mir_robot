@@ -1,3 +1,7 @@
-string state_string
+uint8 HEIGHT_UNKNOWN = 0
+uint8 HEIGHT_HOMING = 1
+uint8 HEIGHT_IDLE = 2
+uint8 HEIGHT_CHANGING = 3
+uint8 HEIGHT_ERROR = 4
+
 uint8 state
-float64 height
