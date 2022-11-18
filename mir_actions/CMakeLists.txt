@@ -5,6 +5,7 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib
   geometry_msgs
   message_generation
+  mir_msgs
   nav_msgs
 )
 
@@ -22,6 +23,7 @@ add_action_files(
 generate_messages(
   DEPENDENCIES
     geometry_msgs
+    mir_msgs
     nav_msgs
 )
 
@@ -33,5 +35,6 @@ catkin_package(
     actionlib
     geometry_msgs
     message_runtime
+    mir_msgs
     nav_msgs
 )

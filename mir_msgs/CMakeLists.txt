@@ -35,6 +35,7 @@ add_message_files(
     JoystickVel.msg
     LocalMapStat.msg
     MirExtra.msg
+    MirLocalPlannerPathTypes.msg
     MissionCtrlCommand.msg
     MissionCtrlState.msg
     MovingState.msg

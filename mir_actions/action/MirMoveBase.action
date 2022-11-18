@@ -6,10 +6,12 @@ int16 RELATIVE_MOVE = 2
 int16 RELATIVE_MARKER_MOVE = 3
 int16 DOCKING_MOVE = 4
 int16 DOCKING_GLOBAL_MOVE = 5
+int16 PATH_TYPE = 6
 int16 move_task
 
 #shared parameters
 geometry_msgs/PoseStamped target_pose
+string target_guid
 
 #global move parameters
 float64 goal_dist_threshold
@@ -44,6 +46,12 @@ float64 bar_length
 float64 bar_distance
 float64 shelf_leg_asymmetry_x
 float64 tolerance
+
+#Path type
+mir_msgs/MirLocalPlannerPathTypes path_type
+geometry_msgs/PoseStamped start_pose
+# float64 timeout
+
 
 ---
 #result definition
@@ -90,6 +98,9 @@ string message
 #feedback
 #shared
 int8 NOT_READY = -1
+int8 UNKNOWN = -2
+int8 WAITING_FOR_FLEET = -3
+int8 COLLISION = -4
 
 #global move states
 int8 PLANNING = 0
@@ -98,7 +109,6 @@ int8 CLEARING = 2
 
 #relative move states
 int8 DOCKING = 3
-int8 COLLISION = 4
 
 #shared feedback
 int8 state
@@ -111,8 +121,10 @@ geometry_msgs/PoseStamped current_goal
 geometry_msgs/PoseStamped dist_to_goal
 
 #docking move feedback
-#int8 DOCKING = 0
-#int8 COLLISION = 1
-#int8 state
 geometry_msgs/Pose2D pose
 bool marker_inversion
+
+#path_types
+    #reverse_trolly
+int8 MOVING_FORWARD = 10
+int8 MOVING_BACKWARD = 11

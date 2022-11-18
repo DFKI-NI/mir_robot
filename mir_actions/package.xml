@@ -17,6 +17,7 @@
 
   <depend>actionlib</depend>
   <depend>geometry_msgs</depend>
+  <depend>mir_msgs</depend>
   <depend>nav_msgs</depend>
 
   <build_depend>message_generation</build_depend>
