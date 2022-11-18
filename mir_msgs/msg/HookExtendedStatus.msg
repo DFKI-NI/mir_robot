@@ -1,10 +1,10 @@
 bool available
 
-mir_msgs/BrakeState brake
+BrakeState brake
 
-mir_msgs/GripperState gripper
+GripperState gripper
 
-mir_msgs/HeightState height
+HeightState height
 
 float32 angle
 

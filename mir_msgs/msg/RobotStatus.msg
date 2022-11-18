@@ -1,3 +1,4 @@
+Header header
 float32 battery_percentage
 int32 battery_time_remaining
 float32 battery_voltage
@@ -5,6 +6,7 @@ float32 distance_to_next_target
 Error[] errors
 string footprint
 HookStatus hook_status
+HookData hook_data
 string map_id
 bool unloaded_map_changes
 int32 mission_queue_id

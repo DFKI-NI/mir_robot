@@ -24,9 +24,11 @@ int32 MISSION_ERROR = 10100
 int32 LOCALIZATION_ERROR = 10200
 int32 MAPPING_ERROR = 10300
 int32 ODOM_FUSION_ERROR = 10400
+int32 EVACUATION_ERROR = 12000
 
 
 time timestamp		# Timestamp for when the error occurred
 int32 code 			# Error code
 string description 	# Error description
 string module		# Module in which the error occurred
+bool nolog          # Do not trigger an error log if set to true
