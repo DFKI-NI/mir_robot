@@ -13,14 +13,14 @@ find_package(catkin REQUIRED COMPONENTS
 # Generate messages in the 'msg' folder
 add_message_files(
   FILES
-    BatteryCurrents.msg
     BMSData.msg
+    BatteryCurrents.msg
     BrakeState.msg
     ChargingState.msg
     Device.msg
     Devices.msg
-    Encoders.msg
     EncoderTestEntry.msg
+    Encoders.msg
     Error.msg
     Event.msg
     Events.msg
@@ -37,6 +37,7 @@ add_message_files(
     MirExtra.msg
     MissionCtrlCommand.msg
     MissionCtrlState.msg
+    MovingState.msg
     PalletLifterStatus.msg
     Path.msg
     Pendant.msg
@@ -46,15 +47,20 @@ add_message_files(
     PowerBoardMotorStatus.msg
     PrecisionDockingStatus.msg
     Proximity.msg
-    ResourcesState.msg
     ResourceState.msg
+    ResourcesAcquisition.msg
+    ResourcesState.msg
     RobotMode.msg
     RobotState.msg
     RobotStatus.msg
     SafetyStatus.msg
     Serial.msg
+    ServiceResponseHeader.msg
+    SkidDetectionDiff.msg
+    SkidDetectionStampedFloat.msg
     SoundEvent.msg
     StampedEncoders.msg
+    TimeDebug.msg
     Trolley.msg
     Twist2D.msg
     UserPrompt.msg
