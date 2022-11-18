@@ -1,7 +1,7 @@
 float64 pack_voltage
 float64 charge_current
 float64 discharge_current
-int32 state_of_charge
+float64 state_of_charge
 float64 remaining_time_to_full_charge
 int32 remaining_capacity
 int32 state_of_health
@@ -47,7 +47,7 @@ uint32 BATT_TYPE_NO_BMS=255       #WST No BMS battery
 float64 full_voltage
 int32 full_capacity
 int32 temperature2
-int32 temperature3
+int32 temperature_pcb
 int32 cycle_count
 int32 dsg_overcurrent_counter
 int32 chg_overcurrent_counter
