@@ -1,3 +1,9 @@
-string state_string
+uint8 LOCK_UNKNOWN = 0
+uint8 LOCK_HOMING = 1
+uint8 LOCK_OPEN = 2
+uint8 LOCK_OPENING = 3
+uint8 LOCK_CLOSED = 4
+uint8 LOCK_CLOSING = 6
+uint8 LOCK_ERROR = 9
+
 uint8 state
-bool closed
