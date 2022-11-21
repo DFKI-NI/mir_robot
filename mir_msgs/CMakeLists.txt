@@ -29,8 +29,8 @@ add_message_files(
     ExternalRobots.msg
     Gpio.msg
     GripperState.msg
-    HookData.msg
     HeightState.msg
+    HookData.msg
     HookExtendedStatus.msg
     HookStatus.msg
     IOs.msg
