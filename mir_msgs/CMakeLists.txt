@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
 # Generate messages in the 'msg' folder
 add_message_files(
   FILES
+    AngleMeasurment.msg
     BMSData.msg
     BatteryCurrents.msg
     BrakeState.msg
@@ -29,6 +30,7 @@ add_message_files(
     Gpio.msg
     GripperState.msg
     HeightState.msg
+    HookData.msg
     HookExtendedStatus.msg
     HookStatus.msg
     IOs.msg
