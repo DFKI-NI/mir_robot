@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
 # Generate messages in the 'msg' folder
 add_message_files(
   FILES
+    AngleMeasurment.msg
     BMSData.msg
     BatteryCurrents.msg
     BrakeState.msg
@@ -28,6 +29,7 @@ add_message_files(
     ExternalRobots.msg
     Gpio.msg
     GripperState.msg
+    HookData.msg
     HeightState.msg
     HookExtendedStatus.msg
     HookStatus.msg
