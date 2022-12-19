@@ -103,7 +103,7 @@ catkin_make -DCMAKE_BUILD_TYPE=RelWithDebugInfo
 ```
 
 In case you encounter problems, please compare the commands above to the build
-step in [`.travis.yml`](.travis.yml); that should always have the most
+step in [`.github/workflows/github-actions.yml`](.github/workflows/github-actions.yml); that should always have the most
 recent list of commands.
 
 You should add the following line to the end of your `~/.bashrc`, and then
@@ -340,12 +340,12 @@ status `SUCCEEDED` arrives before the corresponding result message, this
 warning will be printed. It can be safely ignored.
 
 
-Travis - Continuous Integration
--------------------------------
+GitHub Actions - Continuous Integration
+---------------------------------------
 
-| Melodic                                                                                                                  | Noetic                                                                                                                  |
-|--------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|
-| [![Build Status](https://travis-ci.org/dfki-ric/mir_robot.svg?branch=melodic)](https://travis-ci.org/dfki-ric/mir_robot) | [![Build Status](https://travis-ci.org/dfki-ric/mir_robot.svg?branch=noetic)](https://travis-ci.org/dfki-ric/mir_robot) |
+| Noetic                                                                                                                                                                               |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [![Build Status](https://github.com/dfki-ric/mir_robot/actions/workflows/github-actions.yml/badge.svg)](https://github.com/dfki-ric/mir_robot/actions/workflows/github-actions.yml/) |
 
 
 ROS Buildfarm
