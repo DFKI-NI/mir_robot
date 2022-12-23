@@ -1,0 +1,328 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <link name="cart_base_link">
+  </link>
+
+  <link name="cart_root">
+    <inertial>
+      <origin xyz="7e-05 0.00011 -3e-05" rpy="0 0 0"/>
+      <mass value="12.5"/>
+      <inertia ixx="0.06608" ixy="0" ixz="0" iyy="0.05242" iyz="1e-05" izz="0.02359"/>
+    </inertial>
+    <visual name="visual_back_stabilizer">
+      <xacro:insert_block name="material_silver" />
+      <origin xyz="0.00017 0.38637 1.06389" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/cart/Part__Feature167.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <gazebo reference="cart_root">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <visual name="visual_castor_rigid_left_fork">
+      <xacro:insert_block name="material_silver" />
+      <origin xyz="-0.28116 0.33151 -0.06865" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/cart/Part__Feature082.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <gazebo reference="visual_castor_rigid_left_fork">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <visual name="visual_castor_rigid_right_fork">
+      <xacro:insert_block name="material_silver" />
+      <origin xyz="0.28184 0.33151 -0.06865" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/cart/Part__Feature099.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <gazebo reference="visual_castor_rigid_right_fork">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <visual name="visual_castor_swivel_left_top_plate">
+      <xacro:insert_block name="material_silver" />
+      <origin xyz="-0.28133 -0.32949 -0.04313" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/cart/Part__Feature021.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <gazebo reference="visual_castor_swivel_left_top_plate">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <visual name="visual_castor_swivel_right_top_plate">
+      <xacro:insert_block name="material_silver" />
+      <origin xyz="0.28167 -0.32949 -0.04313" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/cart/Part__Feature116.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <gazebo reference="visual_castor_swivel_right_top_plate">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <visual name="visual_container_base">
+      <xacro:insert_block name="material_silver" />
+      <origin xyz="-0.00111 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/cart/Part__Feature.stl" scale="1.01559 1.0 1.0"/>
+      </geometry>
+      <gazebo reference="visual_container_base">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <visual name="visual_handle_left">
+      <xacro:insert_block name="material_silver" />
+      <origin xyz="-0.31379 -0.43587 0.90411" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/cart/Part__Feature163.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <gazebo reference="visual_handle_left">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <visual name="visual_handle_right">
+      <xacro:insert_block name="material_silver" />
+      <origin xyz="0.31187 -0.43529 0.90415" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/cart/Part__Feature166.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <gazebo reference="visual_handle_right">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <visual name="visual_wire_lattice_left">
+      <xacro:insert_block name="material_silver" />
+      <origin xyz="-0.3407 0.00254 0.70262" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/cart/Part__Feature162.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <gazebo reference="visual_wire_lattice_left">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <visual name="visual_wire_lattice_right">
+      <xacro:insert_block name="material_silver" />
+      <origin xyz="0.34102 0.00291 0.70264" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/cart/Part__Feature165.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <gazebo reference="visual_wire_lattice_right">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+  </link>
+
+  <link name="castor_rigid_left_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.25"/>
+      <inertia ixx="3e-05" ixy="0" ixz="0" iyy="2e-05" iyz="0" izz="2e-05"/>
+    </inertial>
+    <visual name="visual_castor_rigid_left_wheel">
+      <xacro:insert_block name="material_red" />
+      <origin xyz="0 0 0" rpy="0 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/cart/Part__Feature066.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <gazebo reference="castor_rigid_left_wheel">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <collision name="collision_castor_rigid_left_wheel">
+      <origin xyz="-5e-05 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.0495"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="castor_rigid_right_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.25"/>
+      <inertia ixx="3e-05" ixy="0" ixz="0" iyy="2e-05" iyz="0" izz="2e-05"/>
+    </inertial>
+    <visual name="visual_castor_rigid_right_wheel">
+      <xacro:insert_block name="material_red" />
+      <origin xyz="0 0 0" rpy="0 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/cart/Part__Feature083.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <gazebo reference="$castor_rigid_right_wheel">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <collision name="collision_castor_rigid_right_wheel">
+      <origin xyz="-5e-05 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.0495"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="castor_swivel_left_fork">
+    <inertial>
+      <origin xyz="-0.00547 -0.01599 -0.02516" rpy="0 0 0"/>
+      <mass value="0.05"/>
+      <inertia ixx="2e-05" ixy="0" ixz="0" iyy="2e-05" iyz="0" izz="2e-05"/>
+    </inertial>
+    <visual name="visual_castor_swivel_left_fork">
+      <xacro:insert_block name="material_silver" />
+      <origin xyz="-0.00547 -0.01599 -0.02516" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/cart/Part__Feature022.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <gazebo reference="castor_swivel_left_fork">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <collision name="collision_castor_swivel_left_fork">
+      <origin xyz="0.00029 -0.01005 -0.03671" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.06794 0.086 0.07898"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="castor_swivel_left_wheel">
+    <inertial>
+      <origin xyz="0 0 -5e-05" rpy="0 0 0"/>
+      <mass value="0.25"/>
+      <inertia ixx="3e-05" ixy="0" ixz="0" iyy="2e-05" iyz="0" izz="2e-05"/>
+    </inertial>
+    <visual name="visual_castor_swivel_left_wheel">
+      <xacro:insert_block name="material_red" />
+      <origin xyz="0 0 -5e-05" rpy="0.50265 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/cart/Part__Feature006.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <gazebo reference="castor_swivel_left_wheel">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <collision name="collision_castor_swivel_left_wheel">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.0495"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="castor_swivel_right_fork">
+    <inertial>
+      <origin xyz="-0.00589 -0.01692 -0.02589" rpy="0 0 0"/>
+      <mass value="0.05"/>
+      <inertia ixx="2e-05" ixy="0" ixz="0" iyy="2e-05" iyz="0" izz="2e-05"/>
+    </inertial>
+    <visual name="visual_castor_swivel_right_fork">
+      <xacro:insert_block name="material_silver" />
+      <origin xyz="-0.00589 -0.01692 -0.02589" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/cart/Part__Feature117.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <gazebo reference="castor_swivel_right_fork">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <collision name="collision_castor_swivel_right_fork">
+      <origin xyz="0.00107 -0.00955 -0.03667" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.06794 0.086 0.07898"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="castor_swivel_right_wheel">
+    <inertial>
+      <origin xyz="0 0 5e-05" rpy="0 0 0"/>
+      <mass value="0.25"/>
+      <inertia ixx="3e-05" ixy="0" ixz="0" iyy="2e-05" iyz="0" izz="2e-05"/>
+    </inertial>
+    <visual name="visual_castor_swivel_right_wheel">
+      <xacro:insert_block name="material_red" />
+      <origin xyz="0 0 5e-05" rpy="0 -1.5708 0"/>
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/cart/Part__Feature083_001.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <gazebo reference="castor_swivel_right_wheel">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <collision name="collision_castor_swivel_right_wheel">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.0495"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="castor_rigid_left_wheel_joint" type="continuous">
+    <origin xyz="-0.28128 0.33151 -0.11689" rpy="0 1.5708 0"/>
+    <parent link="cart_root"/>
+    <child link="castor_rigid_left_wheel"/>
+    <axis xyz="0 0 1.0"/>
+    <limit effort="0" velocity="0"/>
+  </joint>
+
+  <joint name="castor_rigid_right_wheel_joint" type="continuous">
+    <origin xyz="0.28172 0.33151 -0.11689" rpy="0 1.5708 0"/>
+    <parent link="cart_root"/>
+    <child link="castor_rigid_right_wheel"/>
+    <axis xyz="0 0 1.0"/>
+    <limit effort="0" velocity="0"/>
+  </joint>
+
+  <joint name="castor_swivel_left_fork_joint" type="revolute">
+    <limit lower="-1" upper="0.25" effort="100.0" velocity="0"/>
+    <origin xyz="-0.28164 -0.32844 -0.05218" rpy="0 0 0"/>
+    <parent link="cart_root"/>
+    <child link="castor_swivel_left_fork"/>
+    <axis xyz="0 0 1.0"/>
+    <limit effort="0" velocity="0"/>
+  </joint>
+
+  <joint name="castor_swivel_left_wheel_joint" type="fixed">
+    <origin xyz="0.0003 -0.04105 -0.06471" rpy="0 1.5708 0"/>
+    <parent link="castor_swivel_left_fork"/>
+    <child link="castor_swivel_left_wheel"/>
+    <axis xyz="0 0 1.0"/>
+    <limit effort="0" velocity="0"/>
+  </joint>
+
+  <joint name="castor_swivel_right_fork_joint" type="revolute">
+    <limit lower="-1" upper="0.25" effort="100.0" velocity="0"/>
+    <origin xyz="0.28059 -0.32894 -0.05222" rpy="0 0 0"/>
+    <parent link="cart_root"/>
+    <child link="castor_swivel_right_fork"/>
+    <axis xyz="0 0 1.0"/>
+    <limit effort="0" velocity="0"/>
+  </joint>
+
+  <!--type="revolute">
+      <axis xyz="0 0 1.0"/>
+      <limit lower="-0.25" upper="0.25" effort="100.0" velocity="0"/ -->
+  <joint name="castor_swivel_right_wheel_joint" type="fixed">
+    <origin xyz="0.00108 -0.04055 -0.06467" rpy="0 1.5708 0"/>
+    <parent link="castor_swivel_right_fork"/>
+    <child link="castor_swivel_right_wheel"/>
+    <axis xyz="0 0 1.0"/>
+    <limit effort="5" velocity="0"/>
+  </joint>
+
+
+  <joint name="carriage_to_cart_base_link" type="fixed">
+    <origin xyz="-0.31849 -0.58689 0.0 " rpy="-1.5708 0 0.0"/>
+    <parent link="carriage"/>
+    <child link="cart_base_link"/>
+    <axis xyz="0 0 0"/>
+    <limit effort="0" velocity="0"/>
+  </joint>
+
+  <joint name="cart_base_link_to_root" type="fixed">
+    <origin xyz="-0.33151 0.0 0.11689" rpy="0.0 0.0 -1.5707"/>
+    <parent link="cart_base_link"/>
+    <child link="cart_root"/>
+    <axis xyz="0 0 0"/>
+    <limit effort="0" velocity="0"/>
+  </joint>
+
+</robot>

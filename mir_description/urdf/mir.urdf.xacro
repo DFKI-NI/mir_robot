@@ -6,6 +6,14 @@
   <xacro:include filename="$(find mir_description)/urdf/include/mir_v1.urdf.xacro" />
   <xacro:include filename="$(find mir_description)/urdf/include/common.gazebo.xacro" />
 
+  <!-- MiR hook and cart -->
+  <xacro:property name="mir_hook" value="$(arg mir_hook)" />
+  <xacro:if value="${mir_hook == True}">
+    <xacro:include filename="$(find mir_hook_description)/urdf/include/mir_hook_common.urdf.xacro" />  
+    <xacro:include filename="$(find mir_hook_description)/urdf/include/cart.urdf.xacro" />
+    <xacro:include filename="$(find mir_hook_description)/urdf/include/hook.urdf.xacro" />
+  </xacro:if>
+
   <xacro:arg name="tf_prefix" default="" />
   <xacro:property name="tf_prefix_" value="$(arg tf_prefix)" />
   <xacro:if value="${tf_prefix_ == ''}">
