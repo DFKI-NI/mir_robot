@@ -8,85 +8,55 @@
       <mass value="8.35" />
       <inertia ixx="0.0102801" ixy="0.0005188" ixz="-0.0035496" iyy="0.0089798" iyz="-7.18e-05" izz="0.0049397" />
     </inertial>
-    <visual name="visual_carriage">
+    <visual>
       <origin xyz="-0.0345127 -0.0820147 3.1e-06" rpy="-1.5707964 0 0" />
       <geometry>
         <mesh filename="package://mir_hook_description/meshes/hook/carriage.stl" scale="1.0 1.0 1.0" />
       </geometry>
       <xacro:insert_block name="material_grey" />
-      <gazebo reference="carriage">
-        <material>Gazebo/DarkGrey</material>
-      </gazebo>
     </visual>
-    <visual name="visual_container_crawler">
+    <visual>
       <origin xyz="-0.2067981 -0.2896011 3e-06" rpy="-1.5707964 0 0" />
       <geometry>
         <mesh filename="package://mir_hook_description/meshes/hook/container_crawler.stl" scale="1.0 1.0 1.0" />
       </geometry>
       <xacro:insert_block name="material_grey" />
-      <gazebo reference="carriage">
-        <material>Gazebo/DarkGrey</material>
-      </gazebo>
     </visual>
-    <visual name="visual_container_lock">
+    <visual>
       <origin xyz="-0.1818805 -0.180375 -0.000269" rpy="-1.5707964 0 0" />
       <geometry>
         <mesh filename="package://mir_hook_description/meshes/hook/container_lock.stl" scale="1.0 1.0 1.0" />
       </geometry>
-      <gazebo reference="carriage">
-        <xacro:insert_block name="material_grey" />
-        <material>Gazebo/DarkGrey</material>
-      </gazebo>
     </visual>
-    <visual name="visual_fork_base">
+    <visual>
       <origin xyz="-0.1448901 -0.2715 3.2e-06" rpy="-1.5707964 0 0" />
       <geometry>
         <mesh filename="package://mir_hook_description/meshes/hook/fork_base.stl" scale="1.0 1.0 1.0" />
       </geometry>
-      <gazebo reference="carriage">
-        <xacro:insert_block name="material_grey" />
-        <material>Gazebo/DarkGrey</material>
-      </gazebo>
     </visual>
-    <visual name="visual_tilt_actuator_cylinder">
+    <visual>
       <origin xyz="-0.1676646 -0.1944744 0.0017018" rpy="-1.5707964 0 0" />
       <geometry>
         <mesh filename="package://mir_hook_description/meshes/hook/Part__Feature079.stl" scale="1.0000001 1.0 1.0000001" />
       </geometry>
-      <gazebo reference="carriage">
-        <material>Gazebo/DarkGrey</material>
-        <xacro:insert_block name="material_grey" />
-      </gazebo>
     </visual>
-    <visual name="visual_tilt_actuator_motor">
+    <visual>
       <origin xyz="-0.1158853 -0.0953563 0.0017019" rpy="-1.5707964 0 0" />
       <geometry>
         <mesh filename="package://mir_hook_description/meshes/hook/Part__Feature078.stl" scale="1.0000001 1.0 1.0000001" />
       </geometry>
-      <gazebo reference="carriage">
-        <material>Gazebo/DarkGrey</material>
-        <xacro:insert_block name="material_grey" />
-      </gazebo>
     </visual>
-    <visual name="visual_tilt_arm_lower">
+    <visual>
       <origin xyz="-0.13785 -0.3212596 3e-06" rpy="-1.5707964 0 0" />
       <geometry>
         <mesh filename="package://mir_hook_description/meshes/hook/tilt_arm_lower.stl" scale="1.0 1.0 1.0" />
       </geometry>
-      <gazebo reference="carriage">
-        <material>Gazebo/DarkGrey</material>
-        <xacro:insert_block name="material_grey" />
-      </gazebo>
     </visual>
-    <visual name="visual_tilt_arm_upper">
+    <visual>
       <origin xyz="-0.1404309 -0.2453349 3e-06" rpy="-1.5707964 0 0" />
       <geometry>
         <mesh filename="package://mir_hook_description/meshes/hook/Part__Feature158.stl" scale="1.0 1.0 1.0" />
       </geometry>
-      <gazebo reference="carriage">
-        <material>Gazebo/DarkGrey</material>
-        <xacro:insert_block name="material_grey" />
-      </gazebo>
     </visual>
     <collision name="collision_carriage_1">
       <origin xyz="-0.0424136 0.089503 3.1e-06" rpy="-1.5707964 0 -0.3490658" />
@@ -234,15 +204,12 @@
       <mass value="1.0" />
       <inertia ixx="0.0003373" ixy="-0.0006013" ixz="0" iyy="0.0014916" iyz="0" izz="0.0012083" />
     </inertial>
-    <visual name="visual_lift_arm_lower">
+    <visual>
       <origin xyz="-0.2092547 0.1067384 3.3e-05" rpy="-1.5707964 0 0" />
       <geometry>
         <mesh filename="package://mir_hook_description/meshes/hook/lift_lower_arm.stl" scale="1.0 1.0 1.0" />
       </geometry>
       <xacro:insert_block name="material_grey" />
-      <gazebo reference="lift_arm_lower">
-        <material>Gazebo/DarkGrey</material>
-      </gazebo>
     </visual>
     <collision name="collision_lift_arm_lower">
       <origin xyz="-0.2093314 0.1067384 3.33e-05" rpy="-1.5707964 0 -0.4712389" />
@@ -251,43 +218,46 @@
       </geometry>
     </collision>
   </link>
+
   <link name="lift_arm_upper">
     <inertial>
-      <origin xyz="-0.1397772 0.0769129 -9.87e-05" rpy="0 0 0" />
+      <origin xyz="-0.1397772 0.0769129 0.0" rpy="0 0 0" />
       <mass value="2.2" />
       <inertia ixx="0.0009413" ixy="-0.0006054" ixz="0.0005665" iyy="0.0032542" iyz="-1.06e-05" izz="0.0025802" />
     </inertial>
-    <visual name="visual_emergency_stop">
-      <xacro:insert_block name="material_red" />
-      <origin xyz="-0.0732943 0.0745365 -5.57e-05" rpy="-1.5707964 0 0" />
-      <geometry>
-        <mesh filename="package://mir_hook_description/meshes/hook/emergency_stop.stl" scale="1.0 1.0 1.0" />
-      </geometry>
-      <gazebo reference="lift_arm_upper">
-        <xacro:insert_block name="material_grey" />
-        <material>Gazebo/DarkGrey</material>
-      </gazebo>
-    </visual>
-    <visual name="visual_lift_arm_upper">
+    <visual>
       <origin xyz="-0.2092544 0.1027477 0" rpy="-1.5707964 0 0" />
       <geometry>
         <mesh filename="package://mir_hook_description/meshes/hook/lift_arm_upper.stl" scale="1.0 1.0 1.0" />
       </geometry>
       <xacro:insert_block name="material_grey" />
-      <gazebo reference="lift_arm_upper">
-        <material>Gazebo/DarkGrey</material>
-      </gazebo>
+    </visual>
+    <collision name="collision_lift_arm_upper">
+      <origin xyz="-0.2092544 0.1062098 0" rpy="-1.5707964 0 -0.4712389" />
+      <geometry>
+        <box size="0.4483504 0.0915001 0.0251618" />
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="emergency_stop_arm">
+    <inertial>
+      <origin xyz="-0.1397772 0.0769129 0.0" rpy="0 0 0" />
+      <mass value="0.05" />
+      <inertia ixx="0.0009413" ixy="-0.0006054" ixz="0.0005665" iyy="0.0032542" iyz="-1.06e-05" izz="0.0025802" />
+    </inertial>
+    <visual>
+      <xacro:insert_block name="material_red" />
+      <!-- origin xyz="-0.0732943 0.0745365 0.0" rpy="-1.5707964 0 0" /-->
+      <origin xyz="-0.0732943 0.2145365 0.0" rpy="-1.5707964 0 0" />
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/hook/emergency_stop.stl" scale="1.0 1.0 1.0" />
+      </geometry>
     </visual>
     <collision name="collision_emergency_stop">
       <origin xyz="-0.0769995 0.0721075 -0.0002136" rpy="-1.5707964 0 -0.4712389" />
       <geometry>
         <cylinder radius="0.0200511" length="0.0454842" />
-      </geometry>
-    </collision>
-    <collision name="collision_lift_arm_upper">
-      <origin xyz="-0.2092544 0.1062098 0" rpy="-1.5707964 0 -0.4712389" />
-      <geometry>
-        <box size="0.4483504 0.0915001 0.0251618" />
       </geometry>
     </collision>
   </link>
@@ -298,25 +268,19 @@
       <mass value="0.55" />
       <inertia ixx="0.0001287" ixy="-3.9e-06" ixz="3.2e-05" iyy="0.0001894" iyz="4.65e-05" izz="8.17e-05" />
     </inertial>
-    <visual name="visual_lift_actuator_cylinder">
+    <visual>
       <origin xyz="-0.1810796 0.1424212 8.3e-06" rpy="-1.5707964 0 0" />
       <geometry>
         <mesh filename="package://mir_hook_description/meshes/hook/Part__Feature063.stl" scale="1.0 1.0 1.0" />
       </geometry>
       <xacro:insert_block name="material_grey" />
-      <gazebo reference="lift_motor_joint">
-        <material>Gazebo/DarkGrey</material>
-      </gazebo>
     </visual>
-    <visual name="visual_lift_actuator_motor">
+    <visual>
       <origin xyz="-0.0706371 0.0612726 3.1e-06" rpy="-1.5707964 0 0" />
       <geometry>
         <mesh filename="package://mir_hook_description/meshes/hook/Part__Feature062.stl" scale="1.0 1.0 1.0" />
       </geometry>
       <xacro:insert_block name="material_grey" />
-      <gazebo reference="lift_motor_joint">
-        <material>Gazebo/DarkGrey</material>
-      </gazebo>
     </visual>
     <collision name="collision_lift_actuator_cylinder">
       <origin xyz="-0.1900736 0.1490457 3.1e-06" rpy="-1.5707963 0 -2.2375119" />
@@ -338,14 +302,11 @@
       <mass value="5.5" />
       <inertia ixx="0.0013133" ixy="0.000168" ixz="5e-07" iyy="0.0014023" iyz="-1.4e-06" izz="0.000605" />
     </inertial>
-    <visual name="visual_pan_motor">
+    <visual>
       <origin xyz="-0.0200243 -0.0003519 -0.0032138" rpy="0 0 0" />
       <geometry>
         <mesh filename="package://mir_hook_description/meshes/hook/pan_motor.stl" scale="1.0 1.0 1.0" />
       </geometry>
-      <gazebo reference="pan_motor">
-        <material>Gazebo/DarkGrey</material>
-      </gazebo>
       <xacro:insert_block name="material_grey" />
     </visual>
     <collision name="collision_pan_motor">
@@ -362,15 +323,12 @@
       <mass value="10.3999996" />
       <inertia ixx="0.0132281" ixy="-0.0003299" ixz="2.77e-05" iyy="0.0183048" iyz="-9.9e-06" izz="0.0244622" />
     </inertial>
-    <visual name="visual_frame">
+    <visual>
       <xacro:insert_block name="material_white" />
       <origin xyz="-0.0690002 -2.2e-06 0.1547746" rpy="0 0 0" />
       <geometry>
         <mesh filename="package://mir_hook_description/meshes/hook/frame.stl" scale="1.0 1.0 1.0" />
       </geometry>
-      <gazebo reference="hook_root">
-        <material>Gazebo/DarkGrey</material>
-      </gazebo>
     </visual>
     <collision name="collision_frame_1">
       <origin xyz="-0.0690002 -0.1933002 0.0197549" rpy="0 0 0" />
@@ -422,6 +380,28 @@
     </collision>
   </link>
 
+  <gazebo reference="hook_root">
+    <material>Gazebo/White</material>
+  </gazebo>
+  <gazebo reference="carriage">
+    <material>Gazebo/DarkGrey</material>
+  </gazebo>
+  <gazebo reference="lift_arm_lower">
+    <material>Gazebo/DarkGrey</material>
+  </gazebo>
+  <gazebo reference="lift_arm_upper">
+    <material>Gazebo/DarkGrey</material>
+  </gazebo>
+  <gazebo reference="lift_motor_joint">
+    <material>Gazebo/DarkGrey</material>
+  </gazebo>
+  <gazebo reference="pan_motor">
+    <material>Gazebo/DarkGrey</material>
+  </gazebo>
+  <gazebo reference="emergency_stop_arm">
+    <material>Gazebo/Red</material>
+  </gazebo>
+
   <joint name="hook_root" type="fixed">
     <origin xyz="0.110500 -0.00587 0.347745" rpy="0 0 0" />
     <parent link="base_footprint" />
@@ -442,6 +422,14 @@
     <origin xyz="-0.077511 3.3e-05 -0.0564022" rpy="1.5707964 0 0" />
     <parent link="pan_motor" />
     <child link="lift_arm_lower" />
+    <axis xyz="0 0 1.0" />
+    <limit lower="0" upper="0.5235988" effort="100.0" velocity="6.0" />
+  </joint>
+
+  <joint name="emergency_stop_arm" type="fixed">
+    <origin xyz="-0.077511 3.3e-05 -0.0564022" rpy="1.5707964 0 0" />
+    <parent link="pan_motor" />
+    <child link="emergency_stop_arm" />
     <axis xyz="0 0 1.0" />
     <limit lower="0" upper="0.5235988" effort="100.0" velocity="6.0" />
   </joint>
