@@ -1,0 +1,482 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- hook -->
+  <link name="carriage">
+    <inertial>
+      <origin xyz="-0.0086191 0.0047125 0.0010376" rpy="0 0 0" />
+      <mass value="8.35" />
+      <inertia ixx="0.0102801" ixy="0.0005188" ixz="-0.0035496" iyy="0.0089798" iyz="-7.18e-05" izz="0.0049397" />
+    </inertial>
+    <visual name="visual_carriage">
+      <origin xyz="-0.0345127 -0.0820147 3.1e-06" rpy="-1.5707964 0 0" />
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/hook/carriage.stl" scale="1.0 1.0 1.0" />
+      </geometry>
+      <xacro:insert_block name="material_grey" />
+      <gazebo reference="carriage">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <visual name="visual_container_crawler">
+      <origin xyz="-0.2067981 -0.2896011 3e-06" rpy="-1.5707964 0 0" />
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/hook/container_crawler.stl" scale="1.0 1.0 1.0" />
+      </geometry>
+      <xacro:insert_block name="material_grey" />
+      <gazebo reference="carriage">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <visual name="visual_container_lock">
+      <origin xyz="-0.1818805 -0.180375 -0.000269" rpy="-1.5707964 0 0" />
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/hook/container_lock.stl" scale="1.0 1.0 1.0" />
+      </geometry>
+      <gazebo reference="carriage">
+        <xacro:insert_block name="material_grey" />
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <visual name="visual_fork_base">
+      <origin xyz="-0.1448901 -0.2715 3.2e-06" rpy="-1.5707964 0 0" />
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/hook/fork_base.stl" scale="1.0 1.0 1.0" />
+      </geometry>
+      <gazebo reference="carriage">
+        <xacro:insert_block name="material_grey" />
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <visual name="visual_tilt_actuator_cylinder">
+      <origin xyz="-0.1676646 -0.1944744 0.0017018" rpy="-1.5707964 0 0" />
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/hook/Part__Feature079.stl" scale="1.0000001 1.0 1.0000001" />
+      </geometry>
+      <gazebo reference="carriage">
+        <material>Gazebo/DarkGrey</material>
+        <xacro:insert_block name="material_grey" />
+      </gazebo>
+    </visual>
+    <visual name="visual_tilt_actuator_motor">
+      <origin xyz="-0.1158853 -0.0953563 0.0017019" rpy="-1.5707964 0 0" />
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/hook/Part__Feature078.stl" scale="1.0000001 1.0 1.0000001" />
+      </geometry>
+      <gazebo reference="carriage">
+        <material>Gazebo/DarkGrey</material>
+        <xacro:insert_block name="material_grey" />
+      </gazebo>
+    </visual>
+    <visual name="visual_tilt_arm_lower">
+      <origin xyz="-0.13785 -0.3212596 3e-06" rpy="-1.5707964 0 0" />
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/hook/tilt_arm_lower.stl" scale="1.0 1.0 1.0" />
+      </geometry>
+      <gazebo reference="carriage">
+        <material>Gazebo/DarkGrey</material>
+        <xacro:insert_block name="material_grey" />
+      </gazebo>
+    </visual>
+    <visual name="visual_tilt_arm_upper">
+      <origin xyz="-0.1404309 -0.2453349 3e-06" rpy="-1.5707964 0 0" />
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/hook/Part__Feature158.stl" scale="1.0 1.0 1.0" />
+      </geometry>
+      <gazebo reference="carriage">
+        <material>Gazebo/DarkGrey</material>
+        <xacro:insert_block name="material_grey" />
+      </gazebo>
+    </visual>
+    <collision name="collision_carriage_1">
+      <origin xyz="-0.0424136 0.089503 3.1e-06" rpy="-1.5707964 0 -0.3490658" />
+      <geometry>
+        <box size="0.03052 0.13439 0.162844" />
+      </geometry>
+    </collision>
+    <collision name="collision_carriage_2">
+      <origin xyz="-0.0538089 -0.1362699 0" rpy="-1.5707964 0 0" />
+      <geometry>
+        <box size="0.0719401 0.139106 0.3969324" />
+      </geometry>
+    </collision>
+    <collision name="collision_carriage_4">
+      <origin xyz="-0.0216487 -0.2830374 3.1e-06" rpy="-1.5707964 0 0" />
+      <geometry>
+        <box size="0.00545 0.13741 0.0865109" />
+      </geometry>
+    </collision>
+    <collision name="collision_container_crawler_1">
+      <origin xyz="-0.1846113 -0.2807498 3e-06" rpy="-1.5707964 0 0" />
+      <geometry>
+        <box size="0.0243 0.272 0.03627" />
+      </geometry>
+    </collision>
+    <collision name="collision_container_crawler_2">
+      <origin xyz="-0.2129726 -0.3028729 0.132826" rpy="-1e-07 0 0.8045967" />
+      <geometry>
+        <cylinder radius="0.05733" length="0.00544" />
+      </geometry>
+    </collision>
+    <collision name="collision_container_crawler_3">
+      <origin xyz="-0.212973 -0.3028729 -0.132826" rpy="-1e-07 0 0.8045968" />
+      <geometry>
+        <cylinder radius="0.05733" length="0.00544" />
+      </geometry>
+    </collision>
+    <collision name="collision_container_crawler_4">
+      <origin xyz="-0.1921152 -0.278682 3e-06" rpy="-1.5707964 0 0" />
+      <geometry>
+        <box size="0.0027 0.05712 0.08424" />
+      </geometry>
+    </collision>
+    <collision name="collision_container_lock_1">
+      <origin xyz="-0.2414355 -0.3314246 -0.0002958" rpy="-1.5707964 0 0" />
+      <geometry>
+        <box size="0.08282 0.073393 0.033625" />
+      </geometry>
+    </collision>
+    <collision name="collision_container_lock_2">
+      <origin xyz="-0.271374 -0.3108148 -0.0002958" rpy="-1e-07 0 -0.2478367" />
+      <geometry>
+        <cylinder radius="0.0100875" length="0.0055601" />
+      </geometry>
+    </collision>
+    <collision name="collision_container_lock_3">
+      <origin xyz="-0.1819233 -0.3466128 -0.0002958" rpy="-1.5707964 0 0" />
+      <geometry>
+        <box size="0.19998 0.072281 0.0033625" />
+      </geometry>
+    </collision>
+    <collision name="collision_container_lock_4">
+      <origin xyz="-0.1067194 -0.181047 0.0360971" rpy="-1.5707964 0 0" />
+      <geometry>
+        <box size="0.03838 0.002224 0.33625" />
+      </geometry>
+    </collision>
+    <collision name="collision_container_lock_5">
+      <origin xyz="-0.106719 -0.1810469 -0.036097" rpy="-1.5707964 0 0" />
+      <geometry>
+        <box size="0.03838 0.002224 0.33625" />
+      </geometry>
+    </collision>
+    <collision name="collision_fork_base_1">
+      <origin xyz="-0.2164229 -0.3545153 3e-06" rpy="-1.5707964 0 0" />
+      <geometry>
+        <box size="0.05 0.12103 0.0034" />
+      </geometry>
+    </collision>
+    <collision name="collision_fork_base_2">
+      <origin xyz="-0.0612574 -0.3545149 0" rpy="-1.5707964 0 0" />
+      <geometry>
+        <box size="0.03 0.12103 0.0034" />
+      </geometry>
+    </collision>
+    <collision name="collision_fork_base_3">
+      <origin xyz="-0.1440597 -0.3550831 -0.053405" rpy="-1.5707964 0 0" />
+      <geometry>
+        <box size="0.194 0.01482 0.0034" />
+      </geometry>
+    </collision>
+    <collision name="collision_fork_base_4">
+      <origin xyz="-0.143986 -0.3545149 0.052922" rpy="-1.5707964 0 0" />
+      <geometry>
+        <box size="0.194 0.01482 0.0034" />
+      </geometry>
+    </collision>
+    <collision name="collision_fork_base_5">
+      <origin xyz="-0.0469099 -0.3151417 3e-06" rpy="-1.5707964 0 0" />
+      <geometry>
+        <box size="0.004 0.12103 0.0816001" />
+      </geometry>
+    </collision>
+    <collision name="collision_fork_base_6">
+      <origin xyz="-0.1453781 -0.3361342 0.0588561" rpy="-1.5707964 0 0" />
+      <geometry>
+        <box size="0.2 0.00247 0.0391" />
+      </geometry>
+    </collision>
+    <collision name="collision_fork_base_7">
+      <origin xyz="-0.145378 -0.3361339 -0.058856" rpy="-1.5707964 0 0" />
+      <geometry>
+        <box size="0.2 0.00247 0.0391" />
+      </geometry>
+    </collision>
+    <collision name="collision_tilt_actuator_cylinder">
+      <origin xyz="-0.170188 -0.2015466 0.0017018" rpy="-1.5707964 0 -0.3316126" />
+      <geometry>
+        <cylinder radius="0.0093432" length="0.0686558" />
+      </geometry>
+    </collision>
+    <collision name="collision_tilt_actuator_motor">
+      <origin xyz="-0.1381059 -0.1018716 0.0017019" rpy="-1.5707964 0 -0.3316124" />
+      <geometry>
+        <cylinder radius="0.0216029" length="0.1360801" />
+      </geometry>
+    </collision>
+    <collision name="collision_tilt_arm_lower">
+      <origin xyz="-0.1390713 -0.3224227 3e-06" rpy="-1.5707964 0 -0.3263766" />
+      <geometry>
+        <box size="0.0844065 0.056925 0.0137896" />
+      </geometry>
+    </collision>
+    <collision name="collision_tilt_arm_upper">
+      <origin xyz="-0.1375349 -0.2483816 3e-06" rpy="-1.5707964 0 -0.4974188" />
+      <geometry>
+        <box size="0.0759516 0.0368 0.0177953" />
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="lift_arm_lower">
+    <inertial>
+      <origin xyz="-0.2072146 0.1073697 3.3e-05" rpy="0 0 0" />
+      <mass value="1.0" />
+      <inertia ixx="0.0003373" ixy="-0.0006013" ixz="0" iyy="0.0014916" iyz="0" izz="0.0012083" />
+    </inertial>
+    <visual name="visual_lift_arm_lower">
+      <origin xyz="-0.2092547 0.1067384 3.3e-05" rpy="-1.5707964 0 0" />
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/hook/lift_lower_arm.stl" scale="1.0 1.0 1.0" />
+      </geometry>
+      <xacro:insert_block name="material_grey" />
+      <gazebo reference="lift_arm_lower">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <collision name="collision_lift_arm_lower">
+      <origin xyz="-0.2093314 0.1067384 3.33e-05" rpy="-1.5707964 0 -0.4712389" />
+      <geometry>
+        <box size="0.4483504 0.0915001 0.0243848" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="lift_arm_upper">
+    <inertial>
+      <origin xyz="-0.1397772 0.0769129 -9.87e-05" rpy="0 0 0" />
+      <mass value="2.2" />
+      <inertia ixx="0.0009413" ixy="-0.0006054" ixz="0.0005665" iyy="0.0032542" iyz="-1.06e-05" izz="0.0025802" />
+    </inertial>
+    <visual name="visual_emergency_stop">
+      <xacro:insert_block name="material_red" />
+      <origin xyz="-0.0732943 0.0745365 -5.57e-05" rpy="-1.5707964 0 0" />
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/hook/emergency_stop.stl" scale="1.0 1.0 1.0" />
+      </geometry>
+      <gazebo reference="lift_arm_upper">
+        <xacro:insert_block name="material_grey" />
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <visual name="visual_lift_arm_upper">
+      <origin xyz="-0.2092544 0.1027477 0" rpy="-1.5707964 0 0" />
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/hook/lift_arm_upper.stl" scale="1.0 1.0 1.0" />
+      </geometry>
+      <xacro:insert_block name="material_grey" />
+      <gazebo reference="lift_arm_upper">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <collision name="collision_emergency_stop">
+      <origin xyz="-0.0769995 0.0721075 -0.0002136" rpy="-1.5707964 0 -0.4712389" />
+      <geometry>
+        <cylinder radius="0.0200511" length="0.0454842" />
+      </geometry>
+    </collision>
+    <collision name="collision_lift_arm_upper">
+      <origin xyz="-0.2092544 0.1062098 0" rpy="-1.5707964 0 -0.4712389" />
+      <geometry>
+        <box size="0.4483504 0.0915001 0.0251618" />
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="lift_motor_joint">
+    <inertial>
+      <origin xyz="-0.0288321 0.0338943 0.011049" rpy="0 0 0" />
+      <mass value="0.55" />
+      <inertia ixx="0.0001287" ixy="-3.9e-06" ixz="3.2e-05" iyy="0.0001894" iyz="4.65e-05" izz="8.17e-05" />
+    </inertial>
+    <visual name="visual_lift_actuator_cylinder">
+      <origin xyz="-0.1810796 0.1424212 8.3e-06" rpy="-1.5707964 0 0" />
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/hook/Part__Feature063.stl" scale="1.0 1.0 1.0" />
+      </geometry>
+      <xacro:insert_block name="material_grey" />
+      <gazebo reference="lift_motor_joint">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <visual name="visual_lift_actuator_motor">
+      <origin xyz="-0.0706371 0.0612726 3.1e-06" rpy="-1.5707964 0 0" />
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/hook/Part__Feature062.stl" scale="1.0 1.0 1.0" />
+      </geometry>
+      <xacro:insert_block name="material_grey" />
+      <gazebo reference="lift_motor_joint">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <collision name="collision_lift_actuator_cylinder">
+      <origin xyz="-0.1900736 0.1490457 3.1e-06" rpy="-1.5707963 0 -2.2375119" />
+      <geometry>
+        <cylinder radius="0.0096713" length="0.1076295" />
+      </geometry>
+    </collision>
+    <collision name="collision_lift_actuator_motor">
+      <origin xyz="-0.083919 0.0620954 3.1e-06" rpy="-1.5707963 0 -2.2375116" />
+      <geometry>
+        <cylinder radius="0.0186919" length="0.1873198" />
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="pan_motor">
+    <inertial>
+      <origin xyz="-0.0205048 -2.86e-05 -0.0183847" rpy="0 0 0" />
+      <mass value="5.5" />
+      <inertia ixx="0.0013133" ixy="0.000168" ixz="5e-07" iyy="0.0014023" iyz="-1.4e-06" izz="0.000605" />
+    </inertial>
+    <visual name="visual_pan_motor">
+      <origin xyz="-0.0200243 -0.0003519 -0.0032138" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/hook/pan_motor.stl" scale="1.0 1.0 1.0" />
+      </geometry>
+      <gazebo reference="pan_motor">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+      <xacro:insert_block name="material_grey" />
+    </visual>
+    <collision name="collision_pan_motor">
+      <origin xyz="0 0 -0.0238775" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.0589277" length="0.2146374" />
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="hook_root">
+    <inertial>
+      <origin xyz="0.0410034 -0.000587 0.1077447" rpy="0 0 0" />
+      <mass value="10.3999996" />
+      <inertia ixx="0.0132281" ixy="-0.0003299" ixz="2.77e-05" iyy="0.0183048" iyz="-9.9e-06" izz="0.0244622" />
+    </inertial>
+    <visual name="visual_frame">
+      <xacro:insert_block name="material_white" />
+      <origin xyz="-0.0690002 -2.2e-06 0.1547746" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://mir_hook_description/meshes/hook/frame.stl" scale="1.0 1.0 1.0" />
+      </geometry>
+      <gazebo reference="hook_root">
+        <material>Gazebo/DarkGrey</material>
+      </gazebo>
+    </visual>
+    <collision name="collision_frame_1">
+      <origin xyz="-0.0690002 -0.1933002 0.0197549" rpy="0 0 0" />
+      <geometry>
+        <box size="0.772 0.0687 0.03696" />
+      </geometry>
+    </collision>
+    <collision name="collision_frame_2">
+      <origin xyz="-0.0690002 0.1933 0.019755" rpy="0 0 0" />
+      <geometry>
+        <box size="0.772 0.0687 0.03696" />
+      </geometry>
+    </collision>
+    <collision name="collision_frame_3">
+      <origin xyz="-0.0406363 -9.1e-06 0.2792808" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.1158" length="0.05496" />
+      </geometry>
+    </collision>
+    <collision name="collision_frame_4">
+      <origin xyz="0.1580628 -2.2e-06 0.041374" rpy="0 0 0" />
+      <geometry>
+        <box size="0.31652 0.458 0.077" />
+      </geometry>
+    </collision>
+    <collision name="collision_frame_5">
+      <origin xyz="0.1693561 0 0.1547746" rpy="1.5707964 0.7592182 0" />
+      <geometry>
+        <cylinder radius="0.18914" length="0.23816" />
+      </geometry>
+    </collision>
+    <collision name="collision_frame_6">
+      <origin xyz="0.1092483 -0.161247 0.1393904" rpy="1.5707964 0.6981317 1.5707964" />
+      <geometry>
+        <cylinder radius="0.03474" length="0.19236" />
+      </geometry>
+    </collision>
+    <collision name="collision_frame_7">
+      <origin xyz="0.109248 0.161247 0.13939" rpy="1.5707963 -0.6981317 1.5707964" />
+      <geometry>
+        <cylinder radius="0.03474" length="0.19236" />
+      </geometry>
+    </collision>
+    <collision name="collision_frame_8">
+      <origin xyz="0.038432 -2.2e-06 0.1246587" rpy="1.6528268 0 1.5707964" />
+      <geometry>
+        <cylinder radius="0.193" length="0.05496" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="hook_root" type="fixed">
+    <origin xyz="0.110500 -0.00587 0.347745" rpy="0 0 0" />
+    <parent link="base_footprint" />
+    <child link="hook_root" />
+    <axis xyz="0 0 4.0" />
+    <limit lower="-0.5235988" upper="0" effort="0.25" velocity="0" />
+  </joint>
+
+  <joint name="carriage" type="fixed">
+    <origin xyz="-0.418597 0.213663 3e-05" rpy="0 0 0" />
+    <parent link="lift_arm_lower" />
+    <child link="carriage" />
+    <axis xyz="0 0 1.0" />
+    <limit lower="-0.5235988" upper="0" effort="0" velocity="0" />
+  </joint>
+
+  <joint name="lift_arm_lower" type="fixed">
+    <origin xyz="-0.077511 3.3e-05 -0.0564022" rpy="1.5707964 0 0" />
+    <parent link="pan_motor" />
+    <child link="lift_arm_lower" />
+    <axis xyz="0 0 1.0" />
+    <limit lower="0" upper="0.5235988" effort="100.0" velocity="6.0" />
+  </joint>
+
+  <joint name="lift_arm_upper" type="fixed">
+    <origin xyz="-0.0775113 0 0.0832461" rpy="1.5707964 0 0" />
+    <parent link="pan_motor" />
+    <child link="lift_arm_upper" />
+    <axis xyz="0 0 1.0" />
+    <limit lower="-1.5707964" upper="1.5707964" effort="100.0" velocity="6.0" />
+  </joint>
+
+  <joint name="lift_motor_joint" type="fixed">
+    <origin xyz="-0.1756014 0.1282467 3e-05" rpy="0 0 0" />
+    <parent link="lift_arm_lower" />
+    <child link="lift_motor_joint" />
+    <axis xyz="0 0 1.0" />
+    <limit lower="-0.5235988" upper="0.5235988" effort="100.0" velocity="6.0" />
+    <!-- <limit lower="-1.5707964" upper="1.5707964" effort="0.25" velocity="6.0"/>-->
+  </joint>
+
+  <joint name="pan_motor_joint" type="revolute">
+    <axis xyz="0 0 1.0" />
+    <limit lower="-1.0" upper="1.0" effort="100.0" velocity="0" />
+    <origin xyz="-0.067 -3e-06 0.1383631" rpy="0 0 0" />
+    <parent link="hook_root" />
+    <child link="pan_motor" />
+  </joint>
+
+  <transmission name="pan_motor_joint_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="pan_motor_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="pan_motor_joint_actuator" />
+  </transmission>
+
+</robot>

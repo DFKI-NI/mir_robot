@@ -2,11 +2,13 @@
 
 <launch>
   <arg name="mir_type" default="mir_100" doc="The MiR variant. Can be 'mir_100' or 'mir_250' for now." />
+  <arg name="mir_hook"  default="False" doc="Add the MiR Hook." />
   <arg name="gui" default="true" />
 
   <!-- load MiR URDF -->
   <include file="$(find mir_description)/launch/upload_mir_urdf.launch">
     <arg name="mir_type" value="$(arg mir_type)" />
+    <arg name="mir_hook" value="$(arg mir_hook)" />
   </include>
 
   <node if="$(arg gui)"     name="joint_state_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />

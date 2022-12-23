@@ -1,7 +1,8 @@
 <?xml version="1.0" ?>
 <launch>
   <arg name="mir_type"  default="mir_100" doc="The MiR variant. Can be 'mir_100' or 'mir_250' for now." />
+  <arg name="mir_hook"  default="False" doc="Add the MiR Hook." />
   <arg name="tf_prefix" default="" doc="TF prefix to use for all of the MiR's TF frames"/>
 
-  <param name="robot_description" command="$(find xacro)/xacro $(find mir_description)/urdf/mir.urdf.xacro mir_type:=$(arg mir_type) tf_prefix:=$(arg tf_prefix)" />
+  <param name="robot_description" command="$(find xacro)/xacro $(find mir_description)/urdf/mir.urdf.xacro mir_type:=$(arg mir_type) tf_prefix:=$(arg tf_prefix) mir_hook:=$(arg mir_hook)" />
 </launch>

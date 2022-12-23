@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<!--
+  Various useful properties such as constants and materials
+ -->
+<robot name="mir_hook_common" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:property name="material_red">
+    <material name="red">
+      <color rgba="${150/255} ${0/255} ${0/255} 1"/>
+    </material>
+  </xacro:property>
+
+  <xacro:property name="material_black">
+    <material name="black">
+      <!-- use a "lighter" black so you can see the outline of the object -->
+      <color rgba="${20/255} ${20/255} ${20/255} 1"/>
+    </material>
+  </xacro:property>
+  
+</robot>

@@ -8,6 +8,7 @@
   <arg name="robot_yaw" default="0.0" />
 
   <arg name="mir_type" default="mir_100" doc="The MiR variant. Can be 'mir_100' or 'mir_250' for now." />
+  <arg name="mir_hook" default="False" doc="Add the MiR Hook (True/False)" />
 
   <arg name="tf_prefix" default="" doc="tf_prefix to be used by gazebo plugins and in the robot's urdf etc." />
 
@@ -33,6 +34,7 @@
         <arg name="robot_y"   value="$(arg robot_y)" />
         <arg name="robot_yaw" value="$(arg robot_yaw)" />
         <arg name="mir_type"  value="$(arg mir_type)" />
+        <arg name="mir_hook" value="$(arg mir_hook)" />
         <arg name="tf_prefix" value="$(arg tf_prefix)" />
       </include>
     </group>
@@ -58,7 +60,8 @@
       <arg name="robot_x"   value="$(arg robot_x)" />
       <arg name="robot_y"   value="$(arg robot_y)" />
       <arg name="robot_yaw" value="$(arg robot_yaw)" />
-        <arg name="mir_type"  value="$(arg mir_type)" />
+      <arg name="mir_type"  value="$(arg mir_type)" />
+      <arg name="mir_hook"  value="$(arg mir_hook)" />
       <arg name="tf_prefix" value="$(arg tf_prefix)" />
     </include>
   </group>
