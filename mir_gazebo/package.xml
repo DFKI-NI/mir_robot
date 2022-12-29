@@ -28,4 +28,5 @@
   <exec_depend>rostopic</exec_depend>
   <exec_depend>rqt_robot_steering</exec_depend>
   <exec_depend>topic_tools</exec_depend>
+  <exec_depend>mir_hook_description</exec_depend>
 </package>
