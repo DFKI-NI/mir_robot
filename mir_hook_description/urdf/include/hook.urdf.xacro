@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <!-- hook -->
   <link name="carriage">
     <inertial>
       <origin xyz="-0.0086191 0.0047125 0.0010376" rpy="0 0 0" />
@@ -85,12 +84,13 @@
     <collision name="collision_container_crawler_2">
       <origin xyz="-0.2129726 -0.3028729 0.132826" rpy="-1e-07 0 0.8045967" />
       <geometry>
-        <cylinder radius="0.05733" length="0.00544" />
+        <box size="0.11466 0.06084 0.00544" />
       </geometry>
     </collision>
     <collision name="collision_container_crawler_3">
       <origin xyz="-0.212973 -0.3028729 -0.132826" rpy="-1e-07 0 0.8045968" />
       <geometry>
+        <!--box size="0.11466 0.06084 0.00544" /-->
         <cylinder radius="0.05733" length="0.00544" />
       </geometry>
     </collision>
@@ -264,12 +264,12 @@
 
   <link name="lift_motor_joint">
     <inertial>
-      <origin xyz="-0.0288321 0.0338943 0.011049" rpy="0 0 0" />
+      <origin xyz="-0.0294563 0.0338943 -0.0067328" rpy="0 0 0" />
       <mass value="0.55" />
-      <inertia ixx="0.0001287" ixy="-3.9e-06" ixz="3.2e-05" iyy="0.0001894" iyz="4.65e-05" izz="8.17e-05" />
+      <inertia ixx="2.07e-05" ixy="1.02e-05" ixz="2.37e-05" iyy="9.31e-05" iyz="4.58e-05" izz="7.67e-05" />
     </inertial>
     <visual>
-      <origin xyz="-0.1810796 0.1424212 8.3e-06" rpy="-1.5707964 0 0" />
+      <origin xyz="-0.1339298 0.1073225 8.3e-06" rpy="-1.5707964 0 0" />
       <geometry>
         <mesh filename="package://mir_hook_description/meshes/hook/Part__Feature063.stl" scale="1.0 1.0 1.0" />
       </geometry>
@@ -283,7 +283,7 @@
       <xacro:insert_block name="material_grey" />
     </visual>
     <collision name="collision_lift_actuator_cylinder">
-      <origin xyz="-0.1900736 0.1490457 3.1e-06" rpy="-1.5707963 0 -2.2375119" />
+      <origin xyz="-0.1429238 0.1139471 3.1e-06" rpy="-1.5707964 0 -2.2375121" />
       <geometry>
         <cylinder radius="0.0096713" length="0.1076295" />
       </geometry>
@@ -411,7 +411,7 @@
   </joint>
 
   <joint name="carriage" type="fixed">
-    <origin xyz="-0.418597 0.213663 3e-05" rpy="0 0 0" />
+    <origin xyz="-0.418597 0.213663 3e-05" rpy="0 0 -0.4712389" />
     <parent link="lift_arm_lower" />
     <child link="carriage" />
     <axis xyz="0 0 1.0" />
@@ -419,7 +419,7 @@
   </joint>
 
   <joint name="lift_arm_lower" type="fixed">
-    <origin xyz="-0.077511 3.3e-05 -0.0564022" rpy="1.5707964 0 0" />
+    <origin xyz="-0.077511 3.3e-05 -0.0564022" rpy="1.5707964 -0.4712389 0" />
     <parent link="pan_motor" />
     <child link="lift_arm_lower" />
     <axis xyz="0 0 1.0" />
@@ -427,7 +427,7 @@
   </joint>
 
   <joint name="emergency_stop_arm" type="fixed">
-    <origin xyz="-0.077511 3.3e-05 -0.0564022" rpy="1.5707964 0 0" />
+    <origin xyz="-0.077511 3.3e-05 -0.0564022" rpy="1.5707964 -0.4712389 0" />
     <parent link="pan_motor" />
     <child link="emergency_stop_arm" />
     <axis xyz="0 0 1.0" />
@@ -435,7 +435,7 @@
   </joint>
 
   <joint name="lift_arm_upper" type="fixed">
-    <origin xyz="-0.0775113 0 0.0832461" rpy="1.5707964 0 0" />
+    <origin xyz="-0.0775113 0 0.0832461" rpy="1.5707964 -0.4712389 0" />
     <parent link="pan_motor" />
     <child link="lift_arm_upper" />
     <axis xyz="0 0 1.0" />
@@ -443,7 +443,7 @@
   </joint>
 
   <joint name="lift_motor_joint" type="fixed">
-    <origin xyz="-0.1756014 0.1282467 3e-05" rpy="0 0 0" />
+    <origin xyz="-0.1756014 0.1282466 3e-05" rpy="0 0 -0.111304" />
     <parent link="lift_arm_lower" />
     <child link="lift_motor_joint" />
     <axis xyz="0 0 1.0" />

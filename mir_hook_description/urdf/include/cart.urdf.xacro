@@ -295,7 +295,7 @@
   </joint>
 
   <joint name="cart_base_link_to_root" type="fixed">
-    <origin xyz="-0.33151 0.0 0.11689" rpy="0.0 0.0 -1.5707"/>
+    <origin xyz="-0.33151 0.0 0.33" rpy="0.0 0.0 -1.5707"/>
     <parent link="cart_base_link"/>
     <child link="cart_root"/>
     <axis xyz="0 0 0"/>
