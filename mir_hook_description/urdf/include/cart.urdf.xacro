@@ -229,8 +229,6 @@
   <gazebo reference="cart_root">
     <material>Gazebo/Grey</material>
   </gazebo>
-  
-  
 
   <joint name="castor_rigid_left_wheel_joint" type="continuous">
     <origin xyz="-0.28128 0.33151 -0.11689" rpy="0 1.5708 0"/>

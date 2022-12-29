@@ -158,7 +158,10 @@ rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
 
 Gazebo demo (MiR with hook and cart)
 ----------------------------------------
-To start the demo with a MiR robot that uses the hook and has a connected cart just add `mir_hook:=True` (note the capitalized *T* ) to the gazebo-command: 
+
+To start the demo with a MiR robot that uses the hook and has a connected cart
+just add `mir_hook:=True` (note the capitalized *T* ) to the gazebo-command:
+
 ```bash
 roslaunch mir_gazebo mir_maze_world.launch mir_hook:=True
 ```
