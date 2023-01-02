@@ -133,7 +133,8 @@ roslaunch mir_navigation amcl.launch initial_pose_x:=10.0 initial_pose_y:=10.0
 # navigation:
 roslaunch mir_navigation start_planner.launch \
     map_file:=$(rospack find mir_gazebo)/maps/maze.yaml \
-    virtual_walls_map_file:=$(rospack find mir_gazebo)/maps/maze_virtual_walls.yaml
+    virtual_walls_map_file:=$(rospack find mir_gazebo)/maps/maze_virtual_walls.yaml \
+    mir_hook:=False
 rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
 ```
 
@@ -227,7 +228,9 @@ roslaunch mir_gazebo mir_maze_world.launch tf_prefix:=mir
 roslaunch mir_navigation amcl.launch initial_pose_x:=10.0 initial_pose_y:=10.0 tf_prefix:=mir#
 roslaunch mir_navigation start_planner.launch \
         map_file:=$(rospack find mir_gazebo)/maps/maze.yaml \
-        virtual_walls_map_file:=$(rospack find mir_gazebo)/maps/maze_virtual_walls.yaml prefix:=mir/
+        mir_hook:=False \
+        virtual_walls_map_file:=$(rospack find mir_gazebo)/maps/maze_virtual_walls.yaml \
+        prefix:=mir/
 ROS_NAMESPACE=mir rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
 
 # spawn second MiR into Gazebo
@@ -237,7 +240,9 @@ roslaunch mir_gazebo mir_gazebo_common.launch robot_x:=-2 robot_y:=-2 tf_prefix:
 roslaunch mir_navigation amcl.launch initial_pose_x:=8.0 initial_pose_y:=8.0 tf_prefix:=mir2
 roslaunch mir_navigation start_planner.launch \
         map_file:=$(rospack find mir_gazebo)/maps/maze.yaml \
-        virtual_walls_map_file:=$(rospack find mir_gazebo)/maps/maze_virtual_walls.yaml prefix:=mir2/
+        mir_hook:=False \
+        virtual_walls_map_file:=$(rospack find mir_gazebo)/maps/maze_virtual_walls.yaml \
+        prefix:=mir2/
 ROS_NAMESPACE=mir2 rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
 ```
 
