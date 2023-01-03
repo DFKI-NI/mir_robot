@@ -1,6 +1,10 @@
 <?xml version="1.0" ?>
 <launch>
+  <!-- show Gazebo gui, only start gazebo server if set to false. for headless mode set gui and teleop to false. -->
   <arg name="gui" default="true" />
+  <!-- start rqt_robot_steering to control the robot manually -->
+  <arg name="teleop" default="true" />
+
   <arg name="world_name" default="worlds/empty.world"/> <!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable, but can also be an absolute path -->
 
   <arg name="robot_x"   default="0.0" />
@@ -30,6 +34,7 @@
     <group ns="$(arg namespace)">
       <!-- spawn robot and bring up controllers etc. -->
       <include file="$(find mir_gazebo)/launch/mir_gazebo_common.launch">
+        <arg name="teleop"   value="$(arg teleop)" />
         <arg name="robot_x"   value="$(arg robot_x)" />
         <arg name="robot_y"   value="$(arg robot_y)" />
         <arg name="robot_yaw" value="$(arg robot_yaw)" />
