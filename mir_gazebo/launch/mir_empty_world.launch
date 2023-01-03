@@ -4,6 +4,8 @@
   <arg name="gui" default="true" />
   <!-- start rqt_robot_steering to control the robot manually -->
   <arg name="teleop" default="true" />
+  <!-- run simulation paused -->
+  <arg name="paused" default="true" />
 
   <arg name="world_name" default="worlds/empty.world"/> <!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable, but can also be an absolute path -->
 
@@ -26,7 +28,7 @@
 
       <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="world_name" value="$(arg world_name)"/>
-        <arg name="paused" value="true" />
+        <arg name="paused" value="$(arg paused)" />
         <arg name="gui" value="$(arg gui)" />
       </include>
     </group>
@@ -55,13 +57,14 @@
 
       <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="world_name" value="$(arg world_name)"/>
-        <arg name="paused" value="true" />
+        <arg name="paused" value="$(arg paused)" />
         <arg name="gui" value="$(arg gui)" />
       </include>
     </group>
 
     <!-- spawn robot and bring up controllers etc. -->
     <include file="$(find mir_gazebo)/launch/mir_gazebo_common.launch">
+      <arg name="teleop"   value="$(arg teleop)" />
       <arg name="robot_x"   value="$(arg robot_x)" />
       <arg name="robot_y"   value="$(arg robot_y)" />
       <arg name="robot_yaw" value="$(arg robot_yaw)" />
