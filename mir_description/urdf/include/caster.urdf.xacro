@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find mir_description)/urdf/include/common_properties.urdf.xacro" />
+
+  <xacro:macro name="caster_wheel" params="prefix ns locationprefix locationright wheel_base_dx">
+    <!-- caster hub -->
+    <joint name="${prefix}${locationprefix}_caster_rotation_joint" type="continuous">
+      <origin xyz="${wheel_base_dx} ${-mir_100_caster_wheel_base_dy * locationright} ${mir_100_caster_wheel_base_dz}" rpy="0 0 0" />
+      <parent link="${prefix}base_link" />
+      <child link="${prefix}${locationprefix}_caster_rotation_link" />
+      <axis xyz="0 0 1" />
+      <dynamics damping="0.0" friction="0.5"/>
+    </joint>
+
+    <gazebo>
+      <plugin name="${locationprefix}_caster_rotation_joint_states" filename="libgazebo_ros_joint_state_publisher.so">
+        <ros>
+          <namespace>${ns}</namespace>
+        </ros>
+        <update_rate>200.0</update_rate>
+        <joint_name>${prefix}${locationprefix}_caster_rotation_joint</joint_name>
+      </plugin>
+    </gazebo>
+
+    <link name="${prefix}${locationprefix}_caster_rotation_link">
+      <inertial>
+        <!-- <origin xyz="0 0 -0.042500000044" rpy="${0.5 * pi} ${24 * deg_to_rad} ${1.5 * pi}" /> -->
+        <origin xyz="0 0 -0.042500000044" rpy="${24 * deg_to_rad} 0 ${0.5 * pi} " />
+        <mass value="0.3097539019" />
+        <inertia
+          ixx="0.0005844517978"
+          ixy="0"
+          ixz="0"
+          iyy="0.00052872551237"
+          iyz="0"
+          izz="0.00017923555074" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://mir_description/meshes/visual/caster_wheel_base.stl" />
+        </geometry>
+        <xacro:insert_block name="material_silver" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://mir_description/meshes/collision/caster_wheel_base.stl" />
+        </geometry>
+      </collision>
+    </link>
+    <gazebo reference="${prefix}${locationprefix}_caster_rotation_link">
+      <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <!-- caster wheel -->
+    <joint name="${prefix}${locationprefix}_caster_wheel_joint" type="continuous">
+      <origin xyz="${mir_100_caster_wheel_dx} ${-mir_100_caster_wheel_dy * locationright} ${mir_100_caster_wheel_dz}" rpy="0 0 0" />
+      <parent link="${prefix}${locationprefix}_caster_rotation_link" />
+      <child link="${prefix}${locationprefix}_caster_wheel_link" />
+      <axis xyz="0 1 0" />
+    </joint>
+
+    <gazebo>
+      <plugin name="${locationprefix}_caster_wheel_joint_states" filename="libgazebo_ros_joint_state_publisher.so">
+        <ros>
+          <namespace>${ns}</namespace>
+        </ros>
+        <update_rate>200.0</update_rate>
+        <joint_name>${prefix}${locationprefix}_caster_wheel_joint</joint_name>
+      </plugin>
+    </gazebo>
+
+    <link name="${prefix}${locationprefix}_caster_wheel_link">
+      <xacro:cylinder_inertial mass="${mir_100_caster_wheel_mass}" radius="${mir_100_caster_wheel_radius}" length="${mir_100_caster_wheel_width}">
+        <origin xyz="0 0 0" rpy="${0.5 * pi} 0 0" />
+      </xacro:cylinder_inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://mir_description/meshes/visual/wheel.stl" />
+        </geometry>
+        <xacro:insert_block name="material_dark_grey" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+        <geometry>
+          <cylinder radius="${mir_100_caster_wheel_radius}" length="${mir_100_caster_wheel_width}" />
+        </geometry>
+      </collision>
+    </link>
+    <gazebo reference="${prefix}${locationprefix}_caster_wheel_link">
+      <material>Gazebo/DarkGrey</material>
+    </gazebo>
+
+    <!-- set the gazebo friction parameters for the wheels -->
+
+    <gazebo reference="${prefix}${locationprefix}_caster_wheel_link">
+      <collision name="${prefix}${locationprefix}_caster_wheel_link_collision">
+        <surface>
+            <friction>
+              <ode>
+                <mu>1.0</mu>
+                <mu2>1.0</mu2>
+                <fdir1>0 0 1</fdir1>
+                <slip1>0.0</slip1>
+                <slip2>0.5</slip2>
+              </ode>
+              <!-- <torsional>
+                <coefficient>1.0</coefficient>
+                <use_patch_radius>false</use_patch_radius>
+                <surface_radius>${mir_100_caster_wheel_radius}</surface_radius>
+              </torsional> -->
+            </friction>
+            <contact>
+              <ode>
+                <!-- <soft_cfm>0.0</soft_cfm>
+                <soft_erp>0.2</soft_erp> -->
+                <kp>100000000.0</kp>
+                <!--<kd>1.0</kd> -->
+                <!-- <max_vel>1.0</max_vel> -->
+                <min_depth>0.0</min_depth>
+              </ode>
+            </contact>
+          </surface>
+      </collision>
+    </gazebo>
+  </xacro:macro>
+</robot>

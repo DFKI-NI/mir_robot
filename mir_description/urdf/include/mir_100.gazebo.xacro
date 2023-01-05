@@ -42,25 +42,6 @@
     </gazebo>
   </xacro:macro>
 
-  <xacro:macro name="set_wheel_friction" params="link friction">
-    <gazebo reference="${link}">
-      <mu1 value="${friction}"/>
-      <mu2 value="${friction}"/>
-      <kp value="10000000.0"/>
-      <kd value="1.0"/>
-      <minDepth>0.01</minDepth>
-    </gazebo>
-  </xacro:macro>
-
-  <xacro:macro name="set_all_wheel_frictions" params="prefix">
-    <xacro:set_wheel_friction link="${prefix}left_wheel_link" friction="200"/>
-    <xacro:set_wheel_friction link="${prefix}right_wheel_link" friction="200"/>
-    <xacro:set_wheel_friction link="${prefix}fl_caster_wheel_link" friction="1"/>
-    <xacro:set_wheel_friction link="${prefix}fr_caster_wheel_link" friction="1"/>
-    <xacro:set_wheel_friction link="${prefix}bl_caster_wheel_link" friction="1"/>
-    <xacro:set_wheel_friction link="${prefix}br_caster_wheel_link" friction="1"/>
-  </xacro:macro>
-
  <!-- See https://github.com/ros-simulation/gazebo_ros_pkgs/wiki/ROS-2-Migration:-P3D for ros2 information -->
   <xacro:macro name="p3d_base_controller" params="prefix">
     <gazebo>
