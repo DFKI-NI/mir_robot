@@ -340,6 +340,26 @@ status `SUCCEEDED` arrives before the corresponding result message, this
 warning will be printed. It can be safely ignored.
 
 
+### Gazebo prints errors: "No p gain specified for pid."
+
+These errors are expected and can be ignored.
+
+Unfortunately, we cannot set the PID gains (to silence the error) due to the
+following behavior of Gazebo:
+
+1. When using the `PositionJointInterface`, you *must* set the PID values for the
+   joints using that interface, otherwise you will run into
+   [this bug](https://github.com/ros-simulation/gazebo_ros_pkgs/issues/612).
+2. When using the `VelocityJointInterface`, if you omit the PID values, Gazebo
+   just perfectly follows the commanded velocities. If you specify PID values,
+   Gazebo will use a PID controller to approximate following the commanded
+   velocities, so you have to tune the PID controllers.
+
+Since we just want Gazebo to follow our commanded velocities, we cannot set the
+PID values for joints using the VelocityJointInterface, so the errors get
+printed (but can be ignored).
+
+
 GitHub Actions - Continuous Integration
 ---------------------------------------
 
