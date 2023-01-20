@@ -2,6 +2,11 @@
 Changelog for package mir_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Don't set cmake_policy CMP0048
+* Contributors: Martin Günther
+
 1.1.6 (2022-06-02)
 ------------------
 * URDF: Downsize inertia box, move to lower back

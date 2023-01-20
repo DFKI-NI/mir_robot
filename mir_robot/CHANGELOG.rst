@@ -2,6 +2,9 @@
 Changelog for package mir_robot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.1.6 (2022-06-02)
 ------------------
 * Rename mir_100 -> mir

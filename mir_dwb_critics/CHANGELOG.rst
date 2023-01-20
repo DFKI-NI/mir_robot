@@ -2,6 +2,13 @@
 Changelog for package mir_dwb_critics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Don't set cmake_policy CMP0048
+* Drop old C++ compiler flags
+* Add license headers
+* Contributors: Martin Günther
+
 1.1.6 (2022-06-02)
 ------------------
 
