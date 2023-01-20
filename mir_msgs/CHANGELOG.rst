@@ -2,8 +2,8 @@
 Changelog for package mir_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.7 (2023-01-20)
+------------------
 * Build new msgs (`#117 <https://github.com/dfki-ric/mir_robot/issues/117>`_)
   Need to build new msg files. The files were added in a previous commit, but not added here for build and installation.
 * Update MirMoveBase action to 2.10.3.1

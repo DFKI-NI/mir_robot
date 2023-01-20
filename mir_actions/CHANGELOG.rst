@@ -2,8 +2,8 @@
 Changelog for package mir_actions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.7 (2023-01-20)
+------------------
 * Update MirMoveBase action to 2.10.3.1
 * Don't set cmake_policy CMP0048
 * Contributors: Martin Günther

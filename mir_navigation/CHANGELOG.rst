@@ -2,8 +2,8 @@
 Changelog for package mir_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.7 (2023-01-20)
+------------------
 * Don't set cmake_policy CMP0048
 * Add license headers
 * Fix flake8 warnings
