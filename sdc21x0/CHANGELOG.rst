@@ -2,6 +2,11 @@
 Changelog for package sdc21x0
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.7 (2023-01-20)
+------------------
+* Don't set cmake_policy CMP0048
+* Contributors: Martin Günther
+
 1.1.6 (2022-06-02)
 ------------------
 

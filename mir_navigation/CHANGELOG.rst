@@ -2,6 +2,13 @@
 Changelog for package mir_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.7 (2023-01-20)
+------------------
+* Don't set cmake_policy CMP0048
+* Add license headers
+* Fix flake8 warnings
+* Contributors: Martin Günther
+
 1.1.6 (2022-06-02)
 ------------------
 * navigation: Reduce footprint to actual size

@@ -2,6 +2,11 @@
 Changelog for package mir_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.1.7 (2023-01-20)
+------------------
+* Don't set cmake_policy CMP0048
+* Contributors: Martin Günther
+
 1.1.6 (2022-06-02)
 ------------------
 * Add arg mir_type to launch files and urdfs
