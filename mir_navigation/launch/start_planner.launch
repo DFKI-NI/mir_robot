@@ -1,5 +1,5 @@
 <launch>
-  <arg name="local_planner"          default="dwb"             doc="Local planner can be either dwa, eband, base, teb or pose" />
+  <arg name="local_planner"          default="dwb"             doc="Local planner can be either dwa, dwb, eband, base, teb or pose" />
   <arg name="map_file" default="$(find mir_gazebo)/maps/maze.yaml" doc="Path to a map .yaml file (required)." />
   <arg name="virtual_walls_map_file" default="$(arg map_file)" doc="Path to a virtual walls map .yaml file (optional)." />
   <arg name="with_virtual_walls" default="true" />
