@@ -1,0 +1,13 @@
+repositories:
+  ira_laser_tools:
+    type: git
+    url: https://github.com/relffok/ira_laser_tools.git
+    version: galactic-devel
+  rclpy_message_converter:
+    type: git
+    url: https://github.com/relffok/rospy_message_converter.git
+    version: foxy-devel
+  twist_stamper:
+    type: git
+    url: https://github.com/joshnewans/twist_stamper.git
+    version: 32e0eed68c76d9d3fa64b54e8313aa9a6d6bd99d

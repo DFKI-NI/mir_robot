@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find mir_description)/urdf/include/common_properties.urdf.xacro" />
+
+  <xacro:macro name="actuated_wheel" params="prefix  locationprefix locationright">
+    <joint name="${prefix}${locationprefix}_wheel_joint" type="continuous">
+      <origin xyz="0.0 ${-mir_100_act_wheel_dy * locationright} ${mir_100_act_wheel_radius}" rpy="0 0 0" />
+      <parent link="${prefix}base_link" />
+      <child link="${prefix}${locationprefix}_wheel_link" />
+      <axis xyz="0 1 0" />
+      <limit effort="100" velocity="20.0" />
+      <!-- <dynamics damping="0.0" friction="0.0"/> -->
+      <!-- <gazebo reference="${prefix}${locationprefix}_wheel_joint">
+        <implicitSpringDamper>1</implicitSpringDamper>
+      </gazebo> -->
+    </joint>
+
+    <link name="${prefix}${locationprefix}_wheel_link">
+      <xacro:cylinder_inertial mass="${mir_100_act_wheel_mass}" radius="${mir_100_act_wheel_radius}" length="${mir_100_act_wheel_width}">
+        <origin xyz="0 0 0" rpy="${0.5 * pi} 0 0" />
+      </xacro:cylinder_inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://mir_description/meshes/visual/wheel.stl" />
+        </geometry>
+        <xacro:insert_block name="material_dark_grey" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+        <geometry>
+          <cylinder radius="${mir_100_act_wheel_radius}" length="${mir_100_act_wheel_width}" />
+        </geometry>
+      </collision>
+    </link>
+    <gazebo reference="${prefix}${locationprefix}_wheel_link">
+      <material>Gazebo/DarkGrey</material>
+    </gazebo>
+
+    <!-- set the gazebo friction parameters for the wheels -->
+    <gazebo reference="${prefix}${locationprefix}_wheel_link">
+      <!-- <mu1>1.6</mu1>
+      <mu2>1.6</mu2>
+      <min_depth>0.01</min_depth> -->
+      <collision name="${prefix}${locationprefix}_wheel_link_collision">
+        <surface>
+            <friction>
+              <ode>
+                <mu>300.0</mu>
+                <mu2>300.0</mu2>
+                <fdir1>0 0 1</fdir1>
+                <!-- <slip1>0</slip1>
+                <slip2>0</slip2> -->
+              </ode>
+              <torsional>
+                <coefficient>300</coefficient>
+                <use_patch_radius>false</use_patch_radius>
+                <surface_radius>${mir_100_act_wheel_radius}</surface_radius>
+              </torsional>
+            </friction>
+            <contact>
+              <ode>
+                <!-- <soft_cfm>0.0</soft_cfm>
+                <soft_erp>0.2</soft_erp> -->
+                <!-- <kp>10000000.0</kp>
+                <kd>1.0</kd>
+                <max_vel>0.01</max_vel> -->
+                <min_depth>0.001</min_depth> <!-- depth needed to have contact friction-->
+              </ode>
+            </contact>
+          </surface>
+      </collision>
+    </gazebo>
+  </xacro:macro>
+</robot>

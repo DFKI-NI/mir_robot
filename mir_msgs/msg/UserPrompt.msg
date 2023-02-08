@@ -3,4 +3,4 @@ string guid
 string user_group
 string question
 string[] options
-duration timeout
+builtin_interfaces/Duration timeout

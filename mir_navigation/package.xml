@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>mir_navigation</name>
   <version>1.1.3</version>
   <description>Launch and configuration files for move_base, localization etc. on the MiR robot.</description>
@@ -13,25 +13,17 @@
   <url type="repository">https://github.com/dfki-ric/mir_robot</url>
   <url type="bugtracker">https://github.com/dfki-ric/mir_robot/issues</url>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <depend>mir_gazebo</depend>
+  <depend>rviz2</depend>
+  <depend>nav2_bringup</depend>
 
-  <build_depend>roslaunch</build_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <exec_depend>amcl</exec_depend>
-  <exec_depend>base_local_planner</exec_depend>
-  <exec_depend>dwa_local_planner</exec_depend>
-  <exec_depend>dwb_critics</exec_depend>         <!-- for dwb_local_planner -->
-  <exec_depend>dwb_local_planner</exec_depend>   <!-- for dwb_local_planner -->
-  <exec_depend>dwb_plugins</exec_depend>         <!-- for dwb_local_planner -->
-  <!-- <exec_depend>eband_local_planner</exec_depend> -->
-  <exec_depend>hector_mapping</exec_depend>
-  <exec_depend>map_server</exec_depend>
-  <exec_depend>mir_driver</exec_depend>
-  <exec_depend>mir_dwb_critics</exec_depend>     <!-- for dwb_local_planner -->
-  <exec_depend>mir_gazebo</exec_depend>
-  <exec_depend>move_base</exec_depend>
-  <exec_depend>nav_core_adapter</exec_depend>    <!-- for dwb_local_planner -->
-  <exec_depend>python3-matplotlib</exec_depend>
-  <exec_depend>sbpl_lattice_planner</exec_depend>
-  <exec_depend>teb_local_planner</exec_depend>
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+
 </package>

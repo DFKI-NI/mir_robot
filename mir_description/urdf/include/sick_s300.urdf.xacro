@@ -32,9 +32,7 @@
     <gazebo reference="${prefix}${link}">
       <!-- <material value="Gazebo/Yellow" /> -->
       <material value="Gazebo/FlatBlack" />
-
       <sensor type="ray" name="${prefix}${link}">
-        <pose>0 0 0 0 0 0</pose>
         <visualize>false</visualize>
         <update_rate>12.5</update_rate>
         <ray>
@@ -53,16 +51,19 @@
           </range>
           <noise>
             <type>gaussian</type>
-            <!-- Noise parameters based on published spec for S300 achieving
+              <!-- Noise parameters based on published spec for S300 achieving
                  "+-29mm" accuracy at range < 3m (~0.01 of the range) at
                  1 sigma. -->
             <mean>0.0</mean>
             <stddev>0.01</stddev>
           </noise>
         </ray>
-        <plugin name="gazebo_ros_${link}_controller" filename="libgazebo_ros_laser.so">
-          <frameName>${prefix}${link}</frameName>
-          <topicName>${topic}</topicName>
+        <plugin name="gazebo_ros_${link}_controller" filename="libgazebo_ros_ray_sensor.so">    
+          <ros>
+            <remapping>~/out:=${prefix}${topic}</remapping>
+          </ros>
+          <output_type>sensor_msgs/LaserScan</output_type>
+          <frame_name>${prefix}${link}</frame_name>
         </plugin>
       </sensor>
     </gazebo>
