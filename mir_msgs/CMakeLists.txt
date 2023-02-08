@@ -64,8 +64,8 @@ set(msg_files
   # "msg/WebPath.msg"
   # "msg/WorldMap.msg"
   # "msg/WorldModel.msg"
+  "srv/ExecMission.srv"
 )
-
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   ${msg_files}

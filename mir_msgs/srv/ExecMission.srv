@@ -1,0 +1,4 @@
+string mission_name
+---
+string message
+bool success

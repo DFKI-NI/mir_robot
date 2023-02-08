@@ -6,6 +6,7 @@ from rclpy.node import Node
 
 import mir_restapi.mir_restapi_lib
 from std_srvs.srv import Trigger
+from mir_msgs.srv import ExecMission
 from rcl_interfaces.msg import SetParametersResult
 
 
@@ -89,6 +90,12 @@ class MirRestAPIServer(Node):
             'mir_100_honk',
             self.honk_callback)
         self.get_logger().info("Listening on 'mir_100_honk'")
+
+        self.create_service(
+            ExecMission,
+            'mir_100_execute_mission',
+            self.exec_mission_callback)
+        self.get_logger().info("Listening on 'mir_100_execute_mission'")
 
         self.create_service(
             Trigger,
@@ -180,27 +187,36 @@ class MirRestAPIServer(Node):
         response = self.call_restapi_function(self.api_handle.get_missions, request, response)
         return response
 
-    def honk_callback(self, request, response):
-        self.get_logger().info('Honking horn over REST API...')
+    def honk_callback(self,request,response):
+        
+        req = ExecMission.Request()
+        req.mission_name = "honk"
+        resp = ExecMission.Response()
 
-        mission_name = "honk"
+        self.exec_mission_callback(req, resp)
+        response.success = resp.success
+        return response
+
+    def exec_mission_callback(self, request, response):
+
+        mission_name = request.mission_name
 
         queue_success, mission_queue_id = self.api_handle.add_mission_to_queue(mission_name)
         if not queue_success:
-            response.message = "Honking failed due to mission queue error"
+            response.message = "Execution Mission '{}' failed due to mission queue error".format(mission_name)
             self.get_logger().error(response.message)
             response.success = False
             return response
-        self.get_logger().info("Put honk mission into queue with mission_queue_id={}".format(
+        self.get_logger().info("Put mission {} into queue with mission_queue_id={}".format(mission_name,
             mission_queue_id))
 
         emerg_response = self.is_emergency_halt_callback(request, response)
         if emerg_response.message == str(True):
-            response.message = "Can't honk, emergency halt"
+            response.message = "Can't execute mission, emergency halt"
             self.get_logger().error(response.message)
             response.success = False
         else:
-            response.message = "Honking"
+            response.message = "Executing mission '{}'".format(mission_name)
             self.get_logger().info(response.message)
             STATE_ID_RUN_MISSION = 3
             STATE_ID_PAUSE = 4
