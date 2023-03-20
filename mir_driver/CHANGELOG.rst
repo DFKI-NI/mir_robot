@@ -45,27 +45,27 @@ Changelog for package mir_driver
 * Remove outdated topics
   These topics don't exist on MiR software 2.8.3 any more (most of them
   have been removed a long time ago).
-  Fixes `#37 <https://github.com/dfki-ric/mir_robot/issues/37>`_.
+  Fixes `#37 <https://github.com/DFKI-NI/mir_robot/issues/37>`_.
 * Remove MirStatus
   This message was removed in MiR software 2.0 (Renamed to RobotStatus).
 * Use same MirMoveBase params as real MiR (2.8.3)
   This shouldn't make a difference (it used to work before). Just removing
   one more potential source of error.
-* Fix: Converts move_base_simple/goal into a move_base action. (`#62 <https://github.com/dfki-ric/mir_robot/issues/62>`_)
+* Fix: Converts move_base_simple/goal into a move_base action. (`#62 <https://github.com/DFKI-NI/mir_robot/issues/62>`_)
   At least MIR software version 2.8 does not react properly to move_base_simple/goal messages. This implements a workaround.
-  Closes `#60 <https://github.com/dfki-ric/mir_robot/issues/60>`_.
-* Fix: Adds subscription to "tf_static". (`#58 <https://github.com/dfki-ric/mir_robot/issues/58>`_)
+  Closes `#60 <https://github.com/DFKI-NI/mir_robot/issues/60>`_.
+* Fix: Adds subscription to "tf_static". (`#58 <https://github.com/DFKI-NI/mir_robot/issues/58>`_)
   Some transformations are published on this topic and are needed to
   obtain a full tf tree. E.g. "base_footprint" to "base_link"
-* Minor: Removes /particlecloud from the list of published topics. (`#57 <https://github.com/dfki-ric/mir_robot/issues/57>`_)
-* Fix: Add missing dict_filter keyword argument for cmd_vel msgs (`#56 <https://github.com/dfki-ric/mir_robot/issues/56>`_)
+* Minor: Removes /particlecloud from the list of published topics. (`#57 <https://github.com/DFKI-NI/mir_robot/issues/57>`_)
+* Fix: Add missing dict_filter keyword argument for cmd_vel msgs (`#56 <https://github.com/DFKI-NI/mir_robot/issues/56>`_)
 * Remove relative_move_action (MiR => 2.4.0)
   This action was merged into the generic MirMoveBaseAction in MiR
   software 2.4.0.
 * Adjust to changed MirMoveBase action (MiR >= 2.4.0)
-  See `#45 <https://github.com/dfki-ric/mir_robot/issues/45>`_.
+  See `#45 <https://github.com/DFKI-NI/mir_robot/issues/45>`_.
 * Adjust cmd_vel topic to TwistStamped (MiR >= 2.7)
-  See `#45 <https://github.com/dfki-ric/mir_robot/issues/45>`_.
+  See `#45 <https://github.com/DFKI-NI/mir_robot/issues/45>`_.
 * Contributors: Martin Günther, matthias-mayr
 
 1.1.2 (2021-05-12)
@@ -80,7 +80,7 @@ Changelog for package mir_driver
   starting to stream messages on topic 'tf'
   starting to stream messages on topic 'tf'
   starting to stream messages on topic 'tf'
-  Probably related to `#64 <https://github.com/dfki-ric/mir_robot/issues/64>`_.
+  Probably related to `#64 <https://github.com/DFKI-NI/mir_robot/issues/64>`_.
 * Contributors: Martin Günther
 
 1.1.0 (2020-06-30)
@@ -99,7 +99,7 @@ Changelog for package mir_driver
 
 1.0.5 (2020-05-01)
 ------------------
-* Add optional prefix parameter to fake_mir_joint_publisher (`#47 <https://github.com/dfki-ric/mir_robot/issues/47>`_)
+* Add optional prefix parameter to fake_mir_joint_publisher (`#47 <https://github.com/DFKI-NI/mir_robot/issues/47>`_)
 * tf_remove_child_frames: Don't publish empty TFs
 * Add sdc21x0 package, MC/currents topic
 * Contributors: Martin Günther, Nils Niemann
@@ -112,10 +112,10 @@ Changelog for package mir_driver
 1.0.3 (2019-03-04)
 ------------------
 * Make disable_map work with MiR software 2.0
-  See `#5 <https://github.com/dfki-ric/mir_robot/issues/5>`_.
-* mir_driver: Optionally disable the map topic + TF frame (`#6 <https://github.com/dfki-ric/mir_robot/issues/6>`_)
+  See `#5 <https://github.com/DFKI-NI/mir_robot/issues/5>`_.
+* mir_driver: Optionally disable the map topic + TF frame (`#6 <https://github.com/DFKI-NI/mir_robot/issues/6>`_)
   This is useful when running one's own SLAM / localization nodes.
-  Fixes `#5 <https://github.com/dfki-ric/mir_robot/issues/5>`_.
+  Fixes `#5 <https://github.com/DFKI-NI/mir_robot/issues/5>`_.
 * Split scan_rep117 topic into two separate topics
   This fixes the problem that the back laser scanner was ignored in the
   navigation costmap in Gazebo (probably because in Gazebo, both laser

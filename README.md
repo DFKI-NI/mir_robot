@@ -8,7 +8,7 @@ This is a community project created by us ([DFKI](https://www.dfki.de/), the
 German Research Center for Artificial Intelligence) to use the MiR Robots with
 ROS. We are not affiliated with Mobile Industrial Robots. If you find a bug or
 missing feature in this software, please report it on the
-[issue tracker](https://github.com/dfki-ric/mir_robot/issues).
+[issue tracker](https://github.com/DFKI-NI/mir_robot/issues).
 
 Supported MiR robots and software versions
 ------------------------------------------
@@ -86,7 +86,7 @@ mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src/
 
 # clone mir_robot into the catkin workspace
-git clone -b noetic https://github.com/dfki-ric/mir_robot.git
+git clone -b noetic https://github.com/DFKI-NI/mir_robot.git
 
 # use rosdep to install all dependencies (including ROS itself)
 sudo apt-get update -qq
@@ -365,7 +365,7 @@ GitHub Actions - Continuous Integration
 
 | Noetic                                                                                                                                                                               |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [![Build Status](https://github.com/dfki-ric/mir_robot/actions/workflows/github-actions.yml/badge.svg)](https://github.com/dfki-ric/mir_robot/actions/workflows/github-actions.yml/) |
+| [![Build Status](https://github.com/DFKI-NI/mir_robot/actions/workflows/github-actions.yml/badge.svg)](https://github.com/DFKI-NI/mir_robot/actions/workflows/github-actions.yml/) |
 
 
 ROS Buildfarm
