@@ -1,0 +1,26 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/ocrtoc/Rajath-master-thesis/catkin_ws/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/ocrtoc/Rajath-master-thesis/catkin_ws/src/mir_robot/mir_dwb_critics/include/**",
+        "/home/ocrtoc/Rajath-master-thesis/catkin_ws/src/realsense-ros-2.3.2/realsense2_camera/include/**",
+        "/home/ocrtoc/Rajath-master-thesis/catkin_ws/src/Universal_Robots_ROS_Driver/ur_calibration/include/**",
+        "/home/ocrtoc/Rajath-master-thesis/catkin_ws/src/universal_robot/ur_kinematics/include/**",
+        "/home/ocrtoc/Rajath-master-thesis/catkin_ws/src/Universal_Robots_ROS_Driver/ur_robot_driver/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
