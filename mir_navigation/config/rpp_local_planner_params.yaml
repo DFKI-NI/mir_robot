@@ -1,0 +1,57 @@
+# requires https://github.com/JohnTGZ/regulated_pure_pursuit_controller
+#
+# known bugs:
+# - ignores local costmap (will collide with dynamic obstacles)
+# - oscillates near goal (https://github.com/JohnTGZ/regulated_pure_pursuit_controller/issues/8)
+
+base_local_planner: regulated_pure_pursuit_controller/RegulatedPurePursuitController
+RegulatedPurePursuitController:
+  # general params
+  #max_robot_pose_search_dist: -1.0   # Unused. Upper bound on integrated distance along the global plan to search for the closest pose to the robot pose. This should be left as the default unless there are paths with loops and intersections that do not leave the local costmap, in which case making this value smaller is necessary to prevent shortcutting. If set to -1, it will use the maximum distance possible to search every point on the path for the nearest path point.
+  min_global_plan_complete_size: 20     # (default: 20)
+  global_plan_prune_distance: 1.0       # Unused. (default: 1.0)
+
+  # Lookahead
+  use_velocity_scaled_lookahead_dist: false   # Whether to use the velocity scaled lookahead distances or constant lookahead_distance. (default: false)
+  # only when false:
+  lookahead_dist: 0.25                        # The lookahead distance (m) to use to find the lookahead point. (default: 0.6)
+  # only when true:
+  min_lookahead_dist: 0.3                     # The minimum lookahead distance (m) threshold. (default: 0.3)
+  max_lookahead_dist: 0.9                     # The maximum lookahead distance (m) threshold. (default: 0.9)
+  lookahead_time: 1.5                         # The time (s) to project the velocity by, a.k.a. lookahead gain. (default: 1.5)
+
+  # Rotate to heading param - onle one of use_rotate_to_heading and allow_reversing can be set to true
+  use_rotate_to_heading: false         # Whether to enable rotating to rough heading and goal orientation when using holonomic planners. Recommended on for all robot types that can rotate in place. (default: true)
+  # only when true:
+  rotate_to_heading_angular_vel: 1.0   # The angular velocity to use. (default: 1.8)
+  rotate_to_heading_min_angle: 0.785   # The difference in the path orientation and the starting robot orientation (radians) to trigger a rotate in place. (default: 0.785)
+  max_angular_accel: 1.5               # Maximum allowable angular acceleration (rad/s/s) while rotating to heading. (default: 3.2)
+
+  # Reversing - onle one of use_rotate_to_heading and allow_reversing can be set to true
+  allow_reversing: true                # Enables the robot to drive in the reverse direction, when the path planned involves reversing (which is represented by orientation cusps). (default: false)
+
+  # Speed
+  desired_linear_vel: 0.6              # The desired maximum linear velocity (m/s) to use. (default: 0.5)
+  max_angular_vel: 0.8                 # (default: 1.5)
+  min_approach_linear_velocity: 0.05   # The minimum velocity (m/s) threshold to apply when approaching the goal to ensure progress. Must be > 0.01. (default: 0.05)
+
+  # Regulated linear velocity scaling
+  use_regulated_linear_velocity_scaling: true   # Whether to use the regulated features for path curvature (e.g. slow on high curvature paths). (default: true)
+  # only when true:
+  regulated_linear_scaling_min_radius: 0.9      # The turning radius (m) for which the regulation features are triggered. Remember, sharper turns have smaller radii. (default: 0.9)
+  regulated_linear_scaling_min_speed: 0.25      # The minimum speed (m/s) for which any of the regulated heuristics can send, to ensure process is still achievable even in high cost spaces with high curvature. Must be > 0.1. (default: 0.25)
+
+  # Inflation cost scaling (Limit velocity by proximity to obstacles)
+  use_cost_regulated_linear_velocity_scaling: true   # Whether to use the regulated features for proximity to obstacles (e.g. slow in close proximity to obstacles). (default: true)
+  inflation_cost_scaling_factor: 3.0                 # (default: 3.0)   # must be > 0
+  cost_scaling_dist: 0.6                             # (default: 0.6)
+  cost_scaling_gain: 1.0                             # (default: 1.0)
+
+  # Collision avoidance
+  max_allowed_time_to_collision_up_to_carrot: 1.0    # The time (s) to project a velocity command forward to check for collisions. (default: 1.0)
+
+  goal_dist_tol: 0.25        # (default: 0.25)
+
+  control_frequency: 20      # (default: 20)
+
+  transform_tolerance: 0.1   # The TF transform tolerance (seconds). (default: 0.1)

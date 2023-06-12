@@ -438,6 +438,45 @@ Visualization Manager:
       Topic: particlecloud
       Unreliable: false
       Value: false
+    - Class: rviz/Group
+      Displays:
+        - Alpha: 1
+          Buffer Length: 1
+          Class: rviz/Path
+          Color: 114; 159; 207
+          Enabled: true
+          Head Diameter: 0.30000001192092896
+          Head Length: 0.20000000298023224
+          Length: 0.30000001192092896
+          Line Style: Billboards
+          Line Width: 0.05000000074505806
+          Name: Lookahead Collision Arc (RPP)
+          Offset:
+            X: 0
+            Y: 0
+            Z: 0
+          Pose Color: 255; 85; 255
+          Pose Style: None
+          Queue Size: 10
+          Radius: 0.029999999329447746
+          Shaft Diameter: 0.10000000149011612
+          Shaft Length: 0.10000000149011612
+          Topic: /move_base_node/RegulatedPurePursuitController/lookahead_collision_arc
+          Unreliable: false
+          Value: true
+        - Alpha: 1
+          Class: rviz/PointStamped
+          Color: 204; 41; 204
+          Enabled: true
+          History Length: 1
+          Name: Lookahead Point (RPP)
+          Queue Size: 10
+          Radius: 0.05000000074505806
+          Topic: /move_base_node/RegulatedPurePursuitController/lookahead_point
+          Unreliable: false
+          Value: true
+      Enabled: true
+      Name: RPP
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
