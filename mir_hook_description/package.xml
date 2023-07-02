@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>mir_hook_description</name>
+  <version>1.0.7</version>
+  <description>URDF description of the MiR100 robot with hook and cart</description>
+
+  <maintainer email="dennis.mronga@dfki.de">Dennis Mronga</maintainer>
+  <author email="dennis.mronga@dfki.de">Dennis Mronga</author>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>mir_description</exec_depend>
+</package>

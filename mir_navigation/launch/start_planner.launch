@@ -1,6 +1,7 @@
 <launch>
   <arg name="local_planner"          default="dwb"             doc="Local planner can be either dwa, dwb, eband, base, teb or pose" />
   <arg name="map_file" default="$(find mir_gazebo)/maps/maze.yaml" doc="Path to a map .yaml file (required)." />
+  <arg name="mir_hook" default="False" doc="Add the MiR Hook and cart." />
   <arg name="virtual_walls_map_file" default="$(arg map_file)" doc="Path to a virtual walls map .yaml file (optional)." />
   <arg name="with_virtual_walls" default="true" />
   <arg name="prefix" default="" />
@@ -15,6 +16,7 @@
 
     <include file="$(find mir_navigation)/launch/move_base.xml">
       <arg name="local_planner" value="$(arg local_planner)"/>
+      <arg name="mir_hook" value="$(arg mir_hook)"/>
       <arg name="with_virtual_walls" value="$(arg with_virtual_walls)" />
       <arg name="prefix" value="$(arg prefix)" />
     </include>
@@ -31,6 +33,7 @@
 
     <include file="$(find mir_navigation)/launch/move_base.xml">
       <arg name="local_planner" value="$(arg local_planner)"/>
+      <arg name="mir_hook" value="$(arg mir_hook)"/>
       <arg name="with_virtual_walls" value="$(arg with_virtual_walls)" />
       <arg name="prefix" value="$(arg prefix)" />
     </include>

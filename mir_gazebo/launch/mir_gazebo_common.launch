@@ -5,24 +5,34 @@
   <arg name="robot_yaw" default="0.0" />
 
   <arg name="mir_type" default="mir_100" doc="The MiR variant. Can be 'mir_100' or 'mir_250' for now." />
+  <arg name="mir_hook" default="False" doc="Add the MiR Hook" />
 
   <arg name="tf_prefix" default="" doc="tf_prefix to be used by gazebo plugins and in the robot's urdf etc." />
 
   <arg name="prefix" value="$(arg tf_prefix)/" if="$(eval tf_prefix != '')" /> <!-- $(arg prefix) is used in all the config files! TODO: For multiple robots, create groups when loading the parameters to overwrite the arg? -->
   <arg name="prefix" value=""                  unless="$(eval tf_prefix != '')" />
 
-  <arg name="model_name" default="mir" doc="Name of the Gazebo robot model (needs to be different for each robot)" />
+  <!-- start rqt_robot_steering to control the robot manually -->
+  <arg name="teleop" default="true" />
 
+  <arg name="model_name" default="mir" doc="Name of the Gazebo robot model (needs to be different for each robot)" />
 
   <!-- Load URDF -->
   <include file="$(find mir_description)/launch/upload_mir_urdf.launch">
     <arg name="mir_type" value="$(arg mir_type)" />
+    <arg name="mir_hook" value="$(arg mir_hook)" />
     <arg name="tf_prefix" value="$(arg tf_prefix)" />
   </include>
 
   <!-- Spawn the robot into Gazebo -->
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model $(arg model_name)
     -x $(arg robot_x) -y $(arg robot_y) -Y $(arg robot_yaw) " />
+
+  <!-- control params for the hook -->
+  <rosparam command="load"
+    file="$(find mir_hook_description)/urdf/config/gazebo_ros_control_params.yaml"
+    if="$(eval mir_hook == True)" />
+
 
   <!-- Load ros_control controller configurations -->
   <rosparam file="$(find mir_description)/config/joint_state_controller.yaml" command="load" />
@@ -47,7 +57,7 @@
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" />
 
   <!-- Load teleop -->
-  <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
+  <node if="$(arg teleop)" name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
     <param name="default_topic" value="cmd_vel"/>
     <param name="default_vx_max" value="1.0" />
     <param name="default_vx_min" value="-1.0" />

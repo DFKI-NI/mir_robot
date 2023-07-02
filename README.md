@@ -30,6 +30,8 @@ This repo has been tested with the following MiR software versions:
 You can try if it works with other versions, but these are the ones that are
 known to work.
 
+It also supports the MiR hook with a connected cart (docking the cart is not simulated).
+
 
 Package overview
 ----------------
@@ -37,6 +39,7 @@ Package overview
 * `mir_actions`: Action definitions for the MiR robot
 * `mir_description`: URDF description of the MiR robot
 * `mir_dwb_critics`: Plugins for the dwb_local_planner used in Gazebo
+* `mir_hook_description`: URDF description of the MiR hook and a cart
 * `mir_driver`: A reverse ROS bridge for the MiR robot
 * `mir_gazebo`: Simulation specific launch and configuration files for the MiR robot
 * `mir_msgs`: Message definitions for the MiR robot
@@ -130,7 +133,8 @@ roslaunch mir_navigation amcl.launch initial_pose_x:=10.0 initial_pose_y:=10.0
 # navigation:
 roslaunch mir_navigation start_planner.launch \
     map_file:=$(rospack find mir_gazebo)/maps/maze.yaml \
-    virtual_walls_map_file:=$(rospack find mir_gazebo)/maps/maze_virtual_walls.yaml
+    virtual_walls_map_file:=$(rospack find mir_gazebo)/maps/maze_virtual_walls.yaml \
+    mir_hook:=False
 rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
 ```
 
@@ -152,6 +156,18 @@ roslaunch mir_navigation hector_mapping.launch
 roslaunch mir_navigation move_base.xml with_virtual_walls:=false
 rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
 ```
+
+Gazebo demo (MiR with hook and cart)
+----------------------------------------
+
+To start the demo with a MiR robot that uses the hook and has a connected cart
+just add `mir_hook:=True` (note the capitalized *T* ) to the gazebo-command:
+
+```bash
+roslaunch mir_gazebo mir_maze_world.launch mir_hook:=True
+```
+
+you can then run the other commands like you would strat the normal simulation.
 
 Gazebo demo (MiR 250 in warehouse Gazebo world)
 -----------------------------------------------
@@ -212,7 +228,9 @@ roslaunch mir_gazebo mir_maze_world.launch tf_prefix:=mir
 roslaunch mir_navigation amcl.launch initial_pose_x:=10.0 initial_pose_y:=10.0 tf_prefix:=mir#
 roslaunch mir_navigation start_planner.launch \
         map_file:=$(rospack find mir_gazebo)/maps/maze.yaml \
-        virtual_walls_map_file:=$(rospack find mir_gazebo)/maps/maze_virtual_walls.yaml prefix:=mir/
+        mir_hook:=False \
+        virtual_walls_map_file:=$(rospack find mir_gazebo)/maps/maze_virtual_walls.yaml \
+        prefix:=mir/
 ROS_NAMESPACE=mir rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
 
 # spawn second MiR into Gazebo
@@ -222,7 +240,9 @@ roslaunch mir_gazebo mir_gazebo_common.launch robot_x:=-2 robot_y:=-2 tf_prefix:
 roslaunch mir_navigation amcl.launch initial_pose_x:=8.0 initial_pose_y:=8.0 tf_prefix:=mir2
 roslaunch mir_navigation start_planner.launch \
         map_file:=$(rospack find mir_gazebo)/maps/maze.yaml \
-        virtual_walls_map_file:=$(rospack find mir_gazebo)/maps/maze_virtual_walls.yaml prefix:=mir2/
+        mir_hook:=False \
+        virtual_walls_map_file:=$(rospack find mir_gazebo)/maps/maze_virtual_walls.yaml \
+        prefix:=mir2/
 ROS_NAMESPACE=mir2 rviz -d $(rospack find mir_navigation)/rviz/navigation.rviz
 ```
 

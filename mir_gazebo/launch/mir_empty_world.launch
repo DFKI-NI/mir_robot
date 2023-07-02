@@ -1,6 +1,12 @@
 <?xml version="1.0" ?>
 <launch>
+  <!-- show Gazebo gui, only start gazebo server if set to false. for headless mode set gui and teleop to false. -->
   <arg name="gui" default="true" />
+  <!-- start rqt_robot_steering to control the robot manually -->
+  <arg name="teleop" default="true" />
+  <!-- run simulation paused -->
+  <arg name="paused" default="true" />
+
   <arg name="world_name" default="worlds/empty.world"/> <!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable, but can also be an absolute path -->
 
   <arg name="robot_x"   default="0.0" />
@@ -8,6 +14,7 @@
   <arg name="robot_yaw" default="0.0" />
 
   <arg name="mir_type" default="mir_100" doc="The MiR variant. Can be 'mir_100' or 'mir_250' for now." />
+  <arg name="mir_hook" default="False" doc="Add the MiR Hook (True/False)" />
 
   <arg name="tf_prefix" default="" doc="tf_prefix to be used by gazebo plugins and in the robot's urdf etc." />
 
@@ -21,7 +28,7 @@
 
       <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="world_name" value="$(arg world_name)"/>
-        <arg name="paused" value="true" />
+        <arg name="paused" value="$(arg paused)" />
         <arg name="gui" value="$(arg gui)" />
       </include>
     </group>
@@ -29,10 +36,12 @@
     <group ns="$(arg namespace)">
       <!-- spawn robot and bring up controllers etc. -->
       <include file="$(find mir_gazebo)/launch/mir_gazebo_common.launch">
+        <arg name="teleop"   value="$(arg teleop)" />
         <arg name="robot_x"   value="$(arg robot_x)" />
         <arg name="robot_y"   value="$(arg robot_y)" />
         <arg name="robot_yaw" value="$(arg robot_yaw)" />
         <arg name="mir_type"  value="$(arg mir_type)" />
+        <arg name="mir_hook" value="$(arg mir_hook)" />
         <arg name="tf_prefix" value="$(arg tf_prefix)" />
       </include>
     </group>
@@ -48,17 +57,19 @@
 
       <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="world_name" value="$(arg world_name)"/>
-        <arg name="paused" value="true" />
+        <arg name="paused" value="$(arg paused)" />
         <arg name="gui" value="$(arg gui)" />
       </include>
     </group>
 
     <!-- spawn robot and bring up controllers etc. -->
     <include file="$(find mir_gazebo)/launch/mir_gazebo_common.launch">
+      <arg name="teleop"   value="$(arg teleop)" />
       <arg name="robot_x"   value="$(arg robot_x)" />
       <arg name="robot_y"   value="$(arg robot_y)" />
       <arg name="robot_yaw" value="$(arg robot_yaw)" />
-        <arg name="mir_type"  value="$(arg mir_type)" />
+      <arg name="mir_type"  value="$(arg mir_type)" />
+      <arg name="mir_hook"  value="$(arg mir_hook)" />
       <arg name="tf_prefix" value="$(arg tf_prefix)" />
     </include>
   </group>
