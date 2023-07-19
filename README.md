@@ -321,10 +321,29 @@ To install things on the internal MiR PC:
 * connect a monitor and keyboard to the ports that are exposed on one corner of the MiR
 * boot into a live USB linux system
 * `chroot` into the MiR PC
-* download `chrony_2.1.1-1ubuntu0.1_amd64.deb`,
-  `libtomcrypt0_1.17-7ubuntu0.1_amd64.deb`, `libtommath0_0.42.0-1.2_amd64.deb`
-  and `timelimit_1.8-1_amd64.deb` from a PC that has internet and install them
-  in the `chroot` environment onto the MiR PC using `dpkg -i`
+    1. mount MiR partition and bind /dev and /run:
+       ```
+       sudo mkdir -p /media/mir
+       sudo mount /media/mir/ /dev/sda3
+       sudo mount --bind /dev/ /media/mir/@/dev
+       sudo mount --bind /run/ /media/mir/@/run
+       ```
+    2. `chroot` into the MiR PC:
+       ```sudo chroot /media/mir/@/ ```
+* crate user:
+   ```
+   adduser newuser
+   usermod -aG sudo newuser 
+   ```
+* reboot and login into MiR PC
+* Install Chrony
+   ```
+   sudo apt install chrony
+
+   # if not installable (to fix broken dependencies):
+   sudo apt -f install
+   sudo apt install chrony
+   ```
 * set up `/etc/chrony/chrony.conf`
 
 
