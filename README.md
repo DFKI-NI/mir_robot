@@ -345,6 +345,15 @@ To install things on the internal MiR PC:
    sudo apt install chrony
    ```
 * set up `/etc/chrony/chrony.conf`
+* make sure all old ntp configs are configured in chrony. For this add the following to your chrony.conf (the old ntp.conf part is commented out):
+```
+# Clients from this subnet have unlimited access, but only if
+# cryptographically authenticated.
+#restrict 192.168.12.255 mask 255.255.255.0 nomodify notrap nopeer
+allow 192.168.12.0/24 nomodify notrap nopeer
+```
+* restart chrony service
+
 
 
 Troubleshooting
