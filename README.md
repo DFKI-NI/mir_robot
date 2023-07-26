@@ -321,40 +321,50 @@ To install things on the internal MiR PC:
 * connect a monitor and keyboard to the ports that are exposed on one corner of the MiR
 * boot into a live USB linux system
 * `chroot` into the MiR PC
-    1. mount MiR partition and bind /dev and /run:
-       ```
+    1. mount MiR partition and bind /dev, /run etc..
+    you can use fdisk -l to figure out which partition to mount.
+    (Here it's _sda3_):
+
+       ```bash
        sudo mkdir -p /media/mir
-       sudo mount /media/mir/ /dev/sda3
-       sudo mount --bind /dev/ /media/mir/@/dev
-       sudo mount --bind /run/ /media/mir/@/run
+       sudo mount /dev/sda3 /media/mir/
+
+       for dir in /dev /dev/pts /proc /sys /run; do sudo mount --bind $dir /media/mir/@$dir; done
        ```
+
     2. `chroot` into the MiR PC:
-       ```sudo chroot /media/mir/@/ ```
-* crate user:
-   ```
+       ```sudo chroot /media/mir/@/```
+* create user:
+
+   ```bash
    adduser newuser
-   usermod -aG sudo newuser 
+   usermod -aG sudo newuser
    ```
+
 * reboot and login into MiR PC
 * Install Chrony
-   ```
+
+   ```bash
+   sudo apt update
    sudo apt install chrony
 
    # if not installable (to fix broken dependencies):
    sudo apt -f install
    sudo apt install chrony
    ```
+
 * set up `/etc/chrony/chrony.conf`
-* make sure all old ntp configs are configured in chrony. For this add the following to your chrony.conf (the old ntp.conf part is commented out):
-```
+* make sure all old ntp configs are configured in chrony.
+For this add the following to your chrony.conf (the old ntp.conf part is commented out):
+
+```bash
 # Clients from this subnet have unlimited access, but only if
 # cryptographically authenticated.
 #restrict 192.168.12.255 mask 255.255.255.0 nomodify notrap nopeer
 allow 192.168.12.0/24 nomodify notrap nopeer
 ```
+
 * restart chrony service
-
-
 
 Troubleshooting
 ---------------
