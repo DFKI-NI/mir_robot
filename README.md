@@ -26,9 +26,13 @@ This repo has been tested with the following MiR software versions:
 
 * 2.8.3.1
 * 2.13.4.1
+* 2.13.5.3
 
 You can try if it works with other versions, but these are the ones that are
 known to work.
+
+:warning: **Do NOT update to the upcoming version 3.0; it is very well possible
+that this repo will no longer work with this version!**
 
 
 Package overview
@@ -396,6 +400,30 @@ following behavior of Gazebo:
 Since we just want Gazebo to follow our commanded velocities, we cannot set the
 PID values for joints using the VelocityJointInterface, so the errors get
 printed (but can be ignored).
+
+
+pre-commit Formatting Checks
+----------------------------
+
+This repo has a [pre-commit](https://pre-commit.com/) check that runs in CI.
+You can use this locally and set it up to run automatically before you commit
+something. To install, use pip:
+
+```bash
+pip3 install --user pre-commit
+```
+
+To run over all the files in the repo manually:
+
+```bash
+pre-commit run -a
+```
+
+To run pre-commit automatically before committing in the local repo, install the git hooks:
+
+```bash
+pre-commit install
+```
 
 
 GitHub Actions - Continuous Integration
