@@ -337,7 +337,11 @@ To install things on the internal MiR PC:
        ```
 
     2. `chroot` into the MiR PC:
-       ```sudo chroot /media/mir/@/```
+
+       ```bash
+       sudo chroot /media/mir/@/
+       ```
+
 * create user:
 
    ```bash
@@ -359,7 +363,7 @@ To install things on the internal MiR PC:
 
 * set up `/etc/chrony/chrony.conf`
 * make sure all old ntp configs are configured in chrony.
-For this add the following to your chrony.conf (the old ntp.conf part is commented out):
+  For this add the following to your chrony.conf (the old ntp.conf part is commented out):
 
 ```bash
 # Clients from this subnet have unlimited access, but only if
