@@ -322,16 +322,18 @@ manual interaction.
 
 To install things on the internal MiR PC:
 
-* connect a monitor and keyboard to the ports that are exposed on one corner of the MiR
-* boot into a live USB linux system
-* `chroot` into the MiR PC
-    1. mount MiR partition and bind /dev, /run etc..
-    you can use fdisk -l to figure out which partition to mount.
-    (Here it's _sda3_):
+* Connect a monitor, keyboard and USB stick with a live Linux system to the
+  ports that are exposed on one corner of the MiR.
+* Boot into the live USB Linux system.
+* `chroot` into the MiR PC:
+
+    1. Mount MiR partition and bind /dev, /run etc.
+       You can use fdisk -l to figure out which partition to mount.
+       (Here it's _sda3_):
 
        ```bash
        sudo mkdir -p /media/mir
-       sudo mount /dev/sda3 /media/mir/
+       sudo mount /dev/sda3 /media/mir
 
        for dir in /dev /dev/pts /proc /sys /run; do sudo mount --bind $dir /media/mir/@$dir; done
        ```
@@ -342,15 +344,15 @@ To install things on the internal MiR PC:
        sudo chroot /media/mir/@/
        ```
 
-* create user:
+* Create user:
 
    ```bash
    adduser newuser
    usermod -aG sudo newuser
    ```
 
-* reboot and login into MiR PC
-* Install Chrony
+* Reboot and log into MiR PC via SSH and the newly created user name.
+* Install Chrony:
 
    ```bash
    sudo apt update
@@ -361,9 +363,9 @@ To install things on the internal MiR PC:
    sudo apt install chrony
    ```
 
-* set up `/etc/chrony/chrony.conf`
-* make sure all old ntp configs are configured in chrony.
-  For this add the following to your chrony.conf (the old ntp.conf part is commented out):
+* Set up `/etc/chrony/chrony.conf`.
+* Make sure all old ntp configs are configured in chrony. For this, add the
+  following to your chrony.conf (the old ntp.conf part is commented out):
 
 ```bash
 # Clients from this subnet have unlimited access, but only if
@@ -372,7 +374,8 @@ To install things on the internal MiR PC:
 allow 192.168.12.0/24 nomodify notrap nopeer
 ```
 
-* restart chrony service
+* Restart chrony service.
+
 
 Troubleshooting
 ---------------
