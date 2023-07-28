@@ -27,7 +27,6 @@ repos:
       - id: check-vcs-permalinks
       - id: check-xml
       - id: check-yaml
-        exclude: mobipick_description/config/joint_limits.yaml
       - id: debug-statements
       - id: end-of-file-fixer
         exclude: &excludes |
@@ -113,4 +112,4 @@ repos:
         language: system
         always_run: true
         pass_filenames: false
-        args: [ "--strict", "--skip-pkg", "mobipick_moveit_config" ]   # have to skip this package because of the missing warehouse_ros_mongo dependency
+        args: [ "--strict" ]
