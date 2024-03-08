@@ -103,7 +103,7 @@ repos:
         description: Format files with ClangFormat.
         entry: clang-format-10
         language: system
-        files: \.(c|cc|cxx|cpp|frag|glsl|h|hpp|hxx|ih|ispc|ipp|java|js|m|proto|vert)$
+        files: \.(c|cc|cxx|cpp|frag|glsl|h|hpp|hxx|ih|ispc|ipp|java|js|proto|vert)$
         args: [ "-fallback-style=none", "-i" ]
       - id: catkin_lint
         name: catkin_lint
