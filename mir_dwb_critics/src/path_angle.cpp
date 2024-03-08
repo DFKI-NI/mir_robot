@@ -38,15 +38,17 @@
 #include <nav_grid/coordinate_conversion.h>
 #include <vector>
 
-namespace mir_dwb_critics {
-
-bool PathAngleCritic::prepare(const geometry_msgs::Pose2D &pose, const nav_2d_msgs::Twist2D &vel,
-                              const geometry_msgs::Pose2D &goal, const nav_2d_msgs::Path2D &global_plan) {
-  const nav_core2::Costmap &costmap = *costmap_;
-  const nav_grid::NavGridInfo &info = costmap.getInfo();
+namespace mir_dwb_critics
+{
+bool PathAngleCritic::prepare(const geometry_msgs::Pose2D& pose, const nav_2d_msgs::Twist2D& vel,
+                              const geometry_msgs::Pose2D& goal, const nav_2d_msgs::Path2D& global_plan)
+{
+  const nav_core2::Costmap& costmap = *costmap_;
+  const nav_grid::NavGridInfo& info = costmap.getInfo();
   nav_2d_msgs::Path2D adjusted_global_plan = nav_2d_utils::adjustPlanResolution(global_plan, info.resolution);
 
-  if (global_plan.poses.empty()) {
+  if (global_plan.poses.empty())
+  {
     ROS_ERROR_NAMED("PathAngleCritic", "The global plan was empty.");
     return false;
   }
@@ -54,36 +56,45 @@ bool PathAngleCritic::prepare(const geometry_msgs::Pose2D &pose, const nav_2d_ms
   // find the angle of the plan at the pose on the plan closest to the robot
   double distance_min = std::numeric_limits<double>::infinity();
   bool started_path = false;
-  for (unsigned int i = 0; i < adjusted_global_plan.poses.size(); i++) {
+  for (unsigned int i = 0; i < adjusted_global_plan.poses.size(); i++)
+  {
     double g_x = adjusted_global_plan.poses[i].x;
     double g_y = adjusted_global_plan.poses[i].y;
     unsigned int map_x, map_y;
-    if (worldToGridBounded(info, g_x, g_y, map_x, map_y) && costmap(map_x, map_y) != costmap.NO_INFORMATION) {
+    if (worldToGridBounded(info, g_x, g_y, map_x, map_y) && costmap(map_x, map_y) != costmap.NO_INFORMATION)
+    {
       double distance = nav_2d_utils::poseDistance(adjusted_global_plan.poses[i], pose);
-      if (distance_min > distance) {
+      if (distance_min > distance)
+      {
         // still getting closer
         desired_angle_ = adjusted_global_plan.poses[i].theta;
         distance_min = distance;
         started_path = true;
-      } else {
+      }
+      else
+      {
         // plan is going away from the robot again
         break;
       }
-    } else if (started_path) {
+    }
+    else if (started_path)
+    {
       // Off the costmap after being on the costmap.
       break;
     }
     // else, we have not yet found a point on the costmap, so we just continue
   }
 
-  if (!started_path) {
+  if (!started_path)
+  {
     ROS_ERROR_NAMED("PathAngleCritic", "None of the points of the global plan were in the local costmap.");
     return false;
   }
   return true;
 }
 
-double PathAngleCritic::scoreTrajectory(const dwb_msgs::Trajectory2D &traj) {
+double PathAngleCritic::scoreTrajectory(const dwb_msgs::Trajectory2D& traj)
+{
   double diff = fabs(remainder(traj.poses.back().theta - desired_angle_, 2 * M_PI));
   return diff * diff;
 }

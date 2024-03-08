@@ -45,11 +45,11 @@ namespace mir_dwb_critics
  *        where the global path is pruned to only include waypoints ahead of the
  *        robot.
  */
-class PathDistPrunedCritic : public dwb_critics::PathDistCritic {
+class PathDistPrunedCritic : public dwb_critics::PathDistCritic
+{
 public:
   virtual bool prepare(const geometry_msgs::Pose2D& pose, const nav_2d_msgs::Twist2D& vel,
-                       const geometry_msgs::Pose2D& goal,
-                       const nav_2d_msgs::Path2D& global_plan) override;
+                       const geometry_msgs::Pose2D& goal, const nav_2d_msgs::Path2D& global_plan) override;
 };
 
 }  // namespace mir_dwb_critics

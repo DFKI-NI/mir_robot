@@ -54,12 +54,11 @@ namespace mir_dwb_critics
  * score if the error is large. The PathAlignCritic doesn't take the path orientation into account though,
  * so that's why the PathAngleCritic is a useful addition.
  */
-class PathAngleCritic: public dwb_local_planner::TrajectoryCritic
+class PathAngleCritic : public dwb_local_planner::TrajectoryCritic
 {
 public:
   virtual bool prepare(const geometry_msgs::Pose2D& pose, const nav_2d_msgs::Twist2D& vel,
-                       const geometry_msgs::Pose2D& goal,
-                       const nav_2d_msgs::Path2D& global_plan) override;
+                       const geometry_msgs::Pose2D& goal, const nav_2d_msgs::Path2D& global_plan) override;
 
   virtual double scoreTrajectory(const dwb_msgs::Trajectory2D& traj) override;
 
