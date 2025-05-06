@@ -18,7 +18,7 @@
 
   <build_depend>roslaunch</build_depend>
 
-  <depend>actionlib_msgs</depend>
+  <depend>action_msgs</depend>
   <depend>diagnostic_msgs</depend>
   <depend>dynamic_reconfigure</depend>
   <depend>geometry_msgs</depend>

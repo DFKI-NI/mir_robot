@@ -3,7 +3,7 @@ cmake_policy(SET CMP0048 NEW)
 project(mir_driver)
 
 find_package(catkin REQUIRED COMPONENTS
-  actionlib_msgs
+  action_msgs
   diagnostic_msgs
   dynamic_reconfigure
   geometry_msgs
@@ -28,7 +28,7 @@ catkin_python_setup()
 ###################################
 catkin_package(
   CATKIN_DEPENDS
-    actionlib_msgs
+    action_msgs
     diagnostic_msgs
     dynamic_reconfigure
     geometry_msgs

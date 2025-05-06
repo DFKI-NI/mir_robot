@@ -9,7 +9,7 @@ from mir_driver import rosbridge
 from rospy_message_converter import message_converter
 
 from actionlib import SimpleActionClient
-import actionlib_msgs.msg
+import action_msgs.msg
 import diagnostic_msgs.msg
 import dynamic_reconfigure.msg
 import geometry_msgs.msg
@@ -242,7 +242,7 @@ PUB_TOPICS = [
     ),
     # really mir_actions/MirMoveBaseActionResult:
     TopicConfig('move_base/result', move_base_msgs.msg.MoveBaseActionResult, dict_filter=_move_base_result_dict_filter),
-    TopicConfig('move_base/status', actionlib_msgs.msg.GoalStatusArray),
+    TopicConfig('move_base/status', action_msgs.msg.GoalStatusArray),
     # TopicConfig('move_base_node/MIRPlannerROS/cost_cloud', sensor_msgs.msg.PointCloud2),
     # TopicConfig('move_base_node/MIRPlannerROS/global_plan', nav_msgs.msg.Path),
     # TopicConfig('move_base_node/MIRPlannerROS/len_to_goal', std_msgs.msg.Float64),
@@ -320,7 +320,7 @@ SUB_TOPICS = [
     TopicConfig('initialpose', geometry_msgs.msg.PoseWithCovarianceStamped),
     TopicConfig('light_cmd', std_msgs.msg.String),
     TopicConfig('mir_cmd', std_msgs.msg.String),
-    TopicConfig('move_base/cancel', actionlib_msgs.msg.GoalID),
+    TopicConfig('move_base/cancel', action_msgs.msg.GoalInfo),
     # really mir_actions/MirMoveBaseActionGoal:
     TopicConfig('move_base/goal', move_base_msgs.msg.MoveBaseActionGoal, dict_filter=_move_base_goal_dict_filter),
 ]
