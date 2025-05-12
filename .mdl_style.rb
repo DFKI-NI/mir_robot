@@ -14,7 +14,7 @@ exclude_rule 'header-style'
 exclude_rule 'no-bare-urls'  # we need to use a bare URL in the README for the video to properly show on GitHub
 
 # Line lenght
-rule 'MD013', :line_length => 120, :code_blocks => false, :tables => false
+rule 'MD013', :line_length => 120, :ignore_code_blocks => true, :tables => false
 
 # Unordered list indentation
 rule 'MD007', :indent => 2
