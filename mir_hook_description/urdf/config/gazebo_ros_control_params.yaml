@@ -1,10 +1,6 @@
 gazebo_ros_control:
   pid_gains:
-    Pan_Axis:
-      p: 1
-      i: 1
-      d: 1
-    Tilt_Axis:
+    pan_motor_joint:
       p: 1
       i: 1
       d: 1
