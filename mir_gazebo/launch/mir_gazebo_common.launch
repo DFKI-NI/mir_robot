@@ -30,9 +30,8 @@
 
   <!-- control params for the hook -->
   <rosparam command="load"
-    file="$(find mir_hook_description)/urdf/config/gazebo_ros_control_params.yaml"
-    if="$(eval mir_hook == True)" />
-
+    file="$(find mir_hook_description)/config/gazebo_ros_control_params.yaml"
+    if="$(arg mir_hook)" />
 
   <!-- Load ros_control controller configurations -->
   <rosparam file="$(find mir_description)/config/joint_state_controller.yaml" command="load" />
