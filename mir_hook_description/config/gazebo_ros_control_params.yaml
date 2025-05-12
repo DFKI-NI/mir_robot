@@ -1,6 +1,0 @@
-gazebo_ros_control:
-  pid_gains:
-    pan_motor_joint:
-      p: 1
-      i: 1
-      d: 1

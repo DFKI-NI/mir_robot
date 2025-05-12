@@ -15,7 +15,6 @@ catkin_package()
 
 # Mark other files for installation (e.g. launch and bag files, etc.)
 install(DIRECTORY
-  config
   meshes
   urdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}

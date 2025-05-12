@@ -28,11 +28,6 @@
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model $(arg model_name)
     -x $(arg robot_x) -y $(arg robot_y) -Y $(arg robot_yaw) " />
 
-  <!-- control params for the hook -->
-  <rosparam command="load"
-    file="$(find mir_hook_description)/config/gazebo_ros_control_params.yaml"
-    if="$(arg mir_hook)" />
-
   <!-- Load ros_control controller configurations -->
   <rosparam file="$(find mir_description)/config/joint_state_controller.yaml" command="load" />
   <rosparam file="$(find mir_description)/config/diffdrive_controller.yaml" command="load" subst_value="true" />
