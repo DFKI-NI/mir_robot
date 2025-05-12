@@ -453,7 +453,7 @@
 
   <joint name="pan_motor_joint" type="revolute">
     <axis xyz="0 0 1.0" />
-    <limit lower="-1.0" upper="1.0" effort="100.0" velocity="0" />
+    <limit lower="${-pi/2}" upper="${pi/2}" effort="100.0" velocity="0" />
     <origin xyz="-0.067 -3e-06 0.1383631" rpy="0 0 0" />
     <parent link="hook_root" />
     <child link="pan_motor" />
