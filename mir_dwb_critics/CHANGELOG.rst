@@ -2,6 +2,16 @@
 Changelog for package mir_dwb_critics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* package.xml: Use SPDX license declaration
+* Fix typo in license
+* mir_dwb_critics: Fill in description
+* Re-format C++ files using clang-format
+* mir_dwb_critics: Fix URLs in package.xml
+* Move repo to DFKI-NI
+* Contributors: Martin Günther
+
 1.1.7 (2023-01-20)
 ------------------
 * Don't set cmake_policy CMP0048

@@ -2,6 +2,14 @@
 Changelog for package mir_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* package.xml: Use SPDX license declaration
+* Fix typo in license
+* pre-commit: Update hook versions
+* Move repo to DFKI-NI
+* Contributors: Martin Günther
+
 1.1.7 (2023-01-20)
 ------------------
 * Don't set cmake_policy CMP0048

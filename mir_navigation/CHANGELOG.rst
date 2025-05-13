@@ -2,6 +2,19 @@
 Changelog for package mir_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* package.xml: Use SPDX license declaration
+* Fix typo in license
+* Add Regulated Pure Pursuit local planner (experimental)
+  requires https://github.com/JohnTGZ/regulated_pure_pursuit_controller
+  known bugs:
+  - ignores local costmap (will collide with dynamic obstacles)
+  - oscillates near goal (https://github.com/JohnTGZ/regulated_pure_pursuit_controller/issues/8)
+* Move repo to DFKI-NI
+* Fix start_planner documentation
+* Contributors: Martin Günther
+
 1.1.7 (2023-01-20)
 ------------------
 * Don't set cmake_policy CMP0048

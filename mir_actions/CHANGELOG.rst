@@ -2,6 +2,12 @@
 Changelog for package mir_actions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* package.xml: Use SPDX license declaration
+* Move repo to DFKI-NI
+* Contributors: Martin Günther
+
 1.1.7 (2023-01-20)
 ------------------
 * Update MirMoveBase action to 2.10.3.1

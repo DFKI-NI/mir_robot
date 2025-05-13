@@ -2,6 +2,12 @@
 Changelog for package mir_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* package.xml: Use SPDX license declaration
+* Move repo to DFKI-NI
+* Contributors: Martin Günther
+
 1.1.7 (2023-01-20)
 ------------------
 * Build new msgs (`#117 <https://github.com/DFKI-NI/mir_robot/issues/117>`_)
