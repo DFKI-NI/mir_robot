@@ -2,8 +2,8 @@
 Changelog for package mir_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.8 (2025-05-13)
+------------------
 * package.xml: Use SPDX license declaration
 * Fix typo in license
 * Add Regulated Pure Pursuit local planner (experimental)

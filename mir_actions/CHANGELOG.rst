@@ -2,8 +2,8 @@
 Changelog for package mir_actions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.8 (2025-05-13)
+------------------
 * package.xml: Use SPDX license declaration
 * Move repo to DFKI-NI
 * Contributors: Martin Günther

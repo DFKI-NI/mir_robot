@@ -2,8 +2,8 @@
 Changelog for package mir_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.8 (2025-05-13)
+------------------
 * package.xml: Use SPDX license declaration
 * Fix typo in license
 * pre-commit: Update hook versions
