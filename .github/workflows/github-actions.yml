@@ -37,7 +37,7 @@ jobs:
     - name: Use rosdep to install remaining dependencies
       run: |
         sudo rosdep init
-        rosdep update
+        rosdep update --include-eol-distros
         rosdep install --from-paths src -i -y --rosdistro ${{ matrix.rosdistro }}
     - name: Build
       run: |

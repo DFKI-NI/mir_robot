@@ -22,7 +22,7 @@ WORKDIR /ws
 
 # Use rosdep to install all dependencies (including ROS itself)
 RUN rosdep init \
-    && rosdep update \
+    && rosdep update --include-eol-distros \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive rosdep install --from-paths src -i -y --rosdistro noetic \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

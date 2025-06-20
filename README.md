@@ -97,7 +97,7 @@ git clone -b noetic https://github.com/DFKI-NI/mir_robot.git
 sudo apt-get update -qq
 sudo apt-get install -qq -y python-rosdep
 sudo rosdep init
-rosdep update
+rosdep update --include-eol-distros
 rosdep install --from-paths ./ -i -y --rosdistro noetic
 
 # build all packages in the catkin workspace
