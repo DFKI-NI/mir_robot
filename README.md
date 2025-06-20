@@ -63,7 +63,7 @@ instructions.
 If you haven't already installed ROS on your PC, you need to add the ROS apt
 repository. This step is necessary for either binary or source install.
 
-```
+```bash
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
 sudo apt-get update -qq
@@ -255,7 +255,7 @@ to get out of sync quickly (about 1 second per day!). This causes TF transforms
 timing out etc. and can be seen using `tf_monitor` (the "Max Delay" is about
 3.3 seconds, but should be less than 0.1 seconds):
 
-```
+```text
 $ rosrun tf tf_monitor
 Frames:
 Frame: /back_laser_link published by unknown_publisher Average Delay: 3.22686 Max Delay: 3.34766
@@ -330,7 +330,7 @@ To install things on the internal MiR PC:
 
     1. Mount MiR partition and bind /dev, /run etc.
        You can use fdisk -l to figure out which partition to mount.
-       (Here it's _sda3_):
+       (Here it's `sda3`):
 
        ```bash
        sudo mkdir -p /media/mir
