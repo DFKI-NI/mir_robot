@@ -18,6 +18,7 @@
 
   <build_depend>roslaunch</build_depend>
 
+  <depend>actionlib</depend>
   <depend>actionlib_msgs</depend>
   <depend>diagnostic_msgs</depend>
   <depend>dynamic_reconfigure</depend>
@@ -30,8 +31,10 @@
   <depend>rosgraph_msgs</depend>
   <depend>rospy</depend>
   <depend>rospy_message_converter</depend>
+  <depend>sdc21x0</depend>
   <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
+  <depend>tf2_msgs</depend>
   <depend>tf</depend>
   <depend>visualization_msgs</depend>
 

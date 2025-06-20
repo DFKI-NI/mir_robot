@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5.1)
 project(mir_driver)
 
 find_package(catkin REQUIRED COMPONENTS
+  actionlib
   actionlib_msgs
   diagnostic_msgs
   dynamic_reconfigure
@@ -14,9 +15,11 @@ find_package(catkin REQUIRED COMPONENTS
   roslaunch
   rospy
   rospy_message_converter
+  sdc21x0
   sensor_msgs
   std_msgs
   tf
+  tf2_msgs
   visualization_msgs
 )
 
@@ -27,6 +30,7 @@ catkin_python_setup()
 ###################################
 catkin_package(
   CATKIN_DEPENDS
+    actionlib
     actionlib_msgs
     diagnostic_msgs
     dynamic_reconfigure
@@ -37,9 +41,11 @@ catkin_package(
     nav_msgs
     rosgraph_msgs
     rospy_message_converter
+    sdc21x0
     sensor_msgs
     std_msgs
     tf
+    tf2_msgs
     visualization_msgs
 )
 
