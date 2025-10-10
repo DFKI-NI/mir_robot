@@ -35,7 +35,13 @@
 #define MIR_DWB_CRITICS_PATH_PROGRESS_H_
 
 #include <dwb_critics/map_grid.h>
+#include <ros/publisher.h>
 #include <vector>
+
+namespace geometry_msgs
+{
+struct PoseStamped;
+}
 
 namespace mir_dwb_critics
 {
@@ -63,14 +69,26 @@ protected:
                    unsigned int& y, double& desired_angle);
 
   unsigned int getGoalIndex(const std::vector<geometry_msgs::Pose2D>& plan, unsigned int start_index,
-                            unsigned int last_valid_index) const;
+                            unsigned int last_valid_index, double& desired_angle, bool& has_forward_direction) const;
+
+  bool computeOutgoingAngle(const std::vector<geometry_msgs::Pose2D>& plan, unsigned int index,
+                            double& angle) const;
+
+  bool isGoalReached(const geometry_msgs::Pose2D& robot_pose, const geometry_msgs::Pose2D& goal_pose,
+                     double goal_yaw) const;
 
   double xy_local_goal_tolerance_;
+  double yaw_local_goal_tolerance_;
   double angle_threshold_;
+  double articulation_angle_threshold_;
   double heading_scale_;
+  bool enforce_forward_dot_;
+
+  unsigned int last_progress_index_;
 
   std::vector<geometry_msgs::Pose2D> reached_intermediate_goals_;
   double desired_angle_;
+  ros::Publisher intermediate_goal_pub_;
 };
 
 }  // namespace mir_dwb_critics

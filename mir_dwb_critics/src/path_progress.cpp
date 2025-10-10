@@ -32,9 +32,16 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 #include <mir_dwb_critics/path_progress.h>
+#include <angles/angles.h>
+#include <geometry_msgs/PoseStamped.h>
 #include <nav_grid/coordinate_conversion.h>
 #include <pluginlib/class_list_macros.h>
 #include <nav_2d_utils/path_ops.h>
+#include <ros/time.h>
+#include <tf2/LinearMath/Quaternion.h>
+#include <algorithm>
+#include <cmath>
+#include <limits>
 #include <vector>
 
 namespace mir_dwb_critics
@@ -63,22 +70,32 @@ void PathProgressCritic::onInit()
 {
   dwb_critics::MapGridCritic::onInit();
   critic_nh_.param("xy_local_goal_tolerance", xy_local_goal_tolerance_, 0.20);
+  critic_nh_.param("yaw_local_goal_tolerance", yaw_local_goal_tolerance_, 0.15);
   critic_nh_.param("angle_threshold", angle_threshold_, M_PI_4);
+  critic_nh_.param("articulation_angle_threshold", articulation_angle_threshold_, 1.3089969389957472);
   critic_nh_.param("heading_scale", heading_scale_, 1.0);
+  critic_nh_.param("enforce_forward_dot", enforce_forward_dot_, true);
+
+  intermediate_goal_pub_ = critic_nh_.advertise<geometry_msgs::PoseStamped>("intermediate_goal", 1);
+
+  articulation_angle_threshold_ = std::max(articulation_angle_threshold_, angle_threshold_);
 
   // divide heading scale by position scale because the sum will be multiplied by scale again
   heading_scale_ /= getScale();
+  last_progress_index_ = 0;
+  reached_intermediate_goals_.clear();
 }
 
 void PathProgressCritic::reset()
 {
   reached_intermediate_goals_.clear();
+  last_progress_index_ = 0;
 }
 
 double PathProgressCritic::scoreTrajectory(const dwb_msgs::Trajectory2D& traj)
 {
   double position_score = MapGridCritic::scoreTrajectory(traj);
-  double heading_diff = fabs(remainder(traj.poses.back().theta - desired_angle_, 2 * M_PI));
+  double heading_diff = fabs(angles::shortest_angular_distance(traj.poses.back().theta, desired_angle_));
   double heading_score = heading_diff * heading_diff;
 
   return position_score + heading_scale_ * heading_score;
@@ -97,6 +114,12 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   }
 
   std::vector<geometry_msgs::Pose2D> plan = nav_2d_utils::adjustPlanResolution(global_plan, info.resolution).poses;
+
+  if (plan.empty())
+  {
+    ROS_ERROR_NAMED("PathProgressCritic", "The adjusted global plan was empty.");
+    return false;
+  }
 
   // find the "start pose", i.e. the pose on the plan closest to the robot that is also on the local map
   unsigned int start_index = 0;
@@ -157,94 +180,288 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     }
   }
 
-  // find the "goal pose" by walking along the plan as long as each step leads far enough away from the starting point,
-  // i.e. is within angle_threshold_ of the starting direction.
-  unsigned int goal_index = start_index;
+  // Constrain the search range to enforce monotonic progress.
+  last_progress_index_ = std::min(last_progress_index_, static_cast<unsigned int>(plan.size() - 1));
 
-  while (goal_index < last_valid_index)
+  unsigned int search_start_index = std::max(start_index, last_progress_index_);
+  search_start_index = std::min(search_start_index, last_valid_index);
+
+  unsigned int goal_index = search_start_index;
+  double goal_yaw = plan[goal_index].theta;
+  bool has_forward_direction = false;
+  bool found_goal = false;
+
+  unsigned int search_index = search_start_index;
+  while (search_index <= last_valid_index)
   {
-    goal_index = getGoalIndex(plan, start_index, last_valid_index);
+    double candidate_yaw = goal_yaw;
+    bool candidate_has_forward = false;
+    unsigned int candidate_index =
+        getGoalIndex(plan, search_index, last_valid_index, candidate_yaw, candidate_has_forward);
 
-    // check if goal already reached
-    bool goal_already_reached = false;
-    for (auto& reached_intermediate_goal : reached_intermediate_goals_)
+    candidate_index = std::max(candidate_index, search_index);
+
+    if (isGoalReached(robot_pose, plan[candidate_index], candidate_yaw))
     {
-      double distance = nav_2d_utils::poseDistance(reached_intermediate_goal, plan[goal_index]);
-      if (distance < xy_local_goal_tolerance_)
+      last_progress_index_ = std::max(last_progress_index_, candidate_index);
+      geometry_msgs::Pose2D reached_pose = plan[candidate_index];
+      reached_pose.theta = candidate_yaw;
+      if (reached_intermediate_goals_.empty() ||
+          nav_2d_utils::poseDistance(reached_intermediate_goals_.back(), reached_pose) > 1e-6 ||
+          fabs(angles::shortest_angular_distance(reached_intermediate_goals_.back().theta, reached_pose.theta)) > 1e-6)
       {
-        goal_already_reached = true;
-        // choose a new start_index by walking along the plan until we're outside xy_local_goal_tolerance_ and try again
-        // (start_index is now > goal_index)
-        for (start_index = goal_index; start_index <= last_valid_index; ++start_index)
+        reached_intermediate_goals_.push_back(reached_pose);
+      }
+      ROS_DEBUG_NAMED("PathProgressCritic",
+                      "Reached intermediate goal index %u. last_progress_index_: %u", candidate_index,
+                      last_progress_index_);
+
+      if (candidate_index >= last_valid_index)
+      {
+        goal_index = candidate_index;
+        goal_yaw = candidate_yaw;
+        has_forward_direction = candidate_has_forward;
+        found_goal = true;
+        break;
+      }
+
+      search_index = candidate_index + 1;
+      continue;
+    }
+
+    if (enforce_forward_dot_ && candidate_has_forward)
+    {
+      double to_goal_x = plan[candidate_index].x - robot_pose.x;
+      double to_goal_y = plan[candidate_index].y - robot_pose.y;
+      double dot = to_goal_x * std::cos(candidate_yaw) + to_goal_y * std::sin(candidate_yaw);
+      if (dot < 0.0)
+      {
+        ROS_DEBUG_NAMED("PathProgressCritic",
+                        "Skipping goal index %u due to backward alignment (dot product %.3f)", candidate_index, dot);
+        if (candidate_index >= last_valid_index)
         {
-          distance = nav_2d_utils::poseDistance(reached_intermediate_goal, plan[start_index]);
-          if (distance >= xy_local_goal_tolerance_)
-          {
-            break;
-          }
+          break;
         }
+        search_index = candidate_index + 1;
+        continue;
+      }
+    }
+
+    goal_index = candidate_index;
+    goal_yaw = candidate_yaw;
+    has_forward_direction = candidate_has_forward;
+    found_goal = true;
+    break;
+  }
+
+  if (!found_goal)
+  {
+    unsigned int fallback_start = std::min(last_valid_index, search_start_index);
+    goal_index = fallback_start;
+    bool selected_fallback = false;
+
+    for (; goal_index <= last_valid_index; ++goal_index)
+    {
+      has_forward_direction = computeOutgoingAngle(plan, goal_index, goal_yaw);
+      if (has_forward_direction)
+      {
+        if (!enforce_forward_dot_)
+        {
+          selected_fallback = true;
+          break;
+        }
+
+        double to_goal_x = plan[goal_index].x - robot_pose.x;
+        double to_goal_y = plan[goal_index].y - robot_pose.y;
+        double dot = to_goal_x * std::cos(goal_yaw) + to_goal_y * std::sin(goal_yaw);
+        if (dot >= 0.0)
+        {
+          selected_fallback = true;
+          break;
+        }
+        continue;
+      }
+
+      goal_yaw = plan[goal_index].theta;
+      if (!enforce_forward_dot_ || goal_index == last_valid_index)
+      {
+        selected_fallback = true;
         break;
       }
     }
-    if (!goal_already_reached)
+
+    if (!selected_fallback)
     {
-      // new goal not in reached_intermediate_goals_
-      double distance = nav_2d_utils::poseDistance(plan[goal_index], robot_pose);
-      if (distance < xy_local_goal_tolerance_)
-      {
-        // the robot has currently reached the goal
-        reached_intermediate_goals_.push_back(plan[goal_index]);
-        ROS_DEBUG_NAMED("PathProgressCritic", "Number of reached_intermediate goals: %zu",
-                        reached_intermediate_goals_.size());
-      }
-      else
-      {
-        // we've found a new goal!
-        break;
-      }
+      return false;
     }
   }
-  if (start_index > goal_index)
-    start_index = goal_index;
+
   ROS_ASSERT(goal_index <= last_valid_index);
 
-  // save goal in x, y
   worldToGridBounded(info, plan[goal_index].x, plan[goal_index].y, x, y);
-  desired_angle = plan[start_index].theta;
+  desired_angle = goal_yaw;
+
+  ROS_DEBUG_NAMED("PathProgressCritic",
+                  "Selected goal index %u (x: %.3f, y: %.3f, yaw: %.3f rad). last_progress_index_: %u",
+                  goal_index, plan[goal_index].x, plan[goal_index].y, goal_yaw, last_progress_index_);
+
+  if (intermediate_goal_pub_)
+  {
+    geometry_msgs::PoseStamped goal_pose;
+    goal_pose.header = global_plan.header;
+    goal_pose.header.stamp = ros::Time::now();
+    goal_pose.pose.position.x = plan[goal_index].x;
+    goal_pose.pose.position.y = plan[goal_index].y;
+    goal_pose.pose.position.z = 0.0;
+    tf2::Quaternion q;
+    q.setRPY(0.0, 0.0, goal_yaw);
+    goal_pose.pose.orientation.x = q.x();
+    goal_pose.pose.orientation.y = q.y();
+    goal_pose.pose.orientation.z = q.z();
+    goal_pose.pose.orientation.w = q.w();
+    intermediate_goal_pub_.publish(goal_pose);
+  }
   return true;
 }
 
 unsigned int PathProgressCritic::getGoalIndex(const std::vector<geometry_msgs::Pose2D>& plan, unsigned int start_index,
-                                              unsigned int last_valid_index) const
+                                              unsigned int last_valid_index, double& desired_angle,
+                                              bool& has_forward_direction) const
 {
-  if (start_index >= last_valid_index)
-    return last_valid_index;
-
-  unsigned int goal_index = start_index;
-  const double start_direction_x = plan[start_index + 1].x - plan[start_index].x;
-  const double start_direction_y = plan[start_index + 1].y - plan[start_index].y;
-  if (fabs(start_direction_x) > 1e-9 || fabs(start_direction_y) > 1e-9)
+  if (plan.empty())
   {
-    // make sure that atan2 is defined
-    double start_angle = atan2(start_direction_y, start_direction_x);
+    desired_angle = 0.0;
+    has_forward_direction = false;
+    return 0;
+  }
 
-    for (unsigned int i = start_index + 1; i <= last_valid_index; ++i)
+  const double epsilon = 1e-9;
+  unsigned int clamped_start = std::min(start_index, static_cast<unsigned int>(plan.size() - 1));
+  unsigned int clamped_last = std::min(last_valid_index, static_cast<unsigned int>(plan.size() - 1));
+
+  if (clamped_start >= clamped_last)
+  {
+    has_forward_direction = computeOutgoingAngle(plan, clamped_start, desired_angle);
+    if (!has_forward_direction)
     {
-      const double current_direction_x = plan[i].x - plan[i - 1].x;
-      const double current_direction_y = plan[i].y - plan[i - 1].y;
-      if (fabs(current_direction_x) > 1e-9 || fabs(current_direction_y) > 1e-9)
+      desired_angle = plan[clamped_start].theta;
+    }
+    return clamped_start;
+  }
+
+  unsigned int goal_index = clamped_start;
+  double base_angle = 0.0;
+  bool base_angle_set = false;
+  double previous_segment_angle = 0.0;
+  bool previous_segment_angle_set = false;
+  unsigned int previous_segment_end_index = clamped_start;
+  double last_valid_segment_angle = 0.0;
+  bool last_valid_segment_angle_set = false;
+
+  for (unsigned int i = clamped_start + 1; i <= clamped_last; ++i)
+  {
+    double direction_x = plan[i].x - plan[i - 1].x;
+    double direction_y = plan[i].y - plan[i - 1].y;
+    double length = hypot(direction_x, direction_y);
+    if (length < epsilon)
+    {
+      continue;
+    }
+
+    double current_angle = atan2(direction_y, direction_x);
+    last_valid_segment_angle = current_angle;
+    last_valid_segment_angle_set = true;
+
+    if (!base_angle_set)
+    {
+      base_angle = current_angle;
+      base_angle_set = true;
+    }
+
+    if (previous_segment_angle_set)
+    {
+      double articulation_angle = fabs(angles::shortest_angular_distance(previous_segment_angle, current_angle));
+      if (articulation_angle >= articulation_angle_threshold_)
       {
-        double current_angle = atan2(current_direction_y, current_direction_x);
-
-        // goal pose is found if plan doesn't point far enough away from the starting point
-        if (fabs(remainder(start_angle - current_angle, 2 * M_PI)) > angle_threshold_)
-          break;
-
-        goal_index = i;
+        goal_index = previous_segment_end_index;
+        break;
       }
     }
+
+    double deviation = fabs(angles::shortest_angular_distance(base_angle, current_angle));
+    if (deviation > angle_threshold_)
+    {
+      break;
+    }
+
+    goal_index = i;
+    previous_segment_angle = current_angle;
+    previous_segment_end_index = i;
+    previous_segment_angle_set = true;
   }
+
+  has_forward_direction = computeOutgoingAngle(plan, goal_index, desired_angle);
+  if (!has_forward_direction)
+  {
+    if (goal_index == plan.size() - 1)
+    {
+      desired_angle = plan[goal_index].theta;
+    }
+    else if (previous_segment_angle_set)
+    {
+      desired_angle = previous_segment_angle;
+      has_forward_direction = true;
+    }
+    else if (last_valid_segment_angle_set)
+    {
+      desired_angle = last_valid_segment_angle;
+      has_forward_direction = true;
+    }
+    else
+    {
+      desired_angle = plan[goal_index].theta;
+    }
+  }
+
+  if (goal_index == plan.size() - 1)
+  {
+    has_forward_direction = false;
+  }
+
   return goal_index;
+}
+
+bool PathProgressCritic::computeOutgoingAngle(const std::vector<geometry_msgs::Pose2D>& plan, unsigned int index,
+                                              double& angle) const
+{
+  const double epsilon = 1e-9;
+  if (plan.empty() || index >= plan.size())
+  {
+    return false;
+  }
+
+  for (unsigned int i = index + 1; i < plan.size(); ++i)
+  {
+    double dx = plan[i].x - plan[index].x;
+    double dy = plan[i].y - plan[index].y;
+    double length = hypot(dx, dy);
+    if (length >= epsilon)
+    {
+      angle = atan2(dy, dx);
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool PathProgressCritic::isGoalReached(const geometry_msgs::Pose2D& robot_pose, const geometry_msgs::Pose2D& goal_pose,
+                                       double goal_yaw) const
+{
+  double distance = nav_2d_utils::poseDistance(goal_pose, robot_pose);
+  double yaw_error = fabs(angles::shortest_angular_distance(robot_pose.theta, goal_yaw));
+
+  return distance < xy_local_goal_tolerance_ && yaw_error < yaw_local_goal_tolerance_;
 }
 
 }  // namespace mir_dwb_critics
