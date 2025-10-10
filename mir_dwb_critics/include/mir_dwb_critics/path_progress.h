@@ -35,13 +35,9 @@
 #define MIR_DWB_CRITICS_PATH_PROGRESS_H_
 
 #include <dwb_critics/map_grid.h>
+#include <geometry_msgs/PoseStamped.h>
 #include <ros/publisher.h>
 #include <vector>
-
-namespace geometry_msgs
-{
-struct PoseStamped;
-}
 
 namespace mir_dwb_critics
 {
