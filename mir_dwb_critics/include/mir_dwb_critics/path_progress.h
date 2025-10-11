@@ -67,6 +67,10 @@ protected:
   unsigned int getGoalIndex(const std::vector<geometry_msgs::Pose2D>& plan, unsigned int start_index,
                             unsigned int last_valid_index, double& desired_angle, bool& has_forward_direction) const;
 
+  bool findNextArticulation(const std::vector<geometry_msgs::Pose2D>& plan, unsigned int start_index,
+                            unsigned int end_index, unsigned int last_valid_index, unsigned int& articulation_index,
+                            double& articulation_yaw, bool& has_forward_direction) const;
+
   bool computeOutgoingAngle(const std::vector<geometry_msgs::Pose2D>& plan, unsigned int index,
                             double& angle) const;
 

@@ -208,10 +208,22 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   }
 
   // Constrain the search range to enforce monotonic progress.
-  last_progress_index_ = std::min(last_progress_index_, static_cast<unsigned int>(plan.size() - 1));
+  unsigned int plan_last_index = static_cast<unsigned int>(plan.size() - 1);
+  last_progress_index_ = std::min(last_progress_index_, plan_last_index);
 
   unsigned int search_start_index = std::max(start_index, last_progress_index_);
   search_start_index = std::min(search_start_index, last_valid_index);
+
+  unsigned int articulation_scan_start = 0u;
+  if (plan_last_index >= 1)
+  {
+    unsigned int next_index = last_progress_index_ < plan_last_index ? last_progress_index_ + 1 : plan_last_index;
+    articulation_scan_start = std::max(next_index, 1u);
+  }
+  else
+  {
+    articulation_scan_start = plan_last_index;
+  }
 
   auto publishIntermediateGoal = [&](const geometry_msgs::Pose2D& goal_pose, double goal_yaw) {
     if (!intermediate_goal_pub_)
@@ -259,6 +271,11 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     }
   }
 
+  if (holding_goal_ && held_goal_index_ >= last_progress_index_)
+  {
+    search_start_index = std::min(search_start_index, held_goal_index_);
+  }
+
   unsigned int goal_index = search_start_index;
   double goal_yaw = plan[goal_index].theta;
   bool has_forward_direction = false;
@@ -272,7 +289,26 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     unsigned int candidate_index =
         getGoalIndex(plan, search_index, last_valid_index, candidate_yaw, candidate_has_forward);
 
-    candidate_index = std::max(candidate_index, search_index);
+    bool forced_articulation = false;
+    if (candidate_index > last_progress_index_)
+    {
+      unsigned int articulation_index = 0;
+      double articulation_yaw = candidate_yaw;
+      bool articulation_has_forward = candidate_has_forward;
+      if (findNextArticulation(plan, articulation_scan_start, candidate_index, last_valid_index,
+                               articulation_index, articulation_yaw, articulation_has_forward))
+      {
+        candidate_index = articulation_index;
+        candidate_yaw = articulation_yaw;
+        candidate_has_forward = articulation_has_forward;
+        forced_articulation = true;
+      }
+    }
+
+    if (!forced_articulation)
+    {
+      candidate_index = std::max(candidate_index, search_index);
+    }
 
     if (isGoalReached(robot_pose, plan[candidate_index], candidate_yaw))
     {
@@ -302,7 +338,7 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       continue;
     }
 
-    if (enforce_forward_dot_ && candidate_has_forward)
+    if (enforce_forward_dot_ && candidate_has_forward && !forced_articulation)
     {
       double to_goal_x = plan[candidate_index].x - robot_pose.x;
       double to_goal_y = plan[candidate_index].y - robot_pose.y;
@@ -366,6 +402,20 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     if (!selected_fallback)
     {
       return false;
+    }
+
+    if (goal_index > last_progress_index_)
+    {
+      unsigned int articulation_index = 0;
+      double articulation_yaw = goal_yaw;
+      bool articulation_has_forward = has_forward_direction;
+      if (findNextArticulation(plan, articulation_scan_start, goal_index, last_valid_index,
+                               articulation_index, articulation_yaw, articulation_has_forward))
+      {
+        goal_index = articulation_index;
+        goal_yaw = articulation_yaw;
+        has_forward_direction = articulation_has_forward;
+      }
     }
   }
 
@@ -512,6 +562,78 @@ unsigned int PathProgressCritic::getGoalIndex(const std::vector<geometry_msgs::P
   }
 
   return goal_index;
+}
+
+bool PathProgressCritic::findNextArticulation(const std::vector<geometry_msgs::Pose2D>& plan, unsigned int start_index,
+                                              unsigned int end_index, unsigned int last_valid_index,
+                                              unsigned int& articulation_index, double& articulation_yaw,
+                                              bool& has_forward_direction) const
+{
+  const double epsilon = 1e-9;
+  articulation_index = 0;
+  articulation_yaw = 0.0;
+  has_forward_direction = false;
+
+  if (plan.size() < 2)
+  {
+    return false;
+  }
+
+  unsigned int clamped_end = std::min(end_index, static_cast<unsigned int>(plan.size() - 1));
+  clamped_end = std::min(clamped_end, last_valid_index);
+  if (clamped_end < 1)
+  {
+    return false;
+  }
+
+  unsigned int scan_start = std::max(start_index, 1u);
+  if (scan_start > clamped_end)
+  {
+    return false;
+  }
+
+  double previous_segment_angle = 0.0;
+  bool previous_segment_angle_set = false;
+  unsigned int previous_segment_end_index = 0;
+
+  for (unsigned int i = scan_start; i <= clamped_end; ++i)
+  {
+    double direction_x = plan[i].x - plan[i - 1].x;
+    double direction_y = plan[i].y - plan[i - 1].y;
+    double length = hypot(direction_x, direction_y);
+    if (length < epsilon)
+    {
+      continue;
+    }
+
+    double current_angle = atan2(direction_y, direction_x);
+
+    if (previous_segment_angle_set)
+    {
+      double articulation_angle = fabs(angles::shortest_angular_distance(previous_segment_angle, current_angle));
+      if (articulation_angle >= articulation_angle_threshold_)
+      {
+        articulation_index = previous_segment_end_index;
+        articulation_yaw = current_angle;
+        has_forward_direction = true;
+        if (!computeOutgoingAngle(plan, articulation_index, articulation_yaw))
+        {
+          has_forward_direction = false;
+          if (articulation_index == plan.size() - 1)
+          {
+            articulation_yaw = plan[articulation_index].theta;
+          }
+        }
+        return true;
+      }
+    }
+
+    previous_segment_angle = current_angle;
+    previous_segment_angle_set = true;
+    previous_segment_end_index = i;
+  }
+
+  return false;
 }
 
 bool PathProgressCritic::computeOutgoingAngle(const std::vector<geometry_msgs::Pose2D>& plan, unsigned int index,
