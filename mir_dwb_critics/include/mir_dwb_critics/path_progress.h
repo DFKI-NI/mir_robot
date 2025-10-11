@@ -75,12 +75,18 @@ protected:
 
   double xy_local_goal_tolerance_;
   double yaw_local_goal_tolerance_;
+  double final_goal_yaw_tolerance_;
   double angle_threshold_;
   double articulation_angle_threshold_;
   double heading_scale_;
   bool enforce_forward_dot_;
 
   unsigned int last_progress_index_;
+  bool holding_goal_;
+  unsigned int held_goal_index_;
+  geometry_msgs::Pose2D held_goal_pose_;
+  double hold_position_epsilon_;
+  double hold_yaw_epsilon_;
 
   std::vector<geometry_msgs::Pose2D> reached_intermediate_goals_;
   double desired_angle_;

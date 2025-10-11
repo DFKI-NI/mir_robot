@@ -37,6 +37,7 @@
 #include <nav_grid/coordinate_conversion.h>
 #include <pluginlib/class_list_macros.h>
 #include <nav_2d_utils/path_ops.h>
+#include <ros/node_handle.h>
 #include <ros/time.h>
 #include <tf2/LinearMath/Quaternion.h>
 #include <algorithm>
@@ -71,6 +72,11 @@ void PathProgressCritic::onInit()
   dwb_critics::MapGridCritic::onInit();
   critic_nh_.param("xy_local_goal_tolerance", xy_local_goal_tolerance_, 0.20);
   critic_nh_.param("yaw_local_goal_tolerance", yaw_local_goal_tolerance_, 0.15);
+  ros::NodeHandle private_nh("~");
+  if (!private_nh.getParam("yaw_goal_tolerance", final_goal_yaw_tolerance_))
+  {
+    critic_nh_.param("yaw_goal_tolerance", final_goal_yaw_tolerance_, yaw_local_goal_tolerance_);
+  }
   critic_nh_.param("angle_threshold", angle_threshold_, M_PI_4);
   critic_nh_.param("articulation_angle_threshold", articulation_angle_threshold_, 1.3089969389957472);
   critic_nh_.param("heading_scale", heading_scale_, 1.0);
@@ -84,12 +90,25 @@ void PathProgressCritic::onInit()
   heading_scale_ /= getScale();
   last_progress_index_ = 0;
   reached_intermediate_goals_.clear();
+  holding_goal_ = false;
+  held_goal_index_ = 0;
+  held_goal_pose_.x = 0.0;
+  held_goal_pose_.y = 0.0;
+  held_goal_pose_.theta = 0.0;
+  hold_position_epsilon_ = 1e-6;
+  hold_yaw_epsilon_ = 1e-6;
+  final_goal_yaw_tolerance_ = std::max(final_goal_yaw_tolerance_, 1e-6);
 }
 
 void PathProgressCritic::reset()
 {
   reached_intermediate_goals_.clear();
   last_progress_index_ = 0;
+  holding_goal_ = false;
+  held_goal_index_ = 0;
+  held_goal_pose_.x = 0.0;
+  held_goal_pose_.y = 0.0;
+  held_goal_pose_.theta = 0.0;
 }
 
 double PathProgressCritic::scoreTrajectory(const dwb_msgs::Trajectory2D& traj)
@@ -119,6 +138,14 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   {
     ROS_ERROR_NAMED("PathProgressCritic", "The adjusted global plan was empty.");
     return false;
+  }
+
+  if (holding_goal_ && held_goal_index_ >= plan.size())
+  {
+    ROS_DEBUG_NAMED("PathProgressCritic", "Held goal index %u is out of range for current plan of size %zu. Releasing hold.",
+                    held_goal_index_, plan.size());
+    holding_goal_ = false;
+    held_goal_index_ = 0;
   }
 
   // find the "start pose", i.e. the pose on the plan closest to the robot that is also on the local map
@@ -185,6 +212,52 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
 
   unsigned int search_start_index = std::max(start_index, last_progress_index_);
   search_start_index = std::min(search_start_index, last_valid_index);
+
+  auto publishIntermediateGoal = [&](const geometry_msgs::Pose2D& goal_pose, double goal_yaw) {
+    if (!intermediate_goal_pub_)
+    {
+      return;
+    }
+    geometry_msgs::PoseStamped goal_msg;
+    goal_msg.header = global_plan.header;
+    goal_msg.header.stamp = ros::Time::now();
+    goal_msg.pose.position.x = goal_pose.x;
+    goal_msg.pose.position.y = goal_pose.y;
+    goal_msg.pose.position.z = 0.0;
+    tf2::Quaternion q;
+    q.setRPY(0.0, 0.0, goal_yaw);
+    goal_msg.pose.orientation.x = q.x();
+    goal_msg.pose.orientation.y = q.y();
+    goal_msg.pose.orientation.z = q.z();
+    goal_msg.pose.orientation.w = q.w();
+    intermediate_goal_pub_.publish(goal_msg);
+  };
+
+  if (holding_goal_)
+  {
+    double yaw_error = fabs(angles::shortest_angular_distance(robot_pose.theta, held_goal_pose_.theta));
+    if (yaw_error >= final_goal_yaw_tolerance_)
+    {
+      unsigned int held_x = 0;
+      unsigned int held_y = 0;
+      if (worldToGridBounded(info, held_goal_pose_.x, held_goal_pose_.y, held_x, held_y))
+      {
+        x = held_x;
+        y = held_y;
+        desired_angle = held_goal_pose_.theta;
+        publishIntermediateGoal(held_goal_pose_, held_goal_pose_.theta);
+        ROS_DEBUG_NAMED("PathProgressCritic", "Holding goal index %u due to yaw error %.3f rad (threshold %.3f)",
+                        held_goal_index_, yaw_error, final_goal_yaw_tolerance_);
+        return true;
+      }
+
+      ROS_WARN_NAMED("PathProgressCritic",
+                     "Held goal (index %u) is outside the local costmap. Releasing hold to search for a new goal.",
+                     held_goal_index_);
+      holding_goal_ = false;
+      held_goal_index_ = 0;
+    }
+  }
 
   unsigned int goal_index = search_start_index;
   double goal_yaw = plan[goal_index].theta;
@@ -301,26 +374,36 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   worldToGridBounded(info, plan[goal_index].x, plan[goal_index].y, x, y);
   desired_angle = goal_yaw;
 
+  bool same_as_held = false;
+  if (holding_goal_)
+  {
+    double position_diff_x = plan[goal_index].x - held_goal_pose_.x;
+    double position_diff_y = plan[goal_index].y - held_goal_pose_.y;
+    double yaw_diff = angles::shortest_angular_distance(goal_yaw, held_goal_pose_.theta);
+    same_as_held = (fabs(position_diff_x) <= hold_position_epsilon_) &&
+                   (fabs(position_diff_y) <= hold_position_epsilon_) &&
+                   (fabs(yaw_diff) <= hold_yaw_epsilon_);
+  }
+
+  if (!same_as_held)
+  {
+    held_goal_pose_ = plan[goal_index];
+    held_goal_pose_.theta = goal_yaw;
+    held_goal_index_ = goal_index;
+  }
+  else
+  {
+    held_goal_pose_.x = plan[goal_index].x;
+    held_goal_pose_.y = plan[goal_index].y;
+    held_goal_pose_.theta = goal_yaw;
+  }
+  holding_goal_ = true;
+
   ROS_DEBUG_NAMED("PathProgressCritic",
                   "Selected goal index %u (x: %.3f, y: %.3f, yaw: %.3f rad). last_progress_index_: %u",
                   goal_index, plan[goal_index].x, plan[goal_index].y, goal_yaw, last_progress_index_);
 
-  if (intermediate_goal_pub_)
-  {
-    geometry_msgs::PoseStamped goal_pose;
-    goal_pose.header = global_plan.header;
-    goal_pose.header.stamp = ros::Time::now();
-    goal_pose.pose.position.x = plan[goal_index].x;
-    goal_pose.pose.position.y = plan[goal_index].y;
-    goal_pose.pose.position.z = 0.0;
-    tf2::Quaternion q;
-    q.setRPY(0.0, 0.0, goal_yaw);
-    goal_pose.pose.orientation.x = q.x();
-    goal_pose.pose.orientation.y = q.y();
-    goal_pose.pose.orientation.z = q.z();
-    goal_pose.pose.orientation.w = q.w();
-    intermediate_goal_pub_.publish(goal_pose);
-  }
+  publishIntermediateGoal(held_goal_pose_, held_goal_pose_.theta);
   return true;
 }
 
