@@ -277,8 +277,29 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     if (matchPoseToPlanIndex(robot_pose, robot_match_index))
     {
       state_preserved = true;
-      progress_match_found = true;
-      restored_progress_index = std::max(restored_progress_index, robot_match_index);
+
+      double match_goal_yaw = plan[robot_match_index].theta;
+      if (!computeOutgoingAngle(plan, robot_match_index, match_goal_yaw))
+      {
+        match_goal_yaw = plan[robot_match_index].theta;
+      }
+
+      bool match_is_final_index = (robot_match_index + 1u) >= plan.size();
+      double match_yaw_tolerance = match_is_final_index ? final_goal_yaw_tolerance_ : yaw_local_goal_tolerance_;
+      double yaw_error = fabs(angles::shortest_angular_distance(robot_pose.theta, match_goal_yaw));
+
+      if (yaw_error <= match_yaw_tolerance)
+      {
+        progress_match_found = true;
+        restored_progress_index = std::max(restored_progress_index, robot_match_index);
+      }
+      else
+      {
+        ROS_DEBUG_NAMED("PathProgressCritic",
+                        "Robot pose matched plan index %u but yaw error %.3f rad exceeds tolerance %.3f."
+                        " Preserving state without increasing progress.",
+                        robot_match_index, yaw_error, match_yaw_tolerance);
+      }
     }
 
     if (state_preserved)
