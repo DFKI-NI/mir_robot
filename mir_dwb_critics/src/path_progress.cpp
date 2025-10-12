@@ -967,6 +967,28 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     }
   }
 
+  if (plan_last_index <= last_valid_index && goal_index != plan_last_index)
+  {
+    double snap_threshold = final_goal_xy_tolerance_;
+    if (snap_threshold >= 0.0)
+    {
+      double final_dx = plan[plan_last_index].x - plan[goal_index].x;
+      double final_dy = plan[plan_last_index].y - plan[goal_index].y;
+      double distance_to_final = hypot(final_dx, final_dy);
+      if (distance_to_final <= snap_threshold)
+      {
+        ROS_DEBUG_NAMED("PathProgressCritic",
+                        "Snapping intermediate goal index %u to final goal because distance %.3f <= threshold %.3f",
+                        goal_index, distance_to_final, snap_threshold);
+        goal_index = plan_last_index;
+        goal_yaw = plan[plan_last_index].theta;
+        has_forward_direction = false;
+        forced_skipped_articulation = false;
+        has_next_articulation = false;
+      }
+    }
+  }
+
   bool pending_articulation = false;
   if (last_progress_index_ < goal_index)
   {
