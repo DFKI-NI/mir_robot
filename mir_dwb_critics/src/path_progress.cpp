@@ -109,6 +109,13 @@ void PathProgressCritic::onInit()
   hold_yaw_epsilon_ = 1e-6;
   final_goal_yaw_tolerance_ = std::max(final_goal_yaw_tolerance_, 1e-6);
   final_goal_xy_tolerance_ = std::max(final_goal_xy_tolerance_, 0.0);
+  have_last_plan_ = false;
+  last_plan_size_ = 0;
+  last_plan_end_pose_.x = 0.0;
+  last_plan_end_pose_.y = 0.0;
+  last_plan_end_pose_.theta = 0.0;
+  last_plan_frame_id_.clear();
+  last_plan_stamp_ = ros::Time(0);
 }
 
 void PathProgressCritic::reset()
@@ -145,6 +152,44 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   }
 
   std::vector<geometry_msgs::Pose2D> plan = nav_2d_utils::adjustPlanResolution(global_plan, info.resolution).poses;
+  // Reset state if a new global plan arrives (size, last pose, frame or stamp changes)
+  bool plan_changed = false;
+  if (!have_last_plan_)
+  {
+    plan_changed = true;
+  }
+  else
+  {
+    if (last_plan_size_ != plan.size()) plan_changed = true;
+    if (global_plan.header.frame_id != last_plan_frame_id_) plan_changed = true;
+    if (global_plan.header.stamp != last_plan_stamp_) plan_changed = true;
+    const geometry_msgs::Pose2D& end_pose = plan.back();
+    if (fabs(end_pose.x - last_plan_end_pose_.x) > 1e-6 || fabs(end_pose.y - last_plan_end_pose_.y) > 1e-6 ||
+        fabs(angles::shortest_angular_distance(end_pose.theta, last_plan_end_pose_.theta)) > 1e-6)
+    {
+      plan_changed = true;
+    }
+  }
+
+  if (plan_changed)
+  {
+    // Abort everything and start over
+    reached_intermediate_goals_.clear();
+    last_progress_index_ = 0;
+    holding_goal_ = false;
+    held_goal_index_ = 0;
+    held_goal_pose_.x = 0.0;
+    held_goal_pose_.y = 0.0;
+    held_goal_pose_.theta = 0.0;
+    initial_alignment_done_ = false;
+
+    have_last_plan_ = true;
+    last_plan_size_ = plan.size();
+    last_plan_end_pose_ = plan.back();
+    last_plan_frame_id_ = global_plan.header.frame_id;
+    last_plan_stamp_ = global_plan.header.stamp;
+  }
+
 
   if (plan.empty())
   {
@@ -351,24 +396,25 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   if (!initial_alignment_done_)
   {
     double desired_initial_yaw = plan.front().theta;
-    bool reached_alignment = isGoalReached(robot_pose, plan.front(), desired_initial_yaw);
-    if (!reached_alignment)
+    double yaw_error = fabs(angles::shortest_angular_distance(robot_pose.theta, desired_initial_yaw));
+    if (yaw_error >= yaw_local_goal_tolerance_)
     {
-      unsigned int initial_x = 0;
-      unsigned int initial_y = 0;
-      if (worldToGridBounded(info, plan.front().x, plan.front().y, initial_x, initial_y))
+      unsigned int rx = 0;
+      unsigned int ry = 0;
+      if (worldToGridBounded(info, robot_pose.x, robot_pose.y, rx, ry))
       {
-        x = initial_x;
-        y = initial_y;
+        x = rx;
+        y = ry;
         desired_angle = desired_initial_yaw;
-        held_goal_pose_ = plan.front();
+        held_goal_pose_.x = robot_pose.x;
+        held_goal_pose_.y = robot_pose.y;
         held_goal_pose_.theta = desired_initial_yaw;
         held_goal_index_ = 0;
         holding_goal_ = true;
         publishIntermediateGoal(held_goal_pose_, held_goal_pose_.theta);
         ROS_DEBUG_NAMED("PathProgressCritic",
-                        "Holding initial alignment goal at plan index 0 (x: %.3f, y: %.3f, yaw: %.3f rad)",
-                        held_goal_pose_.x, held_goal_pose_.y, held_goal_pose_.theta);
+                        "Initial alignment: rotate in place to yaw %.3f rad at robot pose (x: %.3f, y: %.3f)",
+                        held_goal_pose_.theta, held_goal_pose_.x, held_goal_pose_.y);
         return true;
       }
     }
@@ -508,7 +554,8 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     }
   }
 
-  if (!found_goal && search_start_index > last_progress_index_ + 1 && !articulation_indices.empty())
+  if (!found_goal && initial_alignment_done_ && search_start_index > last_progress_index_ + 1 &&
+      !articulation_indices.empty())
   {
     unsigned int articulation_lower_bound = std::max(last_progress_index_ + 1, 1u);
     unsigned int articulation_upper_bound = std::min(search_start_index - 1, last_valid_index);
@@ -725,6 +772,8 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
                            articulation_indices.end();
   }
 
+  // Only consider snapping to the final goal yaw when we have already selected the last path index as goal.
+  // Otherwise, keep following the path even if the final goal is within tolerance.
   if (!pending_articulation && final_goal_xy_tolerance_ >= 0.0 && plan_last_index <= last_valid_index &&
       goal_index == plan_last_index)
   {

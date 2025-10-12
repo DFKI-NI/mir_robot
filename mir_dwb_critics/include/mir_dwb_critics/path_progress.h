@@ -39,6 +39,8 @@
 #include <sensor_msgs/PointCloud.h>
 #include <visualization_msgs/MarkerArray.h>
 #include <ros/publisher.h>
+#include <ros/time.h>
+#include <string>
 #include <vector>
 
 namespace mir_dwb_critics
@@ -89,6 +91,13 @@ protected:
   bool enforce_forward_dot_;
   bool always_target_articulations_;
   bool initial_alignment_done_;
+
+  // Plan change detection to reset internal state on new global plans
+  bool have_last_plan_;
+  size_t last_plan_size_;
+  geometry_msgs::Pose2D last_plan_end_pose_;
+  std::string last_plan_frame_id_;
+  ros::Time last_plan_stamp_;
 
   unsigned int last_progress_index_;
   bool holding_goal_;
