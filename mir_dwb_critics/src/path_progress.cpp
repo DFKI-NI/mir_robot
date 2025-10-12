@@ -86,6 +86,7 @@ void PathProgressCritic::onInit()
   critic_nh_.param("articulation_angle_threshold", articulation_angle_threshold_, 1.3089969389957472);
   critic_nh_.param("heading_scale", heading_scale_, 1.0);
   critic_nh_.param("enforce_forward_dot", enforce_forward_dot_, true);
+  critic_nh_.param("always_target_articulations", always_target_articulations_, true);
 
   intermediate_goal_pub_ = critic_nh_.advertise<geometry_msgs::PoseStamped>("intermediate_goal", 1);
   articulation_points_pub_ = critic_nh_.advertise<sensor_msgs::PointCloud>("articulation_points", 1);
@@ -434,7 +435,50 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   bool found_goal = false;
   bool forced_skipped_articulation = false;
 
-  if (search_start_index > last_progress_index_ + 1 && !articulation_indices.empty())
+  if (always_target_articulations_ && !articulation_indices.empty())
+  {
+    unsigned int window_start = std::max(search_start_index, last_progress_index_ + 1);
+    unsigned int window_end = last_valid_index;
+
+    for (unsigned int idx : articulation_indices)
+    {
+      if (idx < window_start || idx > window_end)
+      {
+        continue;
+      }
+
+      double articulation_yaw = plan[idx].theta;
+      bool articulation_has_forward = computeOutgoingAngle(plan, idx, articulation_yaw);
+      double goal_candidate_yaw = articulation_has_forward ? articulation_yaw : plan[idx].theta;
+
+      if (isGoalReached(robot_pose, plan[idx], goal_candidate_yaw))
+      {
+        last_progress_index_ = std::max(last_progress_index_, idx);
+        geometry_msgs::Pose2D reached_pose = plan[idx];
+        reached_pose.theta = goal_candidate_yaw;
+        if (reached_intermediate_goals_.empty() ||
+            nav_2d_utils::poseDistance(reached_intermediate_goals_.back(), reached_pose) > 1e-6 ||
+            fabs(angles::shortest_angular_distance(reached_intermediate_goals_.back().theta, reached_pose.theta)) >
+                1e-6)
+        {
+          reached_intermediate_goals_.push_back(reached_pose);
+        }
+        continue;
+      }
+
+      goal_index = idx;
+      goal_yaw = goal_candidate_yaw;
+      has_forward_direction = articulation_has_forward;
+      found_goal = true;
+      forced_skipped_articulation = true;
+      ROS_DEBUG_NAMED("PathProgressCritic",
+                      "Selecting articulation index %u as prioritized intermediate goal. last_progress_index_: %u",
+                      goal_index, last_progress_index_);
+      break;
+    }
+  }
+
+  if (!found_goal && search_start_index > last_progress_index_ + 1 && !articulation_indices.empty())
   {
     unsigned int articulation_lower_bound = std::max(last_progress_index_ + 1, 1u);
     unsigned int articulation_upper_bound = std::min(search_start_index - 1, last_valid_index);
@@ -607,7 +651,7 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       unsigned int articulation_index = 0;
       double articulation_yaw = goal_yaw;
       bool articulation_has_forward = has_forward_direction;
-      unsigned int articulation_start_index = articulationSearchStart(goal_index);
+      unsigned int articulation_start_index = articulationSearchStart(search_start_index);
       if (articulation_start_index <= goal_index &&
           findNextArticulation(plan, articulation_start_index, goal_index, last_valid_index,
                                articulation_index, articulation_yaw, articulation_has_forward))
