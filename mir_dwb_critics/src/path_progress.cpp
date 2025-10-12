@@ -77,6 +77,10 @@ void PathProgressCritic::onInit()
   {
     critic_nh_.param("yaw_goal_tolerance", final_goal_yaw_tolerance_, yaw_local_goal_tolerance_);
   }
+  if (!private_nh.getParam("xy_goal_tolerance", final_goal_xy_tolerance_))
+  {
+    critic_nh_.param("xy_goal_tolerance", final_goal_xy_tolerance_, xy_local_goal_tolerance_);
+  }
   critic_nh_.param("angle_threshold", angle_threshold_, M_PI_4);
   critic_nh_.param("articulation_angle_threshold", articulation_angle_threshold_, 1.3089969389957472);
   critic_nh_.param("heading_scale", heading_scale_, 1.0);
@@ -99,6 +103,7 @@ void PathProgressCritic::onInit()
   hold_position_epsilon_ = 1e-6;
   hold_yaw_epsilon_ = 1e-6;
   final_goal_yaw_tolerance_ = std::max(final_goal_yaw_tolerance_, 1e-6);
+  final_goal_xy_tolerance_ = std::max(final_goal_xy_tolerance_, 0.0);
 }
 
 void PathProgressCritic::reset()
@@ -536,6 +541,26 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
         goal_yaw = articulation_yaw;
         has_forward_direction = articulation_has_forward;
       }
+    }
+  }
+
+  bool pending_articulation = false;
+  if (last_progress_index_ < goal_index)
+  {
+    pending_articulation = std::find(articulation_indices.begin(), articulation_indices.end(), goal_index) !=
+                           articulation_indices.end();
+  }
+
+  if (!pending_articulation && final_goal_xy_tolerance_ >= 0.0 && plan_last_index <= last_valid_index)
+  {
+    double final_dx = plan[plan_last_index].x - plan[goal_index].x;
+    double final_dy = plan[plan_last_index].y - plan[goal_index].y;
+    double final_distance = hypot(final_dx, final_dy);
+    if (final_distance <= final_goal_xy_tolerance_)
+    {
+      goal_index = plan_last_index;
+      goal_yaw = plan[plan_last_index].theta;
+      has_forward_direction = false;
     }
   }
 

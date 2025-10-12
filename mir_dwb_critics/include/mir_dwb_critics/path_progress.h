@@ -81,6 +81,7 @@ protected:
   double xy_local_goal_tolerance_;
   double yaw_local_goal_tolerance_;
   double final_goal_yaw_tolerance_;
+  double final_goal_xy_tolerance_;
   double angle_threshold_;
   double articulation_angle_threshold_;
   double heading_scale_;
