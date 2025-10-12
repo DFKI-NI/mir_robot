@@ -331,7 +331,7 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       marker.pose.orientation.y = 0.0;
       marker.pose.orientation.z = 0.0;
       marker.pose.orientation.w = 1.0;
-      double diameter = std::max(2.0 * final_goal_xy_tolerance_, 1e-6);
+      double diameter = std::max(2.0 * xy_local_goal_tolerance_, 1e-6);
       marker.scale.x = diameter;
       marker.scale.y = diameter;
       marker.scale.z = diameter;
