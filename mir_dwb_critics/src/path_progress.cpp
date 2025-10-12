@@ -87,6 +87,7 @@ void PathProgressCritic::onInit()
   critic_nh_.param("heading_scale", heading_scale_, 1.0);
   critic_nh_.param("enforce_forward_dot", enforce_forward_dot_, true);
   critic_nh_.param("always_target_articulations", always_target_articulations_, true);
+  initial_alignment_done_ = false;
 
   intermediate_goal_pub_ = critic_nh_.advertise<geometry_msgs::PoseStamped>("intermediate_goal", 1);
   articulation_points_pub_ = critic_nh_.advertise<sensor_msgs::PointCloud>("articulation_points", 1);
@@ -119,6 +120,7 @@ void PathProgressCritic::reset()
   held_goal_pose_.x = 0.0;
   held_goal_pose_.y = 0.0;
   held_goal_pose_.theta = 0.0;
+  initial_alignment_done_ = false;
 }
 
 double PathProgressCritic::scoreTrajectory(const dwb_msgs::Trajectory2D& traj)
@@ -151,6 +153,34 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   }
 
   const unsigned int plan_last_index = static_cast<unsigned int>(plan.size() - 1);
+
+  if (!initial_alignment_done_)
+  {
+    double desired_initial_yaw = plan.front().theta;
+    bool reached_alignment = isGoalReached(robot_pose, plan.front(), desired_initial_yaw);
+    if (!reached_alignment)
+    {
+      unsigned int initial_x = 0;
+      unsigned int initial_y = 0;
+      if (worldToGridBounded(info, plan.front().x, plan.front().y, initial_x, initial_y))
+      {
+        x = initial_x;
+        y = initial_y;
+        desired_angle = desired_initial_yaw;
+        held_goal_pose_ = plan.front();
+        held_goal_pose_.theta = desired_initial_yaw;
+        held_goal_index_ = 0;
+        holding_goal_ = true;
+        publishIntermediateGoal(held_goal_pose_, held_goal_pose_.theta);
+        ROS_DEBUG_NAMED("PathProgressCritic",
+                        "Holding initial alignment goal at plan index 0 (x: %.3f, y: %.3f, yaw: %.3f rad)",
+                        held_goal_pose_.x, held_goal_pose_.y, held_goal_pose_.theta);
+        return true;
+      }
+    }
+
+    initial_alignment_done_ = true;
+  }
 
   if (holding_goal_ && held_goal_index_ >= plan.size())
   {

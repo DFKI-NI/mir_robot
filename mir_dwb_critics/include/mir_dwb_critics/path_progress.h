@@ -88,6 +88,7 @@ protected:
   double heading_scale_;
   bool enforce_forward_dot_;
   bool always_target_articulations_;
+  bool initial_alignment_done_;
 
   unsigned int last_progress_index_;
   bool holding_goal_;
