@@ -401,9 +401,53 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   double goal_yaw = plan[goal_index].theta;
   bool has_forward_direction = false;
   bool found_goal = false;
+  bool forced_skipped_articulation = false;
+
+  if (search_start_index > last_progress_index_ + 1 && !articulation_indices.empty())
+  {
+    unsigned int articulation_lower_bound = std::max(last_progress_index_ + 1, 1u);
+    unsigned int articulation_upper_bound = std::min(search_start_index - 1, last_valid_index);
+
+    if (articulation_lower_bound <= articulation_upper_bound)
+    {
+      auto articulation_it = std::find_if(articulation_indices.begin(), articulation_indices.end(),
+                                          [&](unsigned int index) {
+                                            return index >= articulation_lower_bound && index <= articulation_upper_bound;
+                                          });
+
+      if (articulation_it != articulation_indices.end())
+      {
+        goal_index = *articulation_it;
+        has_forward_direction = computeOutgoingAngle(plan, goal_index, goal_yaw);
+        if (!has_forward_direction)
+        {
+          goal_yaw = plan[goal_index].theta;
+        }
+
+        if (enforce_forward_dot_ && has_forward_direction)
+        {
+          double to_goal_x = plan[goal_index].x - robot_pose.x;
+          double to_goal_y = plan[goal_index].y - robot_pose.y;
+          double dot = to_goal_x * std::cos(goal_yaw) + to_goal_y * std::sin(goal_yaw);
+          if (dot < 0.0)
+          {
+            ROS_WARN_NAMED("PathProgressCritic",
+                           "Forcing skipped articulation index %u despite backward dot product %.3f due to policy.",
+                           goal_index, dot);
+          }
+        }
+
+        forced_skipped_articulation = true;
+        found_goal = true;
+        ROS_DEBUG_NAMED("PathProgressCritic",
+                        "Recovered skipped articulation index %u between progress %u and search start %u.",
+                        goal_index, last_progress_index_, search_start_index);
+      }
+    }
+  }
 
   unsigned int search_index = search_start_index;
-  while (search_index <= last_valid_index)
+  while (!forced_skipped_articulation && search_index <= last_valid_index)
   {
     double candidate_yaw = goal_yaw;
     bool candidate_has_forward = false;
