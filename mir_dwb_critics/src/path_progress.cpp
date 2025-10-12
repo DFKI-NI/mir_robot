@@ -725,14 +725,14 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
                            articulation_indices.end();
   }
 
-  if (!pending_articulation && final_goal_xy_tolerance_ >= 0.0 && plan_last_index <= last_valid_index)
+  if (!pending_articulation && final_goal_xy_tolerance_ >= 0.0 && plan_last_index <= last_valid_index &&
+      goal_index == plan_last_index)
   {
     double final_dx = plan[plan_last_index].x - plan[goal_index].x;
     double final_dy = plan[plan_last_index].y - plan[goal_index].y;
     double final_distance = hypot(final_dx, final_dy);
     if (final_distance <= final_goal_xy_tolerance_)
     {
-      goal_index = plan_last_index;
       goal_yaw = plan[plan_last_index].theta;
       has_forward_direction = false;
     }
