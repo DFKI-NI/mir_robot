@@ -210,27 +210,6 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     }
   }
 
-  // Constrain the search range to enforce monotonic progress.
-  last_progress_index_ = std::min(last_progress_index_, plan_last_index);
-
-  unsigned int search_start_index = std::max(start_index, last_progress_index_);
-  search_start_index = std::min(search_start_index, last_valid_index);
-
-  unsigned int articulation_scan_start = 0u;
-  if (plan_last_index >= 1)
-  {
-    unsigned int next_index = last_progress_index_ < plan_last_index ? last_progress_index_ + 1 : plan_last_index;
-    articulation_scan_start = std::max(next_index, 1u);
-  }
-  else
-  {
-    articulation_scan_start = plan_last_index;
-  }
-
-  auto articulationSearchStart = [&](unsigned int candidate_start) {
-    return std::max({candidate_start, articulation_scan_start, 1u});
-  };
-
   auto collectArticulationIndices = [&](unsigned int scan_start, unsigned int scan_end) {
     std::vector<unsigned int> articulation_indices;
     if (plan.size() < 2)
@@ -335,12 +314,22 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
 
   if (holding_goal_)
   {
-    double yaw_error = fabs(angles::shortest_angular_distance(robot_pose.theta, held_goal_pose_.theta));
-    if (yaw_error >= final_goal_yaw_tolerance_)
+    unsigned int held_x = 0;
+    unsigned int held_y = 0;
+    bool held_in_costmap = worldToGridBounded(info, held_goal_pose_.x, held_goal_pose_.y, held_x, held_y);
+
+    if (!held_in_costmap)
     {
-      unsigned int held_x = 0;
-      unsigned int held_y = 0;
-      if (worldToGridBounded(info, held_goal_pose_.x, held_goal_pose_.y, held_x, held_y))
+      ROS_WARN_NAMED("PathProgressCritic",
+                     "Held goal (index %u) is outside the local costmap. Releasing hold to search for a new goal.",
+                     held_goal_index_);
+      holding_goal_ = false;
+      held_goal_index_ = 0;
+    }
+    else
+    {
+      double yaw_error = fabs(angles::shortest_angular_distance(robot_pose.theta, held_goal_pose_.theta));
+      if (yaw_error >= final_goal_yaw_tolerance_)
       {
         x = held_x;
         y = held_y;
@@ -351,18 +340,57 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
         return true;
       }
 
-      ROS_WARN_NAMED("PathProgressCritic",
-                     "Held goal (index %u) is outside the local costmap. Releasing hold to search for a new goal.",
-                     held_goal_index_);
+      if (!isGoalReached(robot_pose, held_goal_pose_, held_goal_pose_.theta))
+      {
+        x = held_x;
+        y = held_y;
+        desired_angle = held_goal_pose_.theta;
+        publishIntermediateGoal(held_goal_pose_, held_goal_pose_.theta);
+        ROS_DEBUG_NAMED("PathProgressCritic",
+                        "Holding goal index %u until full pose tolerance satisfied (XY + yaw)", held_goal_index_);
+        return true;
+      }
+
+      last_progress_index_ = std::max(last_progress_index_, held_goal_index_);
+      geometry_msgs::Pose2D reached_pose = held_goal_pose_;
+      if (reached_intermediate_goals_.empty() ||
+          nav_2d_utils::poseDistance(reached_intermediate_goals_.back(), reached_pose) > 1e-6 ||
+          fabs(angles::shortest_angular_distance(reached_intermediate_goals_.back().theta, reached_pose.theta)) > 1e-6)
+      {
+        reached_intermediate_goals_.push_back(reached_pose);
+      }
+      ROS_DEBUG_NAMED("PathProgressCritic",
+                      "Reached held intermediate goal index %u while respecting pose tolerances. last_progress_index_: %u",
+                      held_goal_index_, last_progress_index_);
       holding_goal_ = false;
-      held_goal_index_ = 0;
     }
   }
+
+  // Constrain the search range to enforce monotonic progress with the updated bookkeeping.
+  last_progress_index_ = std::min(last_progress_index_, plan_last_index);
+
+  unsigned int search_start_index = std::max(start_index, last_progress_index_);
+  search_start_index = std::min(search_start_index, last_valid_index);
 
   if (holding_goal_ && held_goal_index_ >= last_progress_index_)
   {
     search_start_index = std::min(search_start_index, held_goal_index_);
   }
+
+  unsigned int articulation_scan_start = 0u;
+  if (plan_last_index >= 1)
+  {
+    unsigned int next_index = last_progress_index_ < plan_last_index ? last_progress_index_ + 1 : plan_last_index;
+    articulation_scan_start = std::max(next_index, 1u);
+  }
+  else
+  {
+    articulation_scan_start = plan_last_index;
+  }
+
+  auto articulationSearchStart = [&](unsigned int candidate_start) {
+    return std::max({candidate_start, articulation_scan_start, 1u});
+  };
 
   unsigned int goal_index = search_start_index;
   double goal_yaw = plan[goal_index].theta;
