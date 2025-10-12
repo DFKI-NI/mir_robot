@@ -78,6 +78,9 @@ protected:
   bool computeOutgoingAngle(const std::vector<geometry_msgs::Pose2D>& plan, unsigned int index,
                             double& angle) const;
 
+  bool isPoseReached(const geometry_msgs::Pose2D& robot_pose, const geometry_msgs::Pose2D& goal_pose,
+                     double goal_yaw, double xy_tolerance, double yaw_tolerance) const;
+
   bool isGoalReached(const geometry_msgs::Pose2D& robot_pose, const geometry_msgs::Pose2D& goal_pose,
                      double goal_yaw) const;
 

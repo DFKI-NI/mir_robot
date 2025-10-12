@@ -557,6 +557,15 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   if (!initial_alignment_done_)
   {
     double desired_initial_yaw = plan.front().theta;
+    if (!plan.empty())
+    {
+      double outgoing_angle = desired_initial_yaw;
+      if (computeOutgoingAngle(plan, 0u, outgoing_angle))
+      {
+        desired_initial_yaw = outgoing_angle;
+      }
+    }
+
     double yaw_error = fabs(angles::shortest_angular_distance(robot_pose.theta, desired_initial_yaw));
     if (yaw_error >= yaw_local_goal_tolerance_)
     {
@@ -602,19 +611,22 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     }
     else
     {
+      double held_xy_tolerance = (held_goal_index_ == plan_last_index) ? final_goal_xy_tolerance_ : xy_local_goal_tolerance_;
+      double held_yaw_tolerance = (held_goal_index_ == plan_last_index) ? final_goal_yaw_tolerance_ : yaw_local_goal_tolerance_;
+
       double yaw_error = fabs(angles::shortest_angular_distance(robot_pose.theta, held_goal_pose_.theta));
-      if (yaw_error >= final_goal_yaw_tolerance_)
+      if (yaw_error >= held_yaw_tolerance)
       {
         x = held_x;
         y = held_y;
         desired_angle = held_goal_pose_.theta;
         publishIntermediateGoal(held_goal_pose_, held_goal_pose_.theta);
         ROS_DEBUG_NAMED("PathProgressCritic", "Holding goal index %u due to yaw error %.3f rad (threshold %.3f)",
-                        held_goal_index_, yaw_error, final_goal_yaw_tolerance_);
+                        held_goal_index_, yaw_error, held_yaw_tolerance);
         return true;
       }
 
-      if (!isGoalReached(robot_pose, held_goal_pose_, held_goal_pose_.theta))
+      if (!isPoseReached(robot_pose, held_goal_pose_, held_goal_pose_.theta, held_xy_tolerance, held_yaw_tolerance))
       {
         x = held_x;
         y = held_y;
@@ -692,7 +704,11 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       bool articulation_has_forward = computeOutgoingAngle(plan, idx, articulation_yaw);
       double articulation_goal_yaw = articulation_has_forward ? articulation_yaw : plan[idx].theta;
 
-      if (isGoalReached(robot_pose, plan[idx], articulation_goal_yaw))
+      double articulation_xy_tolerance = (idx == plan_last_index) ? final_goal_xy_tolerance_ : xy_local_goal_tolerance_;
+      double articulation_yaw_tolerance = (idx == plan_last_index) ? final_goal_yaw_tolerance_ : yaw_local_goal_tolerance_;
+
+      if (isPoseReached(robot_pose, plan[idx], articulation_goal_yaw, articulation_xy_tolerance,
+                        articulation_yaw_tolerance))
       {
         last_progress_index_ = std::max(last_progress_index_, idx);
         geometry_msgs::Pose2D reached_pose = plan[idx];
@@ -804,7 +820,11 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       break;
     }
 
-    if (isGoalReached(robot_pose, plan[candidate_index], candidate_yaw))
+    double candidate_xy_tolerance = (candidate_index == plan_last_index) ? final_goal_xy_tolerance_ : xy_local_goal_tolerance_;
+    double candidate_yaw_tolerance = (candidate_index == plan_last_index) ? final_goal_yaw_tolerance_ : yaw_local_goal_tolerance_;
+
+    if (isPoseReached(robot_pose, plan[candidate_index], candidate_yaw, candidate_xy_tolerance,
+                      candidate_yaw_tolerance))
     {
       last_progress_index_ = std::max(last_progress_index_, candidate_index);
       geometry_msgs::Pose2D reached_pose = plan[candidate_index];
@@ -943,6 +963,7 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     double final_distance = hypot(final_dx, final_dy);
     if (final_distance <= final_goal_xy_tolerance_)
     {
+      goal_index = plan_last_index;
       goal_yaw = plan[plan_last_index].theta;
       has_forward_direction = false;
     }
@@ -1189,13 +1210,19 @@ bool PathProgressCritic::computeOutgoingAngle(const std::vector<geometry_msgs::P
   return false;
 }
 
-bool PathProgressCritic::isGoalReached(const geometry_msgs::Pose2D& robot_pose, const geometry_msgs::Pose2D& goal_pose,
-                                       double goal_yaw) const
+bool PathProgressCritic::isPoseReached(const geometry_msgs::Pose2D& robot_pose, const geometry_msgs::Pose2D& goal_pose,
+                                       double goal_yaw, double xy_tolerance, double yaw_tolerance) const
 {
   double distance = nav_2d_utils::poseDistance(goal_pose, robot_pose);
   double yaw_error = fabs(angles::shortest_angular_distance(robot_pose.theta, goal_yaw));
 
-  return distance < xy_local_goal_tolerance_ && yaw_error < yaw_local_goal_tolerance_;
+  return distance < xy_tolerance && yaw_error < yaw_tolerance;
+}
+
+bool PathProgressCritic::isGoalReached(const geometry_msgs::Pose2D& robot_pose, const geometry_msgs::Pose2D& goal_pose,
+                                       double goal_yaw) const
+{
+  return isPoseReached(robot_pose, goal_pose, goal_yaw, xy_local_goal_tolerance_, yaw_local_goal_tolerance_);
 }
 
 }  // namespace mir_dwb_critics
