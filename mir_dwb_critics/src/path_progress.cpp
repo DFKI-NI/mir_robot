@@ -464,13 +464,12 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   bool has_forward_direction = false;
   bool found_goal = false;
   bool forced_skipped_articulation = false;
+  unsigned int next_articulation_index = 0;
+  double next_articulation_yaw = 0.0;
+  bool next_articulation_has_forward = false;
+  bool has_next_articulation = false;
 
-  unsigned int next_pending_articulation = 0;
-  double next_pending_articulation_yaw = 0.0;
-  bool next_pending_articulation_has_forward = false;
-  bool has_pending_articulation = false;
-
-  if (always_target_articulations_ && !articulation_indices.empty())
+  if (initial_alignment_done_ && !articulation_indices.empty())
   {
     unsigned int articulation_window_start = std::max(search_start_index, last_progress_index_ + 1);
     unsigned int articulation_window_end = last_valid_index;
@@ -501,10 +500,10 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
         continue;
       }
 
-      next_pending_articulation = idx;
-      next_pending_articulation_yaw = articulation_goal_yaw;
-      next_pending_articulation_has_forward = articulation_has_forward;
-      has_pending_articulation = true;
+      next_articulation_index = idx;
+      next_articulation_yaw = articulation_goal_yaw;
+      next_articulation_has_forward = articulation_has_forward;
+      has_next_articulation = true;
       break;
     }
   }
@@ -583,6 +582,20 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       candidate_index = std::max(candidate_index, search_index);
     }
 
+    if (has_next_articulation && candidate_index >= next_articulation_index)
+    {
+      goal_index = next_articulation_index;
+      goal_yaw = next_articulation_yaw;
+      has_forward_direction = next_articulation_has_forward;
+      found_goal = true;
+      forced_skipped_articulation = true;
+      has_next_articulation = false;
+      ROS_DEBUG_NAMED("PathProgressCritic",
+                      "Selecting pending articulation index %u reached at candidate %u.", goal_index,
+                      candidate_index);
+      break;
+    }
+
     if (isGoalReached(robot_pose, plan[candidate_index], candidate_yaw))
     {
       last_progress_index_ = std::max(last_progress_index_, candidate_index);
@@ -629,40 +642,9 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       }
     }
 
-    if (has_pending_articulation && candidate_index > next_pending_articulation)
-    {
-      goal_index = next_pending_articulation;
-      goal_yaw = next_pending_articulation_yaw;
-      has_forward_direction = next_pending_articulation_has_forward;
-      found_goal = true;
-      forced_skipped_articulation = true;
-      ROS_DEBUG_NAMED("PathProgressCritic",
-                      "Switching to pending articulation index %u ahead of candidate %u.", goal_index,
-                      candidate_index);
-      break;
-    }
-
     goal_index = candidate_index;
     goal_yaw = candidate_yaw;
     has_forward_direction = candidate_has_forward;
-    found_goal = true;
-    break;
-    if (has_pending_articulation && goal_index > next_pending_articulation)
-    {
-      goal_index = next_pending_articulation;
-      goal_yaw = next_pending_articulation_yaw;
-      has_forward_direction = next_pending_articulation_has_forward;
-      forced_skipped_articulation = true;
-      ROS_DEBUG_NAMED("PathProgressCritic",
-                      "Selecting pending articulation index %u during fallback after candidate %u.", goal_index,
-                      candidate_index);
-    }
-    else
-    {
-      goal_index = candidate_index;
-      goal_yaw = candidate_yaw;
-      has_forward_direction = candidate_has_forward;
-    }
     found_goal = true;
     break;
   }
@@ -706,6 +688,17 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     if (!selected_fallback)
     {
       return false;
+    }
+
+    if (has_next_articulation && goal_index >= next_articulation_index)
+    {
+      goal_index = next_articulation_index;
+      goal_yaw = next_articulation_yaw;
+      has_forward_direction = next_articulation_has_forward;
+      has_next_articulation = false;
+      forced_skipped_articulation = true;
+      ROS_DEBUG_NAMED("PathProgressCritic",
+                      "Fallback switching to pending articulation index %u.", goal_index);
     }
 
     if (goal_index > last_progress_index_)
