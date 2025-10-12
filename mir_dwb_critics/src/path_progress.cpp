@@ -116,6 +116,9 @@ void PathProgressCritic::onInit()
   last_plan_end_pose_.theta = 0.0;
   last_plan_frame_id_.clear();
   last_plan_stamp_ = ros::Time(0);
+  last_plan_.clear();
+  plan_position_epsilon_ = 1e-4;
+  plan_yaw_epsilon_ = 1e-4;
 }
 
 void PathProgressCritic::reset()
@@ -152,7 +155,28 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   }
 
   std::vector<geometry_msgs::Pose2D> plan = nav_2d_utils::adjustPlanResolution(global_plan, info.resolution).poses;
-  // Reset state if a new global plan arrives (size, last pose, frame or stamp changes)
+
+  auto plansEqual = [&](const std::vector<geometry_msgs::Pose2D>& a,
+                        const std::vector<geometry_msgs::Pose2D>& b) {
+    if (a.size() != b.size())
+    {
+      return false;
+    }
+
+    for (size_t idx = 0; idx < a.size(); ++idx)
+    {
+      if (fabs(a[idx].x - b[idx].x) > plan_position_epsilon_ ||
+          fabs(a[idx].y - b[idx].y) > plan_position_epsilon_ ||
+          fabs(angles::shortest_angular_distance(a[idx].theta, b[idx].theta)) > plan_yaw_epsilon_)
+      {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  // Reset state if a new global plan arrives (size, geometry, or frame changes)
   bool plan_changed = false;
   if (!have_last_plan_)
   {
@@ -160,12 +184,11 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   }
   else
   {
-    if (last_plan_size_ != plan.size()) plan_changed = true;
-    if (global_plan.header.frame_id != last_plan_frame_id_) plan_changed = true;
-    if (global_plan.header.stamp != last_plan_stamp_) plan_changed = true;
-    const geometry_msgs::Pose2D& end_pose = plan.back();
-    if (fabs(end_pose.x - last_plan_end_pose_.x) > 1e-6 || fabs(end_pose.y - last_plan_end_pose_.y) > 1e-6 ||
-        fabs(angles::shortest_angular_distance(end_pose.theta, last_plan_end_pose_.theta)) > 1e-6)
+    if (global_plan.header.frame_id != last_plan_frame_id_)
+    {
+      plan_changed = true;
+    }
+    else if (!plansEqual(plan, last_plan_))
     {
       plan_changed = true;
     }
@@ -184,11 +207,13 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     initial_alignment_done_ = false;
 
     have_last_plan_ = true;
-    last_plan_size_ = plan.size();
-    last_plan_end_pose_ = plan.back();
-    last_plan_frame_id_ = global_plan.header.frame_id;
-    last_plan_stamp_ = global_plan.header.stamp;
   }
+
+  last_plan_size_ = plan.size();
+  last_plan_end_pose_ = plan.back();
+  last_plan_frame_id_ = global_plan.header.frame_id;
+  last_plan_stamp_ = global_plan.header.stamp;
+  last_plan_ = plan;
 
 
   if (plan.empty())

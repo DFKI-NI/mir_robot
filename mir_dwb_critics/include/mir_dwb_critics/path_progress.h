@@ -98,6 +98,10 @@ protected:
   geometry_msgs::Pose2D last_plan_end_pose_;
   std::string last_plan_frame_id_;
   ros::Time last_plan_stamp_;
+  std::vector<geometry_msgs::Pose2D> last_plan_;
+
+  double plan_position_epsilon_;
+  double plan_yaw_epsilon_;
 
   unsigned int last_progress_index_;
   bool holding_goal_;
