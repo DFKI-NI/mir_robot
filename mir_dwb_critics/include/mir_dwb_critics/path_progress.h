@@ -36,6 +36,7 @@
 
 #include <dwb_critics/map_grid.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <sensor_msgs/PointCloud.h>
 #include <ros/publisher.h>
 #include <vector>
 
@@ -95,6 +96,7 @@ protected:
   std::vector<geometry_msgs::Pose2D> reached_intermediate_goals_;
   double desired_angle_;
   ros::Publisher intermediate_goal_pub_;
+  ros::Publisher articulation_points_pub_;
 };
 
 }  // namespace mir_dwb_critics

@@ -33,10 +33,10 @@
  */
 #include <mir_dwb_critics/path_progress.h>
 #include <angles/angles.h>
-#include <geometry_msgs/PoseStamped.h>
 #include <nav_grid/coordinate_conversion.h>
 #include <pluginlib/class_list_macros.h>
 #include <nav_2d_utils/path_ops.h>
+#include <sensor_msgs/PointCloud.h>
 #include <ros/node_handle.h>
 #include <ros/time.h>
 #include <tf2/LinearMath/Quaternion.h>
@@ -83,6 +83,7 @@ void PathProgressCritic::onInit()
   critic_nh_.param("enforce_forward_dot", enforce_forward_dot_, true);
 
   intermediate_goal_pub_ = critic_nh_.advertise<geometry_msgs::PoseStamped>("intermediate_goal", 1);
+  articulation_points_pub_ = critic_nh_.advertise<sensor_msgs::PointCloud>("articulation_points", 1);
 
   articulation_angle_threshold_ = std::max(articulation_angle_threshold_, angle_threshold_);
 
@@ -139,6 +140,8 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     ROS_ERROR_NAMED("PathProgressCritic", "The adjusted global plan was empty.");
     return false;
   }
+
+  const unsigned int plan_last_index = static_cast<unsigned int>(plan.size() - 1);
 
   if (holding_goal_ && held_goal_index_ >= plan.size())
   {
@@ -208,7 +211,6 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   }
 
   // Constrain the search range to enforce monotonic progress.
-  unsigned int plan_last_index = static_cast<unsigned int>(plan.size() - 1);
   last_progress_index_ = std::min(last_progress_index_, plan_last_index);
 
   unsigned int search_start_index = std::max(start_index, last_progress_index_);
@@ -227,6 +229,85 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
 
   auto articulationSearchStart = [&](unsigned int candidate_start) {
     return std::max({candidate_start, articulation_scan_start, 1u});
+  };
+
+  auto collectArticulationIndices = [&](unsigned int scan_start, unsigned int scan_end) {
+    std::vector<unsigned int> articulation_indices;
+    if (plan.size() < 2)
+    {
+      return articulation_indices;
+    }
+
+    const double epsilon = 1e-9;
+    unsigned int clamped_start = std::max(scan_start, 1u);
+    unsigned int clamped_end = std::min(scan_end, plan_last_index);
+    if (clamped_start > clamped_end)
+    {
+      return articulation_indices;
+    }
+
+    double previous_segment_angle = 0.0;
+    bool previous_segment_angle_set = false;
+    unsigned int previous_segment_end_index = 0u;
+
+    for (unsigned int i = clamped_start; i <= clamped_end; ++i)
+    {
+      double direction_x = plan[i].x - plan[i - 1].x;
+      double direction_y = plan[i].y - plan[i - 1].y;
+      double length = hypot(direction_x, direction_y);
+      if (length < epsilon)
+      {
+        continue;
+      }
+
+      double current_angle = atan2(direction_y, direction_x);
+      if (previous_segment_angle_set)
+      {
+        double articulation_angle =
+            fabs(angles::shortest_angular_distance(previous_segment_angle, current_angle));
+        if (articulation_angle >= articulation_angle_threshold_)
+        {
+          if (articulation_indices.empty() || articulation_indices.back() != previous_segment_end_index)
+          {
+            articulation_indices.push_back(previous_segment_end_index);
+          }
+        }
+      }
+
+      previous_segment_angle = current_angle;
+      previous_segment_angle_set = true;
+      previous_segment_end_index = i;
+    }
+
+    return articulation_indices;
+  };
+
+  auto publishArticulationPointCloud = [&](const std::vector<unsigned int>& articulation_indices) {
+    if (!articulation_points_pub_)
+    {
+      return;
+    }
+
+    sensor_msgs::PointCloud cloud_msg;
+    cloud_msg.header = global_plan.header;
+    cloud_msg.header.stamp = ros::Time::now();
+    cloud_msg.points.reserve(articulation_indices.size());
+
+    for (unsigned int index : articulation_indices)
+    {
+      if (index >= plan.size())
+      {
+        continue;
+      }
+
+      geometry_msgs::Point32 point;
+      point.x = plan[index].x;
+      point.y = plan[index].y;
+      point.z = 0.0;
+      cloud_msg.points.push_back(point);
+    }
+
+    articulation_points_pub_.publish(cloud_msg);
   };
 
   auto publishIntermediateGoal = [&](const geometry_msgs::Pose2D& goal_pose, double goal_yaw) {
@@ -248,6 +329,9 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     goal_msg.pose.orientation.w = q.w();
     intermediate_goal_pub_.publish(goal_msg);
   };
+
+  std::vector<unsigned int> articulation_indices = collectArticulationIndices(1u, plan_last_index);
+  publishArticulationPointCloud(articulation_indices);
 
   if (holding_goal_)
   {
