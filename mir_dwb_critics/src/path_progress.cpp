@@ -197,7 +197,31 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     return false;
   }
 
-  const unsigned int plan_last_index = static_cast<unsigned int>(plan.size() - 1);
+  unsigned int plan_last_index = static_cast<unsigned int>(plan.size() - 1);
+
+  if (initial_alignment_done_ && plan.size() > 1 && last_progress_index_ > 0)
+  {
+    unsigned int prune_limit = std::min(last_progress_index_, plan_last_index);
+    if (prune_limit > 0)
+    {
+      plan.erase(plan.begin(), plan.begin() + prune_limit);
+      last_progress_index_ = last_progress_index_ >= prune_limit ? last_progress_index_ - prune_limit : 0;
+      plan_last_index = static_cast<unsigned int>(plan.size() - 1);
+
+      if (holding_goal_)
+      {
+        if (held_goal_index_ < prune_limit)
+        {
+          holding_goal_ = false;
+          held_goal_index_ = 0;
+        }
+        else
+        {
+          held_goal_index_ -= prune_limit;
+        }
+      }
+    }
+  }
 
   if (holding_goal_ && held_goal_index_ >= plan.size())
   {
