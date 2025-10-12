@@ -37,6 +37,7 @@
 #include <dwb_critics/map_grid.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <sensor_msgs/PointCloud.h>
+#include <visualization_msgs/MarkerArray.h>
 #include <ros/publisher.h>
 #include <vector>
 
@@ -98,6 +99,7 @@ protected:
   double desired_angle_;
   ros::Publisher intermediate_goal_pub_;
   ros::Publisher articulation_points_pub_;
+  ros::Publisher intermediate_goal_tolerance_pub_;
 };
 
 }  // namespace mir_dwb_critics

@@ -37,6 +37,7 @@
 #include <pluginlib/class_list_macros.h>
 #include <nav_2d_utils/path_ops.h>
 #include <sensor_msgs/PointCloud.h>
+#include <visualization_msgs/MarkerArray.h>
 #include <ros/node_handle.h>
 #include <ros/time.h>
 #include <tf2/LinearMath/Quaternion.h>
@@ -88,6 +89,8 @@ void PathProgressCritic::onInit()
 
   intermediate_goal_pub_ = critic_nh_.advertise<geometry_msgs::PoseStamped>("intermediate_goal", 1);
   articulation_points_pub_ = critic_nh_.advertise<sensor_msgs::PointCloud>("articulation_points", 1);
+  intermediate_goal_tolerance_pub_ =
+      critic_nh_.advertise<visualization_msgs::MarkerArray>("intermediate_goal_tolerance", 1);
 
   articulation_angle_threshold_ = std::max(articulation_angle_threshold_, angle_threshold_);
 
@@ -312,6 +315,34 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     goal_msg.pose.orientation.z = q.z();
     goal_msg.pose.orientation.w = q.w();
     intermediate_goal_pub_.publish(goal_msg);
+
+    if (intermediate_goal_tolerance_pub_)
+    {
+      visualization_msgs::MarkerArray marker_array;
+      visualization_msgs::Marker marker;
+      marker.header = goal_msg.header;
+      marker.header.stamp = goal_msg.header.stamp;
+      marker.ns = "intermediate_goal_tolerance";
+      marker.id = 0;
+      marker.type = visualization_msgs::Marker::SPHERE;
+      marker.action = visualization_msgs::Marker::ADD;
+      marker.pose.position = goal_msg.pose.position;
+      marker.pose.orientation.x = 0.0;
+      marker.pose.orientation.y = 0.0;
+      marker.pose.orientation.z = 0.0;
+      marker.pose.orientation.w = 1.0;
+      double diameter = std::max(2.0 * final_goal_xy_tolerance_, 1e-6);
+      marker.scale.x = diameter;
+      marker.scale.y = diameter;
+      marker.scale.z = diameter;
+      marker.color.r = 0.2f;
+      marker.color.g = 0.8f;
+      marker.color.b = 0.4f;
+      marker.color.a = 0.35f;
+      marker.lifetime = ros::Duration(0.0);
+      marker_array.markers.push_back(marker);
+      intermediate_goal_tolerance_pub_.publish(marker_array);
+    }
   };
 
   std::vector<unsigned int> articulation_indices = collectArticulationIndices(1u, plan_last_index);
