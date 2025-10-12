@@ -465,27 +465,32 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   bool found_goal = false;
   bool forced_skipped_articulation = false;
 
+  unsigned int next_pending_articulation = 0;
+  double next_pending_articulation_yaw = 0.0;
+  bool next_pending_articulation_has_forward = false;
+  bool has_pending_articulation = false;
+
   if (always_target_articulations_ && !articulation_indices.empty())
   {
-    unsigned int window_start = std::max(search_start_index, last_progress_index_ + 1);
-    unsigned int window_end = last_valid_index;
+    unsigned int articulation_window_start = std::max(search_start_index, last_progress_index_ + 1);
+    unsigned int articulation_window_end = last_valid_index;
 
     for (unsigned int idx : articulation_indices)
     {
-      if (idx < window_start || idx > window_end)
+      if (idx < articulation_window_start || idx > articulation_window_end)
       {
         continue;
       }
 
       double articulation_yaw = plan[idx].theta;
       bool articulation_has_forward = computeOutgoingAngle(plan, idx, articulation_yaw);
-      double goal_candidate_yaw = articulation_has_forward ? articulation_yaw : plan[idx].theta;
+      double articulation_goal_yaw = articulation_has_forward ? articulation_yaw : plan[idx].theta;
 
-      if (isGoalReached(robot_pose, plan[idx], goal_candidate_yaw))
+      if (isGoalReached(robot_pose, plan[idx], articulation_goal_yaw))
       {
         last_progress_index_ = std::max(last_progress_index_, idx);
         geometry_msgs::Pose2D reached_pose = plan[idx];
-        reached_pose.theta = goal_candidate_yaw;
+        reached_pose.theta = articulation_goal_yaw;
         if (reached_intermediate_goals_.empty() ||
             nav_2d_utils::poseDistance(reached_intermediate_goals_.back(), reached_pose) > 1e-6 ||
             fabs(angles::shortest_angular_distance(reached_intermediate_goals_.back().theta, reached_pose.theta)) >
@@ -496,14 +501,10 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
         continue;
       }
 
-      goal_index = idx;
-      goal_yaw = goal_candidate_yaw;
-      has_forward_direction = articulation_has_forward;
-      found_goal = true;
-      forced_skipped_articulation = true;
-      ROS_DEBUG_NAMED("PathProgressCritic",
-                      "Selecting articulation index %u as prioritized intermediate goal. last_progress_index_: %u",
-                      goal_index, last_progress_index_);
+      next_pending_articulation = idx;
+      next_pending_articulation_yaw = articulation_goal_yaw;
+      next_pending_articulation_has_forward = articulation_has_forward;
+      has_pending_articulation = true;
       break;
     }
   }
@@ -628,9 +629,40 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       }
     }
 
+    if (has_pending_articulation && candidate_index > next_pending_articulation)
+    {
+      goal_index = next_pending_articulation;
+      goal_yaw = next_pending_articulation_yaw;
+      has_forward_direction = next_pending_articulation_has_forward;
+      found_goal = true;
+      forced_skipped_articulation = true;
+      ROS_DEBUG_NAMED("PathProgressCritic",
+                      "Switching to pending articulation index %u ahead of candidate %u.", goal_index,
+                      candidate_index);
+      break;
+    }
+
     goal_index = candidate_index;
     goal_yaw = candidate_yaw;
     has_forward_direction = candidate_has_forward;
+    found_goal = true;
+    break;
+    if (has_pending_articulation && goal_index > next_pending_articulation)
+    {
+      goal_index = next_pending_articulation;
+      goal_yaw = next_pending_articulation_yaw;
+      has_forward_direction = next_pending_articulation_has_forward;
+      forced_skipped_articulation = true;
+      ROS_DEBUG_NAMED("PathProgressCritic",
+                      "Selecting pending articulation index %u during fallback after candidate %u.", goal_index,
+                      candidate_index);
+    }
+    else
+    {
+      goal_index = candidate_index;
+      goal_yaw = candidate_yaw;
+      has_forward_direction = candidate_has_forward;
+    }
     found_goal = true;
     break;
   }
