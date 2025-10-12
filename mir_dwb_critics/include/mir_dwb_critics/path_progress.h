@@ -102,6 +102,8 @@ protected:
 
   double plan_position_epsilon_;
   double plan_yaw_epsilon_;
+  double plan_alignment_position_tolerance_;
+  double plan_alignment_yaw_tolerance_;
 
   unsigned int last_progress_index_;
   bool holding_goal_;

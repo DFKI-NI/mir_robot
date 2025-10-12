@@ -44,6 +44,7 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <utility>
 #include <vector>
 
 namespace mir_dwb_critics
@@ -119,6 +120,8 @@ void PathProgressCritic::onInit()
   last_plan_.clear();
   plan_position_epsilon_ = 1e-4;
   plan_yaw_epsilon_ = 1e-4;
+  critic_nh_.param("plan_alignment_position_tolerance", plan_alignment_position_tolerance_, 0.15);
+  critic_nh_.param("plan_alignment_yaw_tolerance", plan_alignment_yaw_tolerance_, 3.14159265358979323846);
 }
 
 void PathProgressCritic::reset()
@@ -176,6 +179,37 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     return true;
   };
 
+  auto matchPoseToPlanIndex = [&](const geometry_msgs::Pose2D& pose, unsigned int& index_out) {
+    bool found = false;
+    double best_distance = std::numeric_limits<double>::infinity();
+
+    for (unsigned int idx = 0; idx < plan.size(); ++idx)
+    {
+      double dx = plan[idx].x - pose.x;
+      double dy = plan[idx].y - pose.y;
+      double distance = hypot(dx, dy);
+      if (distance > plan_alignment_position_tolerance_)
+      {
+        continue;
+      }
+
+      double yaw_error = fabs(angles::shortest_angular_distance(plan[idx].theta, pose.theta));
+      if (yaw_error > plan_alignment_yaw_tolerance_)
+      {
+        continue;
+      }
+
+      if (distance < best_distance)
+      {
+        best_distance = distance;
+        index_out = idx;
+        found = true;
+      }
+    }
+
+    return found;
+  };
+
   // Reset state if a new global plan arrives (size, geometry, or frame changes)
   bool plan_changed = false;
   if (!have_last_plan_)
@@ -196,15 +230,93 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
 
   if (plan_changed)
   {
-    // Abort everything and start over
-    reached_intermediate_goals_.clear();
-    last_progress_index_ = 0;
-    holding_goal_ = false;
-    held_goal_index_ = 0;
-    held_goal_pose_.x = 0.0;
-    held_goal_pose_.y = 0.0;
-    held_goal_pose_.theta = 0.0;
-    initial_alignment_done_ = false;
+    bool state_preserved = false;
+    bool progress_match_found = false;
+    unsigned int restored_progress_index = 0u;
+    std::vector<std::pair<unsigned int, geometry_msgs::Pose2D>> preserved_reached;
+    preserved_reached.reserve(reached_intermediate_goals_.size());
+
+    unsigned int previous_progress_index = last_progress_index_;
+
+    for (const auto& reached_pose : reached_intermediate_goals_)
+    {
+      unsigned int matched_index = 0u;
+      if (matchPoseToPlanIndex(reached_pose, matched_index))
+      {
+        geometry_msgs::Pose2D preserved_pose = reached_pose;
+        preserved_pose.x = plan[matched_index].x;
+        preserved_pose.y = plan[matched_index].y;
+        preserved_reached.emplace_back(matched_index, preserved_pose);
+        state_preserved = true;
+        progress_match_found = true;
+        restored_progress_index = std::max(restored_progress_index, matched_index);
+      }
+    }
+
+    unsigned int held_match_index = 0u;
+    if (holding_goal_)
+    {
+      if (matchPoseToPlanIndex(held_goal_pose_, held_match_index))
+      {
+        state_preserved = true;
+        held_goal_index_ = held_match_index;
+        held_goal_pose_.x = plan[held_match_index].x;
+        held_goal_pose_.y = plan[held_match_index].y;
+      }
+      else
+      {
+        holding_goal_ = false;
+        held_goal_index_ = 0u;
+        held_goal_pose_.x = 0.0;
+        held_goal_pose_.y = 0.0;
+        held_goal_pose_.theta = 0.0;
+      }
+    }
+
+    unsigned int robot_match_index = 0u;
+    if (matchPoseToPlanIndex(robot_pose, robot_match_index))
+    {
+      state_preserved = true;
+      progress_match_found = true;
+      restored_progress_index = std::max(restored_progress_index, robot_match_index);
+    }
+
+    if (state_preserved)
+    {
+      if (progress_match_found)
+      {
+        std::sort(preserved_reached.begin(), preserved_reached.end(),
+                  [](const std::pair<unsigned int, geometry_msgs::Pose2D>& lhs,
+                     const std::pair<unsigned int, geometry_msgs::Pose2D>& rhs) {
+                    return lhs.first < rhs.first;
+                  });
+        reached_intermediate_goals_.clear();
+        reached_intermediate_goals_.reserve(preserved_reached.size());
+        for (const auto& entry : preserved_reached)
+        {
+          reached_intermediate_goals_.push_back(entry.second);
+        }
+        unsigned int plan_last_index = plan.empty() ? 0u : static_cast<unsigned int>(plan.size() - 1);
+        last_progress_index_ = std::min(restored_progress_index, plan_last_index);
+      }
+      else
+      {
+        reached_intermediate_goals_.clear();
+        unsigned int plan_last_index = plan.empty() ? 0u : static_cast<unsigned int>(plan.size() - 1);
+        last_progress_index_ = std::min(previous_progress_index, plan_last_index);
+      }
+    }
+    else
+    {
+      reached_intermediate_goals_.clear();
+      last_progress_index_ = 0u;
+      holding_goal_ = false;
+      held_goal_index_ = 0u;
+      held_goal_pose_.x = 0.0;
+      held_goal_pose_.y = 0.0;
+      held_goal_pose_.theta = 0.0;
+      initial_alignment_done_ = false;
+    }
 
     have_last_plan_ = true;
   }
