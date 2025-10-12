@@ -154,34 +154,6 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
 
   const unsigned int plan_last_index = static_cast<unsigned int>(plan.size() - 1);
 
-  if (!initial_alignment_done_)
-  {
-    double desired_initial_yaw = plan.front().theta;
-    bool reached_alignment = isGoalReached(robot_pose, plan.front(), desired_initial_yaw);
-    if (!reached_alignment)
-    {
-      unsigned int initial_x = 0;
-      unsigned int initial_y = 0;
-      if (worldToGridBounded(info, plan.front().x, plan.front().y, initial_x, initial_y))
-      {
-        x = initial_x;
-        y = initial_y;
-        desired_angle = desired_initial_yaw;
-        held_goal_pose_ = plan.front();
-        held_goal_pose_.theta = desired_initial_yaw;
-        held_goal_index_ = 0;
-        holding_goal_ = true;
-        publishIntermediateGoal(held_goal_pose_, held_goal_pose_.theta);
-        ROS_DEBUG_NAMED("PathProgressCritic",
-                        "Holding initial alignment goal at plan index 0 (x: %.3f, y: %.3f, yaw: %.3f rad)",
-                        held_goal_pose_.x, held_goal_pose_.y, held_goal_pose_.theta);
-        return true;
-      }
-    }
-
-    initial_alignment_done_ = true;
-  }
-
   if (holding_goal_ && held_goal_index_ >= plan.size())
   {
     ROS_DEBUG_NAMED("PathProgressCritic", "Held goal index %u is out of range for current plan of size %zu. Releasing hold.",
@@ -375,6 +347,34 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       intermediate_goal_tolerance_pub_.publish(marker_array);
     }
   };
+
+  if (!initial_alignment_done_)
+  {
+    double desired_initial_yaw = plan.front().theta;
+    bool reached_alignment = isGoalReached(robot_pose, plan.front(), desired_initial_yaw);
+    if (!reached_alignment)
+    {
+      unsigned int initial_x = 0;
+      unsigned int initial_y = 0;
+      if (worldToGridBounded(info, plan.front().x, plan.front().y, initial_x, initial_y))
+      {
+        x = initial_x;
+        y = initial_y;
+        desired_angle = desired_initial_yaw;
+        held_goal_pose_ = plan.front();
+        held_goal_pose_.theta = desired_initial_yaw;
+        held_goal_index_ = 0;
+        holding_goal_ = true;
+        publishIntermediateGoal(held_goal_pose_, held_goal_pose_.theta);
+        ROS_DEBUG_NAMED("PathProgressCritic",
+                        "Holding initial alignment goal at plan index 0 (x: %.3f, y: %.3f, yaw: %.3f rad)",
+                        held_goal_pose_.x, held_goal_pose_.y, held_goal_pose_.theta);
+        return true;
+      }
+    }
+
+    initial_alignment_done_ = true;
+  }
 
   std::vector<unsigned int> articulation_indices = collectArticulationIndices(1u, plan_last_index);
   publishArticulationPointCloud(articulation_indices);
