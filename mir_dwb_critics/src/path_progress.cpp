@@ -225,6 +225,10 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     articulation_scan_start = plan_last_index;
   }
 
+  auto articulationSearchStart = [&](unsigned int candidate_start) {
+    return std::max({candidate_start, articulation_scan_start, 1u});
+  };
+
   auto publishIntermediateGoal = [&](const geometry_msgs::Pose2D& goal_pose, double goal_yaw) {
     if (!intermediate_goal_pub_)
     {
@@ -295,7 +299,9 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       unsigned int articulation_index = 0;
       double articulation_yaw = candidate_yaw;
       bool articulation_has_forward = candidate_has_forward;
-      if (findNextArticulation(plan, articulation_scan_start, candidate_index, last_valid_index,
+      unsigned int articulation_start_index = articulationSearchStart(search_index);
+      if (articulation_start_index <= candidate_index &&
+          findNextArticulation(plan, articulation_start_index, candidate_index, last_valid_index,
                                articulation_index, articulation_yaw, articulation_has_forward))
       {
         candidate_index = articulation_index;
@@ -409,7 +415,9 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       unsigned int articulation_index = 0;
       double articulation_yaw = goal_yaw;
       bool articulation_has_forward = has_forward_direction;
-      if (findNextArticulation(plan, articulation_scan_start, goal_index, last_valid_index,
+      unsigned int articulation_start_index = articulationSearchStart(goal_index);
+      if (articulation_start_index <= goal_index &&
+          findNextArticulation(plan, articulation_start_index, goal_index, last_valid_index,
                                articulation_index, articulation_yaw, articulation_has_forward))
       {
         goal_index = articulation_index;
