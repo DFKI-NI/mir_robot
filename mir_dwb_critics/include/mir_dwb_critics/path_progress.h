@@ -40,6 +40,7 @@
 #include <visualization_msgs/MarkerArray.h>
 #include <ros/publisher.h>
 #include <ros/time.h>
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -65,11 +66,12 @@ public:
   double scoreTrajectory(const dwb_msgs::Trajectory2D& traj) override;
 
 protected:
-  bool getGoalPose(const geometry_msgs::Pose2D& robot_pose, const nav_2d_msgs::Path2D& global_plan, unsigned int& x,
-                   unsigned int& y, double& desired_angle);
+  bool getGoalPose(const geometry_msgs::Pose2D& robot_pose, const geometry_msgs::Pose2D& final_goal,
+                   const nav_2d_msgs::Path2D& global_plan, unsigned int& x, unsigned int& y, double& desired_angle);
 
   unsigned int getGoalIndex(const std::vector<geometry_msgs::Pose2D>& plan, unsigned int start_index,
-                            unsigned int last_valid_index, double& desired_angle, bool& has_forward_direction) const;
+                            unsigned int last_valid_index, bool plan_tail_is_final_goal, double& desired_angle,
+                            bool& has_forward_direction) const;
 
   bool findNextArticulation(const std::vector<geometry_msgs::Pose2D>& plan, unsigned int start_index,
                             unsigned int end_index, unsigned int last_valid_index, unsigned int& articulation_index,
@@ -101,10 +103,11 @@ protected:
   geometry_msgs::Pose2D last_plan_end_pose_;
   std::string last_plan_frame_id_;
   ros::Time last_plan_stamp_;
-  std::vector<geometry_msgs::Pose2D> last_plan_;
+  uint32_t last_plan_seq_;
+  geometry_msgs::Pose2D last_plan_start_pose_;
+  geometry_msgs::Pose2D last_final_goal_pose_;
+  bool have_last_goal_pose_;
 
-  double plan_position_epsilon_;
-  double plan_yaw_epsilon_;
   double plan_alignment_position_tolerance_;
   double plan_alignment_yaw_tolerance_;
 
