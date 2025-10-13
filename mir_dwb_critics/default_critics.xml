@@ -8,18 +8,6 @@
            base_class_type="dwb_local_planner::TrajectoryCritic">
       <description>Maintains advanced path following behavior with articulation handling and pose alignment logic.</description>
     </class>
-    <class name="mir_dwb_critics::PathFollowerCritic" type="mir_dwb_critics::PathFollowerCritic"
-           base_class_type="dwb_local_planner::TrajectoryCritic">
-      <description>Compatibility alias for the PathFollower critic.</description>
-    </class>
-    <class name="PathFollower" type="mir_dwb_critics::PathFollowerCritic"
-           base_class_type="dwb_local_planner::TrajectoryCritic">
-      <description>Compatibility alias for legacy configurations referencing PathFollower without a namespace.</description>
-    </class>
-    <class name="PathFollowerCritic" type="mir_dwb_critics::PathFollowerCritic"
-           base_class_type="dwb_local_planner::TrajectoryCritic">
-      <description>Compatibility alias for legacy configurations referencing PathFollowerCritic without a namespace.</description>
-    </class>
     <class type="mir_dwb_critics::PathAngleCritic" base_class_type="dwb_local_planner::TrajectoryCritic">
       <description>Scores trajectories based on the difference between the path's current angle and the trajectory's angle</description>
     </class>

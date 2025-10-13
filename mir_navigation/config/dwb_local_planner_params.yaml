@@ -68,7 +68,7 @@ DWBLocalPlanner:
   PathFollower:
     scale: 24.0            # default: 24.0  mir: 48.0   - weighting for how much it should attempt to reach its goal
     heading_scale: 0.1
-    class: 'mir_dwb_critics::PathFollowerCritic'
+    class: 'mir_dwb_critics::PathFollower'
     xy_local_goal_tolerance: 0.20
     yaw_local_goal_tolerance: 0.15
     angle_threshold: 0.78539816  # 45 degrees
