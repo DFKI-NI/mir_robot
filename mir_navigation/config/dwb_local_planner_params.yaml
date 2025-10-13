@@ -4,7 +4,7 @@ LocalPlannerAdapter:
 DWBLocalPlanner:
   # Robot configuration
   max_vel_x:  0.8
-  min_vel_x: -0.2
+  min_vel_x: -0.8 # NOTE: no preference over going forward
 
   max_vel_y: 0.0  # diff drive robot
   min_vel_y: 0.0  # diff drive robot
@@ -49,9 +49,10 @@ DWBLocalPlanner:
 
   # Critics (trajectory scoring)
   #default_critic_namespaces: [dwb_critics, mir_dwb_critics]
-  critics: [RotateToGoal, ObstacleFootprint, PathAlign, PathDistPruned, PathFollowerCritic]
+  # critics: [RotateToGoal, ObstacleFootprint, PathAlign, PathDistPruned, PathFollowerCritic]
+  critics: [PathFollowerCritic]
   RotateToGoal:
-    scale: 100.0
+    scale: 10.0
     # lookahead_time: -1.0
     # slowing_factor: 5.0
   ObstacleFootprint:
@@ -68,10 +69,10 @@ DWBLocalPlanner:
   PathFollowerCritic:
     scale: 24.0            # default: 24.0  mir: 48.0   - weighting for how much it should attempt to reach its goal
     heading_scale: 0.1
+    xy_local_goal_tolerance: 0.1
     class: 'mir_dwb_critics::PathFollowerCritic'
-    xy_local_goal_tolerance: 0.20
     yaw_local_goal_tolerance: 0.15
-    angle_threshold: 0.78539816  # 45 degrees
+    angle_threshold: 0.3   # 90 degrees, default: 0.78539816  -> 45 degrees
     articulation_angle_threshold: 1.3089969389957472  # 75 degrees
     enforce_forward_dot: true
     always_target_articulations: true
