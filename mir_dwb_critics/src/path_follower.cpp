@@ -1304,6 +1304,12 @@ bool PathFollowerCritic::computeOutgoingAngle(const std::vector<geometry_msgs::P
     return false;
   }
 
+  if (std::isfinite(plan[index].theta))
+  {
+    angle = plan[index].theta;
+    return true;
+  }
+
   for (unsigned int i = index + 1; i < plan.size(); ++i)
   {
     double dx = plan[i].x - plan[index].x;
