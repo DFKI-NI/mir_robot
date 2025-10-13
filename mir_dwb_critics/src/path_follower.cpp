@@ -180,6 +180,25 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
 
   std::vector<geometry_msgs::Pose2D> plan = nav_2d_utils::adjustPlanResolution(global_plan, info.resolution).poses;
 
+  auto nearestPlanOrientation = [&](const geometry_msgs::Pose2D& query_pose) {
+    double best_distance = std::numeric_limits<double>::infinity();
+    double selected_orientation = query_pose.theta;
+
+    for (const auto& pose : global_plan.poses)
+    {
+      double dx = pose.x - query_pose.x;
+      double dy = pose.y - query_pose.y;
+      double distance = hypot(dx, dy);
+      if (distance < best_distance)
+      {
+        best_distance = distance;
+        selected_orientation = pose.theta;
+      }
+    }
+
+    return selected_orientation;
+  };
+
   auto posesDiffer = [&](const geometry_msgs::Pose2D& a, const geometry_msgs::Pose2D& b, double position_tolerance,
                          double yaw_tolerance) {
     double dx = a.x - b.x;
@@ -305,6 +324,7 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
         geometry_msgs::Pose2D preserved_pose = reached_pose;
         preserved_pose.x = plan[matched_index].x;
         preserved_pose.y = plan[matched_index].y;
+        preserved_pose.theta = nearestPlanOrientation(preserved_pose);
         preserved_reached.emplace_back(matched_index, preserved_pose);
         state_preserved = true;
         progress_match_found = true;
@@ -321,6 +341,7 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
         held_goal_index_ = held_match_index;
         held_goal_pose_.x = plan[held_match_index].x;
         held_goal_pose_.y = plan[held_match_index].y;
+        held_goal_pose_.theta = nearestPlanOrientation(held_goal_pose_);
       }
       else
       {
@@ -337,10 +358,10 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     {
       state_preserved = true;
 
-      double match_goal_yaw = plan[robot_match_index].theta;
+      double match_goal_yaw = nearestPlanOrientation(plan[robot_match_index]);
       if (!computeOutgoingAngle(plan, robot_match_index, match_goal_yaw))
       {
-        match_goal_yaw = plan[robot_match_index].theta;
+        match_goal_yaw = nearestPlanOrientation(plan[robot_match_index]);
       }
 
       bool match_is_final_index = ((robot_match_index + 1u) >= plan.size()) && final_goal_in_plan_window;
@@ -795,7 +816,7 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       {
         last_progress_index_ = std::max(last_progress_index_, idx);
         geometry_msgs::Pose2D reached_pose = plan[idx];
-        reached_pose.theta = articulation_goal_yaw;
+        reached_pose.theta = nearestPlanOrientation(reached_pose);
         if (reached_intermediate_goals_.empty() ||
             nav_2d_utils::poseDistance(reached_intermediate_goals_.back(), reached_pose) > 1e-6 ||
             fabs(angles::shortest_angular_distance(reached_intermediate_goals_.back().theta, reached_pose.theta)) >
@@ -915,7 +936,7 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     {
       last_progress_index_ = std::max(last_progress_index_, candidate_index);
       geometry_msgs::Pose2D reached_pose = plan[candidate_index];
-      reached_pose.theta = candidate_yaw;
+      reached_pose.theta = nearestPlanOrientation(reached_pose);
       if (reached_intermediate_goals_.empty() ||
           nav_2d_utils::poseDistance(reached_intermediate_goals_.back(), reached_pose) > 1e-6 ||
           fabs(angles::shortest_angular_distance(reached_intermediate_goals_.back().theta, reached_pose.theta)) > 1e-6)
@@ -1081,7 +1102,10 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   ROS_ASSERT(goal_index <= last_valid_index);
 
   worldToGridBounded(info, plan[goal_index].x, plan[goal_index].y, x, y);
-  desired_angle = goal_yaw;
+  geometry_msgs::Pose2D goal_pose = plan[goal_index];
+  double goal_plan_yaw = nearestPlanOrientation(goal_pose);
+  desired_angle = goal_plan_yaw;
+  goal_yaw = goal_plan_yaw;
 
   bool same_as_held = false;
   if (holding_goal_)
@@ -1096,15 +1120,15 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
 
   if (!same_as_held)
   {
-    held_goal_pose_ = plan[goal_index];
-    held_goal_pose_.theta = goal_yaw;
+    held_goal_pose_ = goal_pose;
+    held_goal_pose_.theta = goal_plan_yaw;
     held_goal_index_ = goal_index;
   }
   else
   {
     held_goal_pose_.x = plan[goal_index].x;
     held_goal_pose_.y = plan[goal_index].y;
-    held_goal_pose_.theta = goal_yaw;
+    held_goal_pose_.theta = goal_plan_yaw;
   }
   holding_goal_ = true;
 
@@ -1302,12 +1326,6 @@ bool PathFollowerCritic::computeOutgoingAngle(const std::vector<geometry_msgs::P
   if (plan.empty() || index >= plan.size())
   {
     return false;
-  }
-
-  if (std::isfinite(plan[index].theta))
-  {
-    angle = plan[index].theta;
-    return true;
   }
 
   for (unsigned int i = index + 1; i < plan.size(); ++i)
