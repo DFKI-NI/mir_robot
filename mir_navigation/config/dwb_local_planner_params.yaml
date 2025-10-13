@@ -49,7 +49,7 @@ DWBLocalPlanner:
 
   # Critics (trajectory scoring)
   #default_critic_namespaces: [dwb_critics, mir_dwb_critics]
-  critics: [RotateToGoal, ObstacleFootprint, PathAlign, PathDistPruned, PathProgress]
+  critics: [RotateToGoal, ObstacleFootprint, PathAlign, PathDistPruned, PathFollower]
   RotateToGoal:
     scale: 100.0
     # lookahead_time: -1.0
@@ -65,12 +65,20 @@ DWBLocalPlanner:
   PathDistPruned:
     scale: 32.0            # default: 32.0  mir: 32.0   - weighting for how much it should stick to the global path plan
     class: 'mir_dwb_critics::PathDistPruned'
-  PathProgress:
+  PathFollower:
     scale: 24.0            # default: 24.0  mir: 48.0   - weighting for how much it should attempt to reach its goal
     heading_scale: 0.1
-    class: 'mir_dwb_critics::PathProgress'
+    class: 'mir_dwb_critics::PathFollower'
     xy_local_goal_tolerance: 0.20
+    yaw_local_goal_tolerance: 0.15
     angle_threshold: 0.78539816  # 45 degrees
+    articulation_angle_threshold: 1.3089969389957472  # 75 degrees
+    enforce_forward_dot: true
+    always_target_articulations: true
+    plan_alignment_position_tolerance: 0.15
+    plan_alignment_yaw_tolerance: 3.14159265358979323846
+    xy_goal_tolerance: 0.20
+    yaw_goal_tolerance: 0.15
 
 
   # Prune already passed poses from plan
