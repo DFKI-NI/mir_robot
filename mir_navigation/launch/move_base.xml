@@ -24,7 +24,7 @@
     </node>
 
     <node pkg="mir_navigation" type="global_plan_debug_viz.py" name="global_plan_debug_viz" output="screen">
-        <param name="global_plan_topic" value="move_base_node/SBPLLatticePlanner/plan" />
+        <param name="global_plan_topic" value="move_base_node/DWBLocalPlanner/transformed_global_plan" />
         <param name="marker_frame" value="$(arg prefix)base_link" />
     </node>
 </launch>
