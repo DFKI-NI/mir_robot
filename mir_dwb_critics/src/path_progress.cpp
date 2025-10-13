@@ -55,7 +55,7 @@ bool PathProgressCritic::prepare(const geometry_msgs::Pose2D& pose, const nav_2d
   dwb_critics::MapGridCritic::reset();
 
   unsigned int local_goal_x, local_goal_y;
-  if (!getGoalPose(pose, global_plan, local_goal_x, local_goal_y, desired_angle_))
+  if (!getGoalPose(pose, goal, global_plan, local_goal_x, local_goal_y, desired_angle_))
   {
     return false;
   }
@@ -117,9 +117,14 @@ void PathProgressCritic::onInit()
   last_plan_end_pose_.theta = 0.0;
   last_plan_frame_id_.clear();
   last_plan_stamp_ = ros::Time(0);
-  last_plan_.clear();
-  plan_position_epsilon_ = 1e-4;
-  plan_yaw_epsilon_ = 1e-4;
+  last_plan_seq_ = 0u;
+  last_plan_start_pose_.x = 0.0;
+  last_plan_start_pose_.y = 0.0;
+  last_plan_start_pose_.theta = 0.0;
+  last_final_goal_pose_.x = 0.0;
+  last_final_goal_pose_.y = 0.0;
+  last_final_goal_pose_.theta = 0.0;
+  have_last_goal_pose_ = false;
   critic_nh_.param("plan_alignment_position_tolerance", plan_alignment_position_tolerance_, 0.15);
   critic_nh_.param("plan_alignment_yaw_tolerance", plan_alignment_yaw_tolerance_, 3.14159265358979323846);
 }
@@ -134,6 +139,21 @@ void PathProgressCritic::reset()
   held_goal_pose_.y = 0.0;
   held_goal_pose_.theta = 0.0;
   initial_alignment_done_ = false;
+  have_last_plan_ = false;
+  last_plan_size_ = 0;
+  last_plan_end_pose_.x = 0.0;
+  last_plan_end_pose_.y = 0.0;
+  last_plan_end_pose_.theta = 0.0;
+  last_plan_frame_id_.clear();
+  last_plan_stamp_ = ros::Time(0);
+  last_plan_seq_ = 0u;
+  last_plan_start_pose_.x = 0.0;
+  last_plan_start_pose_.y = 0.0;
+  last_plan_start_pose_.theta = 0.0;
+  last_final_goal_pose_.x = 0.0;
+  last_final_goal_pose_.y = 0.0;
+  last_final_goal_pose_.theta = 0.0;
+  have_last_goal_pose_ = false;
 }
 
 double PathProgressCritic::scoreTrajectory(const dwb_msgs::Trajectory2D& traj)
@@ -145,8 +165,9 @@ double PathProgressCritic::scoreTrajectory(const dwb_msgs::Trajectory2D& traj)
   return position_score + heading_scale_ * heading_score;
 }
 
-bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, const nav_2d_msgs::Path2D& global_plan,
-                                     unsigned int& x, unsigned int& y, double& desired_angle)
+bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, const geometry_msgs::Pose2D& final_goal,
+                                     const nav_2d_msgs::Path2D& global_plan, unsigned int& x, unsigned int& y,
+                                     double& desired_angle)
 {
   const nav_core2::Costmap& costmap = *costmap_;
   const nav_grid::NavGridInfo& info = costmap.getInfo();
@@ -159,44 +180,31 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
 
   std::vector<geometry_msgs::Pose2D> plan = nav_2d_utils::adjustPlanResolution(global_plan, info.resolution).poses;
 
-  auto planPoseMatchesFinalGoal = [&](const geometry_msgs::Pose2D& plan_pose) {
-    double dx = plan_pose.x - goal.x;
-    double dy = plan_pose.y - goal.y;
+  auto posesDiffer = [&](const geometry_msgs::Pose2D& a, const geometry_msgs::Pose2D& b, double position_tolerance,
+                         double yaw_tolerance) {
+    double dx = a.x - b.x;
+    double dy = a.y - b.y;
     double distance = hypot(dx, dy);
-    if (distance > plan_alignment_position_tolerance_)
+    if (distance > position_tolerance)
     {
-      return false;
+      return true;
     }
 
-    double yaw_error = fabs(angles::shortest_angular_distance(plan_pose.theta, goal.theta));
-    return yaw_error <= plan_alignment_yaw_tolerance_;
+    double yaw_error = fabs(angles::shortest_angular_distance(a.theta, b.theta));
+    return yaw_error > yaw_tolerance;
   };
 
-  bool final_goal_in_plan_window = false;
-  if (!plan.empty())
+  if (plan.empty())
   {
-    final_goal_in_plan_window = planPoseMatchesFinalGoal(plan.back());
+    ROS_ERROR_NAMED("PathProgressCritic", "The adjusted global plan was empty.");
+    return false;
   }
 
-  auto plansEqual = [&](const std::vector<geometry_msgs::Pose2D>& a,
-                        const std::vector<geometry_msgs::Pose2D>& b) {
-    if (a.size() != b.size())
-    {
-      return false;
-    }
-
-    for (size_t idx = 0; idx < a.size(); ++idx)
-    {
-      if (fabs(a[idx].x - b[idx].x) > plan_position_epsilon_ ||
-          fabs(a[idx].y - b[idx].y) > plan_position_epsilon_ ||
-          fabs(angles::shortest_angular_distance(a[idx].theta, b[idx].theta)) > plan_yaw_epsilon_)
-      {
-        return false;
-      }
-    }
-
-    return true;
+  auto planPoseMatchesFinalGoal = [&](const geometry_msgs::Pose2D& plan_pose) {
+    return !posesDiffer(plan_pose, final_goal, plan_alignment_position_tolerance_, plan_alignment_yaw_tolerance_);
   };
+
+  bool final_goal_in_plan_window = planPoseMatchesFinalGoal(plan.back());
 
   auto matchPoseToPlanIndex = [&](const geometry_msgs::Pose2D& pose, unsigned int& index_out) {
     bool found = false;
@@ -229,22 +237,54 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     return found;
   };
 
-  // Reset state if a new global plan arrives (size, geometry, or frame changes)
+  // Reset state if a new global plan arrives (detected via metadata changes or major window shifts)
   bool plan_changed = false;
-  if (!have_last_plan_)
+  geometry_msgs::Pose2D plan_start_pose = plan.front();
+
+  auto headerStampChanged = [&]() {
+    if (last_plan_stamp_.isZero() || global_plan.header.stamp.isZero())
+    {
+      return false;
+    }
+    return last_plan_stamp_ != global_plan.header.stamp;
+  };
+
+  auto headerSeqChanged = [&]() {
+    if (!have_last_plan_)
+    {
+      return false;
+    }
+    return last_plan_seq_ != global_plan.header.seq;
+  };
+
+  auto goalPoseChanged = [&]() {
+    if (!have_last_goal_pose_)
+    {
+      return true;
+    }
+    return posesDiffer(final_goal, last_final_goal_pose_, plan_alignment_position_tolerance_,
+                       plan_alignment_yaw_tolerance_);
+  };
+
+  auto planStartChanged = [&]() {
+    if (!have_last_plan_)
+    {
+      return true;
+    }
+    // Allow the cropped window to slide by a generous distance without counting as a full plan change.
+    double position_tolerance = std::max(plan_alignment_position_tolerance_ * 4.0, plan_alignment_position_tolerance_);
+    return posesDiffer(plan_start_pose, last_plan_start_pose_, position_tolerance, plan_alignment_yaw_tolerance_);
+  };
+
+  if (!have_last_plan_ || global_plan.header.frame_id != last_plan_frame_id_ || headerStampChanged() ||
+      headerSeqChanged() ||
+      goalPoseChanged())
   {
     plan_changed = true;
   }
-  else
+  else if (planStartChanged())
   {
-    if (global_plan.header.frame_id != last_plan_frame_id_)
-    {
-      plan_changed = true;
-    }
-    else if (!plansEqual(plan, last_plan_))
-    {
-      plan_changed = true;
-    }
+    plan_changed = true;
   }
 
   if (plan_changed)
@@ -365,14 +405,11 @@ bool PathProgressCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   last_plan_end_pose_ = plan.back();
   last_plan_frame_id_ = global_plan.header.frame_id;
   last_plan_stamp_ = global_plan.header.stamp;
-  last_plan_ = plan;
+  last_plan_seq_ = global_plan.header.seq;
+  last_plan_start_pose_ = plan_start_pose;
+  last_final_goal_pose_ = final_goal;
+  have_last_goal_pose_ = true;
 
-
-  if (plan.empty())
-  {
-    ROS_ERROR_NAMED("PathProgressCritic", "The adjusted global plan was empty.");
-    return false;
-  }
 
   unsigned int plan_last_index = static_cast<unsigned int>(plan.size() - 1);
 
