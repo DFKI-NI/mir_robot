@@ -49,7 +49,7 @@ DWBLocalPlanner:
 
   # Critics (trajectory scoring)
   #default_critic_namespaces: [dwb_critics, mir_dwb_critics]
-  critics: [RotateToGoal, ObstacleFootprint, PathAlign, PathDistPruned, PathFollower]
+  critics: [RotateToGoal, ObstacleFootprint, PathAlign, PathDistPruned, PathFollowerCritic]
   RotateToGoal:
     scale: 100.0
     # lookahead_time: -1.0
@@ -65,10 +65,10 @@ DWBLocalPlanner:
   PathDistPruned:
     scale: 32.0            # default: 32.0  mir: 32.0   - weighting for how much it should stick to the global path plan
     class: 'mir_dwb_critics::PathDistPruned'
-  PathFollower:
+  PathFollowerCritic:
     scale: 24.0            # default: 24.0  mir: 48.0   - weighting for how much it should attempt to reach its goal
     heading_scale: 0.1
-    class: 'mir_dwb_critics::PathFollower'
+    class: 'mir_dwb_critics::PathFollowerCritic'
     xy_local_goal_tolerance: 0.20
     yaw_local_goal_tolerance: 0.15
     angle_threshold: 0.78539816  # 45 degrees

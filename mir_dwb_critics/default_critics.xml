@@ -4,7 +4,7 @@
            base_class_type="dwb_local_planner::TrajectoryCritic">
       <description>Scores trajectories based on how far along the global path they end up.</description>
     </class>
-    <class name="mir_dwb_critics::PathFollower" type="mir_dwb_critics::PathFollowerCritic"
+    <class name="mir_dwb_critics::PathFollowerCritic" type="mir_dwb_critics::PathFollowerCritic"
            base_class_type="dwb_local_planner::TrajectoryCritic">
       <description>Maintains advanced path following behavior with articulation handling and pose alignment logic.</description>
     </class>
