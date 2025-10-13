@@ -78,6 +78,9 @@ protected:
   bool computeOutgoingAngle(const std::vector<geometry_msgs::Pose2D>& plan, unsigned int index,
                             double& angle) const;
 
+  bool isPoseReached(const geometry_msgs::Pose2D& robot_pose, const geometry_msgs::Pose2D& goal_pose,
+                     double goal_yaw, double xy_tolerance, double yaw_tolerance) const;
+
   bool isGoalReached(const geometry_msgs::Pose2D& robot_pose, const geometry_msgs::Pose2D& goal_pose,
                      double goal_yaw) const;
 
@@ -98,6 +101,12 @@ protected:
   geometry_msgs::Pose2D last_plan_end_pose_;
   std::string last_plan_frame_id_;
   ros::Time last_plan_stamp_;
+  std::vector<geometry_msgs::Pose2D> last_plan_;
+
+  double plan_position_epsilon_;
+  double plan_yaw_epsilon_;
+  double plan_alignment_position_tolerance_;
+  double plan_alignment_yaw_tolerance_;
 
   unsigned int last_progress_index_;
   bool holding_goal_;
