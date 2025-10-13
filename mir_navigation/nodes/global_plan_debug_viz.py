@@ -28,6 +28,19 @@ class GlobalPlanDebugViz:
             'a': rospy.get_param('~marker_color_a', 1.0),
         }
 
+        skip_param = rospy.get_param('~number_of_poses_to_skip', 7)
+        try:
+            skip_param = int(skip_param)
+        except (TypeError, ValueError):
+            rospy.logwarn("number_of_poses_to_skip must be an integer, got %s. Using 0 (no skipping).", skip_param)
+            skip_param = 0
+
+        if skip_param < 0:
+            rospy.logwarn("number_of_poses_to_skip cannot be negative. Using 0 (no skipping).")
+            skip_param = 0
+
+        self._poses_to_skip = skip_param
+
         self._pose_array_pub = rospy.Publisher(pose_array_topic, PoseArray, queue_size=1, latch=True)
         self._marker_pub = rospy.Publisher(marker_topic, Marker, queue_size=1, latch=True)
         self._plan_sub = rospy.Subscriber(plan_topic, Path, self._plan_callback, queue_size=1)
@@ -42,7 +55,12 @@ class GlobalPlanDebugViz:
     def _publish_pose_array(self, path_msg: Path):
         pose_array = PoseArray()
         pose_array.header = path_msg.header
-        pose_array.poses = [pose.pose for pose in path_msg.poses]
+
+        if self._poses_to_skip <= 0:
+            pose_array.poses = [pose.pose for pose in path_msg.poses]
+        else:
+            pose_array.poses = [pose.pose for idx, pose in enumerate(path_msg.poses) if idx % self._poses_to_skip == 0]
+
         self._pose_array_pub.publish(pose_array)
 
     def _publish_counter_marker(self):
