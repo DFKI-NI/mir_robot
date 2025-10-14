@@ -1155,7 +1155,28 @@ unsigned int PathFollowerCritic::getGoalIndex(const std::vector<geometry_msgs::P
   unsigned int clamped_start = std::min(start_index, static_cast<unsigned int>(plan.size() - 1));
   unsigned int clamped_last = std::min(last_valid_index, static_cast<unsigned int>(plan.size() - 1));
   unsigned int max_spacing = intermediate_goal_spacing_;
-  bool spacing_limit_enabled = max_spacing > 0u;
+  bool spacing_limit_enabled = true;
+  unsigned int loop_last = clamped_last;
+  if (max_spacing >= std::numeric_limits<unsigned int>::max())
+  {
+    spacing_limit_enabled = false;
+  }
+  else
+  {
+    unsigned int allowed_offset = max_spacing + 1u;
+    if (allowed_offset == 0u)
+    {
+      spacing_limit_enabled = false;
+    }
+    else if (clamped_start <= std::numeric_limits<unsigned int>::max() - allowed_offset)
+    {
+      unsigned int spacing_limit_index = clamped_start + allowed_offset;
+      if (spacing_limit_index < loop_last)
+      {
+        loop_last = spacing_limit_index;
+      }
+    }
+  }
   const double orientation_progress_epsilon = 1e-3;
 
   if (clamped_start >= clamped_last)
@@ -1169,6 +1190,19 @@ unsigned int PathFollowerCritic::getGoalIndex(const std::vector<geometry_msgs::P
     return clamped_start;
   }
 
+  if (spacing_limit_enabled)
+  {
+    unsigned int articulation_index = 0u;
+    double articulation_yaw = 0.0;
+    bool articulation_has_forward = false;
+    if (findNextArticulation(plan, clamped_start, clamped_last, last_valid_index, articulation_index, articulation_yaw,
+                             articulation_has_forward) &&
+        articulation_index > clamped_start)
+    {
+      loop_last = std::min(loop_last, articulation_index);
+    }
+  }
+
   unsigned int goal_index = clamped_start;
   double base_angle = 0.0;
   bool base_angle_set = false;
@@ -1176,7 +1210,8 @@ unsigned int PathFollowerCritic::getGoalIndex(const std::vector<geometry_msgs::P
   bool previous_segment_angle_set = false;
   unsigned int previous_segment_end_index = clamped_start;
 
-  for (unsigned int i = clamped_start + 1; i <= clamped_last; ++i)
+  unsigned int loop_end = spacing_limit_enabled ? std::min(loop_last, clamped_last) : clamped_last;
+  for (unsigned int i = clamped_start + 1; i <= loop_end; ++i)
   {
     double direction_x = plan[i].x - plan[i - 1].x;
     double direction_y = plan[i].y - plan[i - 1].y;
@@ -1191,17 +1226,8 @@ unsigned int PathFollowerCritic::getGoalIndex(const std::vector<geometry_msgs::P
         break;
       }
 
-      if (spacing_limit_enabled && (i - clamped_start) > max_spacing)
-      {
-        break;
-      }
-
+      goal_index = i;
       continue;
-    }
-
-    if (spacing_limit_enabled && (i - clamped_start) > max_spacing)
-    {
-      break;
     }
 
     double current_angle = atan2(direction_y, direction_x);
@@ -1232,6 +1258,11 @@ unsigned int PathFollowerCritic::getGoalIndex(const std::vector<geometry_msgs::P
     previous_segment_angle = current_angle;
     previous_segment_end_index = i;
     previous_segment_angle_set = true;
+  }
+
+  if (goal_index == clamped_start && loop_end > clamped_start)
+  {
+    goal_index = loop_end;
   }
 
   desired_angle = plan[goal_index].theta;
