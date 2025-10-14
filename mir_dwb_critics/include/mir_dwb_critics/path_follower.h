@@ -94,7 +94,7 @@ protected:
   double heading_scale_;
   bool enforce_forward_dot_;
   bool always_target_articulations_;
-  double intermediate_goal_spacing_;
+  unsigned int intermediate_goal_spacing_;
   bool initial_alignment_done_;
 
   // Plan change detection to reset internal state on new global plans

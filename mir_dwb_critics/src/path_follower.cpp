@@ -88,14 +88,16 @@ void PathFollowerCritic::onInit()
   critic_nh_.param("heading_scale", heading_scale_, 1.0);
   critic_nh_.param("enforce_forward_dot", enforce_forward_dot_, true);
   critic_nh_.param("always_target_articulations", always_target_articulations_, true);
-  critic_nh_.param("intermediate_goal_spacing", intermediate_goal_spacing_, 0.5);
-  if (intermediate_goal_spacing_ < 0.0)
+  int intermediate_goal_spacing_param = 0;
+  critic_nh_.param("intermediate_goal_spacing", intermediate_goal_spacing_param, 0);
+  if (intermediate_goal_spacing_param < 0)
   {
     ROS_WARN_NAMED("PathFollowerCritic",
-                   "Parameter intermediate_goal_spacing (%.3f) is negative. Clamping to 0.0 to disable spacing limit.",
-                   intermediate_goal_spacing_);
-    intermediate_goal_spacing_ = 0.0;
+                   "Parameter intermediate_goal_spacing (%d) is negative. Clamping to 0 to disable spacing limit.",
+                   intermediate_goal_spacing_param);
+    intermediate_goal_spacing_param = 0;
   }
+  intermediate_goal_spacing_ = static_cast<unsigned int>(intermediate_goal_spacing_param);
   initial_alignment_done_ = false;
 
   intermediate_goal_pub_ = critic_nh_.advertise<geometry_msgs::PoseStamped>("intermediate_goal", 1);
@@ -1152,9 +1154,9 @@ unsigned int PathFollowerCritic::getGoalIndex(const std::vector<geometry_msgs::P
   const double epsilon = 1e-9;
   unsigned int clamped_start = std::min(start_index, static_cast<unsigned int>(plan.size() - 1));
   unsigned int clamped_last = std::min(last_valid_index, static_cast<unsigned int>(plan.size() - 1));
-  double max_spacing = intermediate_goal_spacing_;
-  bool spacing_limit_enabled = max_spacing > 0.0;
-  double accumulated_distance = 0.0;
+  unsigned int max_spacing = intermediate_goal_spacing_;
+  bool spacing_limit_enabled = max_spacing > 0u;
+  const double orientation_progress_epsilon = 1e-3;
 
   if (clamped_start >= clamped_last)
   {
@@ -1181,11 +1183,23 @@ unsigned int PathFollowerCritic::getGoalIndex(const std::vector<geometry_msgs::P
     double length = hypot(direction_x, direction_y);
     if (length < epsilon)
     {
+      double orientation_delta =
+          fabs(angles::shortest_angular_distance(plan[goal_index].theta, plan[i].theta));
+      if (orientation_delta > orientation_progress_epsilon)
+      {
+        goal_index = i;
+        break;
+      }
+
+      if (spacing_limit_enabled && (i - clamped_start) > max_spacing)
+      {
+        break;
+      }
+
       continue;
     }
 
-    accumulated_distance += length;
-    if (spacing_limit_enabled && accumulated_distance > max_spacing)
+    if (spacing_limit_enabled && (i - clamped_start) > max_spacing)
     {
       break;
     }
