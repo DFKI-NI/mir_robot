@@ -77,8 +77,7 @@ protected:
                             unsigned int end_index, unsigned int last_valid_index, unsigned int& articulation_index,
                             double& articulation_yaw, bool& has_forward_direction) const;
 
-  bool computeOutgoingAngle(const std::vector<geometry_msgs::Pose2D>& plan, unsigned int index,
-                            double& angle) const;
+  bool hasForwardProgress(const std::vector<geometry_msgs::Pose2D>& plan, unsigned int index) const;
 
   bool isPoseReached(const geometry_msgs::Pose2D& robot_pose, const geometry_msgs::Pose2D& goal_pose,
                      double goal_yaw, double xy_tolerance, double yaw_tolerance) const;
@@ -95,6 +94,7 @@ protected:
   double heading_scale_;
   bool enforce_forward_dot_;
   bool always_target_articulations_;
+  unsigned int intermediate_goal_spacing_;
   bool initial_alignment_done_;
 
   // Plan change detection to reset internal state on new global plans

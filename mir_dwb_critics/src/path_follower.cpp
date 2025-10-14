@@ -88,6 +88,16 @@ void PathFollowerCritic::onInit()
   critic_nh_.param("heading_scale", heading_scale_, 1.0);
   critic_nh_.param("enforce_forward_dot", enforce_forward_dot_, true);
   critic_nh_.param("always_target_articulations", always_target_articulations_, true);
+  int intermediate_goal_spacing_param = 0;
+  critic_nh_.param("intermediate_goal_spacing", intermediate_goal_spacing_param, 0);
+  if (intermediate_goal_spacing_param < 0)
+  {
+    ROS_WARN_NAMED("PathFollowerCritic",
+                   "Parameter intermediate_goal_spacing (%d) is negative. Clamping to 0 to disable spacing limit.",
+                   intermediate_goal_spacing_param);
+    intermediate_goal_spacing_param = 0;
+  }
+  intermediate_goal_spacing_ = static_cast<unsigned int>(intermediate_goal_spacing_param);
   initial_alignment_done_ = false;
 
   intermediate_goal_pub_ = critic_nh_.advertise<geometry_msgs::PoseStamped>("intermediate_goal", 1);
@@ -179,6 +189,30 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   }
 
   std::vector<geometry_msgs::Pose2D> plan = nav_2d_utils::adjustPlanResolution(global_plan, info.resolution).poses;
+
+  auto nearestPlanOrientation = [&](const geometry_msgs::Pose2D& query_pose) {
+    double best_distance = std::numeric_limits<double>::infinity();
+    double selected_orientation = query_pose.theta;
+
+    for (const auto& pose : global_plan.poses)
+    {
+      double dx = pose.x - query_pose.x;
+      double dy = pose.y - query_pose.y;
+      double distance = hypot(dx, dy);
+      if (distance < best_distance)
+      {
+        best_distance = distance;
+        selected_orientation = pose.theta;
+      }
+    }
+
+    return selected_orientation;
+  };
+
+  for (auto& pose : plan)
+  {
+    pose.theta = nearestPlanOrientation(pose);
+  }
 
   auto posesDiffer = [&](const geometry_msgs::Pose2D& a, const geometry_msgs::Pose2D& b, double position_tolerance,
                          double yaw_tolerance) {
@@ -305,6 +339,7 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
         geometry_msgs::Pose2D preserved_pose = reached_pose;
         preserved_pose.x = plan[matched_index].x;
         preserved_pose.y = plan[matched_index].y;
+        preserved_pose.theta = nearestPlanOrientation(preserved_pose);
         preserved_reached.emplace_back(matched_index, preserved_pose);
         state_preserved = true;
         progress_match_found = true;
@@ -321,6 +356,7 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
         held_goal_index_ = held_match_index;
         held_goal_pose_.x = plan[held_match_index].x;
         held_goal_pose_.y = plan[held_match_index].y;
+        held_goal_pose_.theta = nearestPlanOrientation(held_goal_pose_);
       }
       else
       {
@@ -337,11 +373,7 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     {
       state_preserved = true;
 
-      double match_goal_yaw = plan[robot_match_index].theta;
-      if (!computeOutgoingAngle(plan, robot_match_index, match_goal_yaw))
-      {
-        match_goal_yaw = plan[robot_match_index].theta;
-      }
+      double match_goal_yaw = nearestPlanOrientation(plan[robot_match_index]);
 
       bool match_is_final_index = ((robot_match_index + 1u) >= plan.size()) && final_goal_in_plan_window;
       double match_yaw_tolerance = match_is_final_index ? final_goal_yaw_tolerance_ : yaw_local_goal_tolerance_;
@@ -633,15 +665,7 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
 
   if (!initial_alignment_done_)
   {
-    double desired_initial_yaw = plan.front().theta;
-    if (!plan.empty())
-    {
-      double outgoing_angle = desired_initial_yaw;
-      if (computeOutgoingAngle(plan, 0u, outgoing_angle))
-      {
-        desired_initial_yaw = outgoing_angle;
-      }
-    }
+    double desired_initial_yaw = nearestPlanOrientation(robot_pose);
 
     double yaw_error = fabs(angles::shortest_angular_distance(robot_pose.theta, desired_initial_yaw));
     if (yaw_error >= yaw_local_goal_tolerance_)
@@ -760,7 +784,7 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   };
 
   unsigned int goal_index = search_start_index;
-  double goal_yaw = plan[goal_index].theta;
+  double goal_yaw = nearestPlanOrientation(plan[goal_index]);
   bool has_forward_direction = false;
   bool found_goal = false;
   bool forced_skipped_articulation = false;
@@ -781,9 +805,9 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
         continue;
       }
 
-      double articulation_yaw = plan[idx].theta;
-      bool articulation_has_forward = computeOutgoingAngle(plan, idx, articulation_yaw);
-      double articulation_goal_yaw = articulation_has_forward ? articulation_yaw : plan[idx].theta;
+      double articulation_yaw = nearestPlanOrientation(plan[idx]);
+      bool articulation_has_forward = hasForwardProgress(plan, idx);
+      double articulation_goal_yaw = articulation_yaw;
 
       double articulation_xy_tolerance =
           (final_goal_in_plan_window && idx == plan_last_index) ? final_goal_xy_tolerance_ : xy_local_goal_tolerance_;
@@ -795,7 +819,7 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       {
         last_progress_index_ = std::max(last_progress_index_, idx);
         geometry_msgs::Pose2D reached_pose = plan[idx];
-        reached_pose.theta = articulation_goal_yaw;
+        reached_pose.theta = nearestPlanOrientation(reached_pose);
         if (reached_intermediate_goals_.empty() ||
             nav_2d_utils::poseDistance(reached_intermediate_goals_.back(), reached_pose) > 1e-6 ||
             fabs(angles::shortest_angular_distance(reached_intermediate_goals_.back().theta, reached_pose.theta)) >
@@ -830,11 +854,8 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       if (articulation_it != articulation_indices.end())
       {
         goal_index = *articulation_it;
-        has_forward_direction = computeOutgoingAngle(plan, goal_index, goal_yaw);
-        if (!has_forward_direction)
-        {
-          goal_yaw = plan[goal_index].theta;
-        }
+        has_forward_direction = hasForwardProgress(plan, goal_index);
+        goal_yaw = nearestPlanOrientation(plan[goal_index]);
 
         if (enforce_forward_dot_ && has_forward_direction)
         {
@@ -915,7 +936,7 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     {
       last_progress_index_ = std::max(last_progress_index_, candidate_index);
       geometry_msgs::Pose2D reached_pose = plan[candidate_index];
-      reached_pose.theta = candidate_yaw;
+      reached_pose.theta = nearestPlanOrientation(reached_pose);
       if (reached_intermediate_goals_.empty() ||
           nav_2d_utils::poseDistance(reached_intermediate_goals_.back(), reached_pose) > 1e-6 ||
           fabs(angles::shortest_angular_distance(reached_intermediate_goals_.back().theta, reached_pose.theta)) > 1e-6)
@@ -972,7 +993,8 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
 
     for (; goal_index <= last_valid_index; ++goal_index)
     {
-      has_forward_direction = computeOutgoingAngle(plan, goal_index, goal_yaw);
+      goal_yaw = nearestPlanOrientation(plan[goal_index]);
+      has_forward_direction = hasForwardProgress(plan, goal_index);
       if (has_forward_direction)
       {
         if (!enforce_forward_dot_)
@@ -992,7 +1014,6 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
         continue;
       }
 
-      goal_yaw = plan[goal_index].theta;
       if (!enforce_forward_dot_ || goal_index == last_valid_index)
       {
         selected_fallback = true;
@@ -1047,7 +1068,7 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
                         "Snapping intermediate goal index %u to final goal because distance %.3f <= threshold %.3f",
                         goal_index, distance_to_final, snap_threshold);
         goal_index = plan_last_index;
-        goal_yaw = plan[plan_last_index].theta;
+        goal_yaw = nearestPlanOrientation(plan[plan_last_index]);
         has_forward_direction = false;
         forced_skipped_articulation = false;
         has_next_articulation = false;
@@ -1073,7 +1094,7 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     if (final_distance <= final_goal_xy_tolerance_)
     {
       goal_index = plan_last_index;
-      goal_yaw = plan[plan_last_index].theta;
+      goal_yaw = nearestPlanOrientation(plan[plan_last_index]);
       has_forward_direction = false;
     }
   }
@@ -1081,7 +1102,10 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   ROS_ASSERT(goal_index <= last_valid_index);
 
   worldToGridBounded(info, plan[goal_index].x, plan[goal_index].y, x, y);
-  desired_angle = goal_yaw;
+  geometry_msgs::Pose2D goal_pose = plan[goal_index];
+  double goal_plan_yaw = nearestPlanOrientation(goal_pose);
+  desired_angle = goal_plan_yaw;
+  goal_yaw = goal_plan_yaw;
 
   bool same_as_held = false;
   if (holding_goal_)
@@ -1096,15 +1120,15 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
 
   if (!same_as_held)
   {
-    held_goal_pose_ = plan[goal_index];
-    held_goal_pose_.theta = goal_yaw;
+    held_goal_pose_ = goal_pose;
+    held_goal_pose_.theta = goal_plan_yaw;
     held_goal_index_ = goal_index;
   }
   else
   {
     held_goal_pose_.x = plan[goal_index].x;
     held_goal_pose_.y = plan[goal_index].y;
-    held_goal_pose_.theta = goal_yaw;
+    held_goal_pose_.theta = goal_plan_yaw;
   }
   holding_goal_ = true;
 
@@ -1130,15 +1154,53 @@ unsigned int PathFollowerCritic::getGoalIndex(const std::vector<geometry_msgs::P
   const double epsilon = 1e-9;
   unsigned int clamped_start = std::min(start_index, static_cast<unsigned int>(plan.size() - 1));
   unsigned int clamped_last = std::min(last_valid_index, static_cast<unsigned int>(plan.size() - 1));
+  unsigned int max_spacing = intermediate_goal_spacing_;
+  bool spacing_limit_enabled = true;
+  unsigned int loop_last = clamped_last;
+  if (max_spacing >= std::numeric_limits<unsigned int>::max())
+  {
+    spacing_limit_enabled = false;
+  }
+  else
+  {
+    unsigned int allowed_offset = max_spacing + 1u;
+    if (allowed_offset == 0u)
+    {
+      spacing_limit_enabled = false;
+    }
+    else if (clamped_start <= std::numeric_limits<unsigned int>::max() - allowed_offset)
+    {
+      unsigned int spacing_limit_index = clamped_start + allowed_offset;
+      if (spacing_limit_index < loop_last)
+      {
+        loop_last = spacing_limit_index;
+      }
+    }
+  }
+  const double orientation_progress_epsilon = 1e-3;
 
   if (clamped_start >= clamped_last)
   {
-    has_forward_direction = computeOutgoingAngle(plan, clamped_start, desired_angle);
-    if (!has_forward_direction)
+    desired_angle = plan[clamped_start].theta;
+    has_forward_direction = hasForwardProgress(plan, clamped_start);
+    if (plan_tail_is_final_goal && clamped_start == plan.size() - 1)
     {
-      desired_angle = plan[clamped_start].theta;
+      has_forward_direction = false;
     }
     return clamped_start;
+  }
+
+  if (spacing_limit_enabled)
+  {
+    unsigned int articulation_index = 0u;
+    double articulation_yaw = 0.0;
+    bool articulation_has_forward = false;
+    if (findNextArticulation(plan, clamped_start, clamped_last, last_valid_index, articulation_index, articulation_yaw,
+                             articulation_has_forward) &&
+        articulation_index > clamped_start)
+    {
+      loop_last = std::min(loop_last, articulation_index);
+    }
   }
 
   unsigned int goal_index = clamped_start;
@@ -1147,22 +1209,28 @@ unsigned int PathFollowerCritic::getGoalIndex(const std::vector<geometry_msgs::P
   double previous_segment_angle = 0.0;
   bool previous_segment_angle_set = false;
   unsigned int previous_segment_end_index = clamped_start;
-  double last_valid_segment_angle = 0.0;
-  bool last_valid_segment_angle_set = false;
 
-  for (unsigned int i = clamped_start + 1; i <= clamped_last; ++i)
+  unsigned int loop_end = spacing_limit_enabled ? std::min(loop_last, clamped_last) : clamped_last;
+  for (unsigned int i = clamped_start + 1; i <= loop_end; ++i)
   {
     double direction_x = plan[i].x - plan[i - 1].x;
     double direction_y = plan[i].y - plan[i - 1].y;
     double length = hypot(direction_x, direction_y);
     if (length < epsilon)
     {
+      double orientation_delta =
+          fabs(angles::shortest_angular_distance(plan[goal_index].theta, plan[i].theta));
+      if (orientation_delta > orientation_progress_epsilon)
+      {
+        goal_index = i;
+        break;
+      }
+
+      goal_index = i;
       continue;
     }
 
     double current_angle = atan2(direction_y, direction_x);
-    last_valid_segment_angle = current_angle;
-    last_valid_segment_angle_set = true;
 
     if (!base_angle_set)
     {
@@ -1192,28 +1260,13 @@ unsigned int PathFollowerCritic::getGoalIndex(const std::vector<geometry_msgs::P
     previous_segment_angle_set = true;
   }
 
-  has_forward_direction = computeOutgoingAngle(plan, goal_index, desired_angle);
-  if (!has_forward_direction)
+  if (goal_index == clamped_start && loop_end > clamped_start)
   {
-    if (plan_tail_is_final_goal && goal_index == plan.size() - 1)
-    {
-      desired_angle = plan[goal_index].theta;
-    }
-    else if (previous_segment_angle_set)
-    {
-      desired_angle = previous_segment_angle;
-      has_forward_direction = true;
-    }
-    else if (last_valid_segment_angle_set)
-    {
-      desired_angle = last_valid_segment_angle;
-      has_forward_direction = true;
-    }
-    else
-    {
-      desired_angle = plan[goal_index].theta;
-    }
+    goal_index = loop_end;
   }
+
+  desired_angle = plan[goal_index].theta;
+  has_forward_direction = hasForwardProgress(plan, goal_index);
 
   if (plan_tail_is_final_goal && goal_index == plan.size() - 1)
   {
@@ -1273,16 +1326,8 @@ bool PathFollowerCritic::findNextArticulation(const std::vector<geometry_msgs::P
       if (articulation_angle >= articulation_angle_threshold_)
       {
         articulation_index = previous_segment_end_index;
-        articulation_yaw = current_angle;
-        has_forward_direction = true;
-        if (!computeOutgoingAngle(plan, articulation_index, articulation_yaw))
-        {
-          has_forward_direction = false;
-          if (articulation_index == plan.size() - 1)
-          {
-            articulation_yaw = plan[articulation_index].theta;
-          }
-        }
+        articulation_yaw = plan[articulation_index].theta;
+        has_forward_direction = hasForwardProgress(plan, articulation_index);
         return true;
       }
     }
@@ -1295,8 +1340,7 @@ bool PathFollowerCritic::findNextArticulation(const std::vector<geometry_msgs::P
   return false;
 }
 
-bool PathFollowerCritic::computeOutgoingAngle(const std::vector<geometry_msgs::Pose2D>& plan, unsigned int index,
-                                              double& angle) const
+bool PathFollowerCritic::hasForwardProgress(const std::vector<geometry_msgs::Pose2D>& plan, unsigned int index) const
 {
   const double epsilon = 1e-9;
   if (plan.empty() || index >= plan.size())
@@ -1311,7 +1355,6 @@ bool PathFollowerCritic::computeOutgoingAngle(const std::vector<geometry_msgs::P
     double length = hypot(dx, dy);
     if (length >= epsilon)
     {
-      angle = atan2(dy, dx);
       return true;
     }
   }
