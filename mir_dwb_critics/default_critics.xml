@@ -1,12 +1,11 @@
 <class_libraries>
   <library path="lib/libmir_dwb_critics">
-    <class name="mir_dwb_critics::PathProgress" type="mir_dwb_critics::PathProgressCritic"
-           base_class_type="dwb_local_planner::TrajectoryCritic">
+    <class type="mir_dwb_critics::PathProgressCritic" base_class_type="dwb_local_planner::TrajectoryCritic">
       <description>Scores trajectories based on how far along the global path they end up.</description>
     </class>
     <class name="mir_dwb_critics::PathFollowerCritic" type="mir_dwb_critics::PathFollowerCritic"
            base_class_type="dwb_local_planner::TrajectoryCritic">
-      <description>Maintains advanced path following behavior with articulation handling and pose alignment logic.</description>
+      <description>Close path following behavior with articulation handling and pose alignment logic.</description>
     </class>
     <class type="mir_dwb_critics::PathAngleCritic" base_class_type="dwb_local_planner::TrajectoryCritic">
       <description>Scores trajectories based on the difference between the path's current angle and the trajectory's angle</description>
