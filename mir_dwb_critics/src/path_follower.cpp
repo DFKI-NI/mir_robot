@@ -311,8 +311,7 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   };
 
   if (!have_last_plan_ || global_plan.header.frame_id != last_plan_frame_id_ || headerStampChanged() ||
-      headerSeqChanged() ||
-      goalPoseChanged())
+      headerSeqChanged() || goalPoseChanged())
   {
     plan_changed = true;
   }
@@ -399,9 +398,7 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       {
         std::sort(preserved_reached.begin(), preserved_reached.end(),
                   [](const std::pair<unsigned int, geometry_msgs::Pose2D>& lhs,
-                     const std::pair<unsigned int, geometry_msgs::Pose2D>& rhs) {
-                    return lhs.first < rhs.first;
-                  });
+                     const std::pair<unsigned int, geometry_msgs::Pose2D>& rhs) { return lhs.first < rhs.first; });
         reached_intermediate_goals_.clear();
         reached_intermediate_goals_.reserve(preserved_reached.size());
         for (const auto& entry : preserved_reached)
@@ -442,7 +439,6 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   last_final_goal_pose_ = final_goal;
   have_last_goal_pose_ = true;
 
-
   unsigned int plan_last_index = static_cast<unsigned int>(plan.size() - 1);
 
   if (initial_alignment_done_ && plan.size() > 1 && last_progress_index_ > 0)
@@ -471,7 +467,8 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
 
   if (holding_goal_ && held_goal_index_ >= plan.size())
   {
-    ROS_DEBUG_NAMED("PathFollowerCritic", "Held goal index %u is out of range for current plan of size %zu. Releasing hold.",
+    ROS_DEBUG_NAMED("PathFollowerCritic",
+                    "Held goal index %u is out of range for current plan of size %zu. Releasing hold.",
                     held_goal_index_, plan.size());
     holding_goal_ = false;
     held_goal_index_ = 0;
@@ -568,8 +565,7 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       double current_angle = atan2(direction_y, direction_x);
       if (previous_segment_angle_set)
       {
-        double articulation_angle =
-            fabs(angles::shortest_angular_distance(previous_segment_angle, current_angle));
+        double articulation_angle = fabs(angles::shortest_angular_distance(previous_segment_angle, current_angle));
         if (articulation_angle >= articulation_angle_threshold_)
         {
           if (articulation_indices.empty() || articulation_indices.back() != previous_segment_end_index)
@@ -712,12 +708,12 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     }
     else
     {
-      double held_xy_tolerance =
-          (final_goal_in_plan_window && held_goal_index_ == plan_last_index) ? final_goal_xy_tolerance_ :
-                                                                             xy_local_goal_tolerance_;
-      double held_yaw_tolerance =
-          (final_goal_in_plan_window && held_goal_index_ == plan_last_index) ? final_goal_yaw_tolerance_ :
-                                                                              yaw_local_goal_tolerance_;
+      double held_xy_tolerance = (final_goal_in_plan_window && held_goal_index_ == plan_last_index) ?
+                                     final_goal_xy_tolerance_ :
+                                     xy_local_goal_tolerance_;
+      double held_yaw_tolerance = (final_goal_in_plan_window && held_goal_index_ == plan_last_index) ?
+                                      final_goal_yaw_tolerance_ :
+                                      yaw_local_goal_tolerance_;
 
       double yaw_error = fabs(angles::shortest_angular_distance(robot_pose.theta, held_goal_pose_.theta));
       if (yaw_error >= held_yaw_tolerance)
@@ -737,8 +733,8 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
         y = held_y;
         desired_angle = held_goal_pose_.theta;
         publishIntermediateGoal(held_goal_pose_, held_goal_pose_.theta);
-        ROS_DEBUG_NAMED("PathFollowerCritic",
-                        "Holding goal index %u until full pose tolerance satisfied (XY + yaw)", held_goal_index_);
+        ROS_DEBUG_NAMED("PathFollowerCritic", "Holding goal index %u until full pose tolerance satisfied (XY + yaw)",
+                        held_goal_index_);
         return true;
       }
 
@@ -750,9 +746,10 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       {
         reached_intermediate_goals_.push_back(reached_pose);
       }
-      ROS_DEBUG_NAMED("PathFollowerCritic",
-                      "Reached held intermediate goal index %u while respecting pose tolerances. last_progress_index_: %u",
-                      held_goal_index_, last_progress_index_);
+      ROS_DEBUG_NAMED(
+          "PathFollowerCritic",
+          "Reached held intermediate goal index %u while respecting pose tolerances. last_progress_index_: %u",
+          held_goal_index_, last_progress_index_);
       holding_goal_ = false;
     }
   }
@@ -780,7 +777,7 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   }
 
   auto articulationSearchStart = [&](unsigned int candidate_start) {
-    return std::max({candidate_start, articulation_scan_start, 1u});
+    return std::max({ candidate_start, articulation_scan_start, 1u });
   };
 
   unsigned int goal_index = search_start_index;
@@ -822,8 +819,7 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
         reached_pose.theta = nearestPlanOrientation(reached_pose);
         if (reached_intermediate_goals_.empty() ||
             nav_2d_utils::poseDistance(reached_intermediate_goals_.back(), reached_pose) > 1e-6 ||
-            fabs(angles::shortest_angular_distance(reached_intermediate_goals_.back().theta, reached_pose.theta)) >
-                1e-6)
+            fabs(angles::shortest_angular_distance(reached_intermediate_goals_.back().theta, reached_pose.theta)) > 1e-6)
         {
           reached_intermediate_goals_.push_back(reached_pose);
         }
@@ -846,10 +842,10 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
 
     if (articulation_lower_bound <= articulation_upper_bound)
     {
-      auto articulation_it = std::find_if(articulation_indices.begin(), articulation_indices.end(),
-                                          [&](unsigned int index) {
-                                            return index >= articulation_lower_bound && index <= articulation_upper_bound;
-                                          });
+      auto articulation_it =
+          std::find_if(articulation_indices.begin(), articulation_indices.end(), [&](unsigned int index) {
+            return index >= articulation_lower_bound && index <= articulation_upper_bound;
+          });
 
       if (articulation_it != articulation_indices.end())
       {
@@ -873,8 +869,8 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
         forced_skipped_articulation = true;
         found_goal = true;
         ROS_DEBUG_NAMED("PathFollowerCritic",
-                        "Recovered skipped articulation index %u between progress %u and search start %u.",
-                        goal_index, last_progress_index_, search_start_index);
+                        "Recovered skipped articulation index %u between progress %u and search start %u.", goal_index,
+                        last_progress_index_, search_start_index);
       }
     }
   }
@@ -884,8 +880,8 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   {
     double candidate_yaw = goal_yaw;
     bool candidate_has_forward = false;
-    unsigned int candidate_index =
-        getGoalIndex(plan, search_index, last_valid_index, final_goal_in_plan_window, candidate_yaw, candidate_has_forward);
+    unsigned int candidate_index = getGoalIndex(plan, search_index, last_valid_index, final_goal_in_plan_window,
+                                                candidate_yaw, candidate_has_forward);
 
     bool forced_articulation = false;
     if (candidate_index > last_progress_index_)
@@ -895,8 +891,8 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       bool articulation_has_forward = candidate_has_forward;
       unsigned int articulation_start_index = articulationSearchStart(search_index);
       if (articulation_start_index <= candidate_index &&
-          findNextArticulation(plan, articulation_start_index, candidate_index, last_valid_index,
-                               articulation_index, articulation_yaw, articulation_has_forward))
+          findNextArticulation(plan, articulation_start_index, candidate_index, last_valid_index, articulation_index,
+                               articulation_yaw, articulation_has_forward))
       {
         candidate_index = articulation_index;
         candidate_yaw = articulation_yaw;
@@ -918,21 +914,19 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       found_goal = true;
       forced_skipped_articulation = true;
       has_next_articulation = false;
-      ROS_DEBUG_NAMED("PathFollowerCritic",
-                      "Selecting pending articulation index %u reached at candidate %u.", goal_index,
-                      candidate_index);
+      ROS_DEBUG_NAMED("PathFollowerCritic", "Selecting pending articulation index %u reached at candidate %u.",
+                      goal_index, candidate_index);
       break;
     }
 
-    double candidate_xy_tolerance =
-        (final_goal_in_plan_window && candidate_index == plan_last_index) ? final_goal_xy_tolerance_ :
-                                                                           xy_local_goal_tolerance_;
-    double candidate_yaw_tolerance =
-        (final_goal_in_plan_window && candidate_index == plan_last_index) ? final_goal_yaw_tolerance_ :
-                                                                            yaw_local_goal_tolerance_;
+    double candidate_xy_tolerance = (final_goal_in_plan_window && candidate_index == plan_last_index) ?
+                                        final_goal_xy_tolerance_ :
+                                        xy_local_goal_tolerance_;
+    double candidate_yaw_tolerance = (final_goal_in_plan_window && candidate_index == plan_last_index) ?
+                                         final_goal_yaw_tolerance_ :
+                                         yaw_local_goal_tolerance_;
 
-    if (isPoseReached(robot_pose, plan[candidate_index], candidate_yaw, candidate_xy_tolerance,
-                      candidate_yaw_tolerance))
+    if (isPoseReached(robot_pose, plan[candidate_index], candidate_yaw, candidate_xy_tolerance, candidate_yaw_tolerance))
     {
       last_progress_index_ = std::max(last_progress_index_, candidate_index);
       geometry_msgs::Pose2D reached_pose = plan[candidate_index];
@@ -943,9 +937,8 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       {
         reached_intermediate_goals_.push_back(reached_pose);
       }
-      ROS_DEBUG_NAMED("PathFollowerCritic",
-                      "Reached intermediate goal index %u. last_progress_index_: %u", candidate_index,
-                      last_progress_index_);
+      ROS_DEBUG_NAMED("PathFollowerCritic", "Reached intermediate goal index %u. last_progress_index_: %u",
+                      candidate_index, last_progress_index_);
 
       if (candidate_index >= last_valid_index)
       {
@@ -967,8 +960,8 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       double dot = to_goal_x * std::cos(candidate_yaw) + to_goal_y * std::sin(candidate_yaw);
       if (dot < 0.0)
       {
-        ROS_DEBUG_NAMED("PathFollowerCritic",
-                        "Skipping goal index %u due to backward alignment (dot product %.3f)", candidate_index, dot);
+        ROS_DEBUG_NAMED("PathFollowerCritic", "Skipping goal index %u due to backward alignment (dot product %.3f)",
+                        candidate_index, dot);
         if (candidate_index >= last_valid_index)
         {
           break;
@@ -1033,8 +1026,7 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       has_forward_direction = next_articulation_has_forward;
       has_next_articulation = false;
       forced_skipped_articulation = true;
-      ROS_DEBUG_NAMED("PathFollowerCritic",
-                      "Fallback switching to pending articulation index %u.", goal_index);
+      ROS_DEBUG_NAMED("PathFollowerCritic", "Fallback switching to pending articulation index %u.", goal_index);
     }
 
     if (goal_index > last_progress_index_)
@@ -1044,8 +1036,8 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
       bool articulation_has_forward = has_forward_direction;
       unsigned int articulation_start_index = articulationSearchStart(search_start_index);
       if (articulation_start_index <= goal_index &&
-          findNextArticulation(plan, articulation_start_index, goal_index, last_valid_index,
-                               articulation_index, articulation_yaw, articulation_has_forward))
+          findNextArticulation(plan, articulation_start_index, goal_index, last_valid_index, articulation_index,
+                               articulation_yaw, articulation_has_forward))
       {
         goal_index = articulation_index;
         goal_yaw = articulation_yaw;
@@ -1057,8 +1049,8 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   bool pending_articulation = false;
   if (last_progress_index_ < goal_index)
   {
-    pending_articulation = std::find(articulation_indices.begin(), articulation_indices.end(), goal_index) !=
-                           articulation_indices.end();
+    pending_articulation =
+        std::find(articulation_indices.begin(), articulation_indices.end(), goal_index) != articulation_indices.end();
   }
 
   // Only consider snapping to the final goal yaw when we have already selected the last path index as goal.
@@ -1092,8 +1084,7 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
     double position_diff_y = plan[goal_index].y - held_goal_pose_.y;
     double yaw_diff = angles::shortest_angular_distance(goal_yaw, held_goal_pose_.theta);
     same_as_held = (fabs(position_diff_x) <= hold_position_epsilon_) &&
-                   (fabs(position_diff_y) <= hold_position_epsilon_) &&
-                   (fabs(yaw_diff) <= hold_yaw_epsilon_);
+                   (fabs(position_diff_y) <= hold_position_epsilon_) && (fabs(yaw_diff) <= hold_yaw_epsilon_);
   }
 
   if (!same_as_held)
@@ -1111,8 +1102,8 @@ bool PathFollowerCritic::getGoalPose(const geometry_msgs::Pose2D& robot_pose, co
   holding_goal_ = true;
 
   ROS_DEBUG_NAMED("PathFollowerCritic",
-                  "Selected goal index %u (x: %.3f, y: %.3f, yaw: %.3f rad). last_progress_index_: %u",
-                  goal_index, plan[goal_index].x, plan[goal_index].y, goal_yaw, last_progress_index_);
+                  "Selected goal index %u (x: %.3f, y: %.3f, yaw: %.3f rad). last_progress_index_: %u", goal_index,
+                  plan[goal_index].x, plan[goal_index].y, goal_yaw, last_progress_index_);
 
   publishIntermediateGoal(held_goal_pose_, held_goal_pose_.theta);
   return true;
@@ -1196,8 +1187,7 @@ unsigned int PathFollowerCritic::getGoalIndex(const std::vector<geometry_msgs::P
     double length = hypot(direction_x, direction_y);
     if (length < epsilon)
     {
-      double orientation_delta =
-          fabs(angles::shortest_angular_distance(plan[goal_index].theta, plan[i].theta));
+      double orientation_delta = fabs(angles::shortest_angular_distance(plan[goal_index].theta, plan[i].theta));
       if (orientation_delta > orientation_progress_epsilon)
       {
         goal_index = i;
