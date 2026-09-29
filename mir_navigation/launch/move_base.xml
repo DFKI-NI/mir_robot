@@ -3,11 +3,13 @@
     <arg name="local_planner" default="dwb" doc="Local planner can be either dwa, base, teb or pose"/>
     <arg name="with_virtual_walls" default="true" doc="Enables usage of virtual walls when set. Set to false when running SLAM." />
     <arg name="prefix" default="" doc="Prefix used for robot tf frames" /> <!-- used in the config files -->
+    <arg name="sbpl_allocated_time" default="10.0" doc="Seconds SBPL (ARA*) may search; it improves a first solution until then, so a hard plan is delivered only after this time" />
 
     <node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen" clear_params="true">
         <param name="SBPLLatticePlanner/primitive_filename" value="$(find mir_navigation)/mprim/unicycle_highcost_5cm.mprim" />
         <rosparam file="$(find mir_navigation)/config/move_base_common_params.yaml" command="load" />
         <rosparam file="$(find mir_navigation)/config/sbpl_global_params.yaml" command="load" />
+        <param name="SBPLLatticePlanner/allocated_time" value="$(arg sbpl_allocated_time)" />
         <rosparam file="$(find mir_navigation)/config/$(arg local_planner)_local_planner_params.yaml" command="load" />
         <!-- global costmap params -->
         <rosparam file="$(find mir_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap" subst_value="true" />

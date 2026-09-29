@@ -5,6 +5,7 @@
   <arg name="with_virtual_walls" default="true" />
   <arg name="prefix" default="" />
   <arg name="namespace" default="$(arg prefix)" doc="Namespace to push all topics into."/>
+  <arg name="sbpl_allocated_time" default="10.0" doc="SBPL search time [s], see move_base.xml" />
 
   <group if="$(eval namespace != '')" ns="$(arg namespace)">
     <include file="$(find mir_navigation)/launch/start_maps.launch">
@@ -17,6 +18,7 @@
       <arg name="local_planner" value="$(arg local_planner)"/>
       <arg name="with_virtual_walls" value="$(arg with_virtual_walls)" />
       <arg name="prefix" value="$(arg prefix)" />
+      <arg name="sbpl_allocated_time" value="$(arg sbpl_allocated_time)" />
     </include>
   </group>
 
@@ -33,6 +35,7 @@
       <arg name="local_planner" value="$(arg local_planner)"/>
       <arg name="with_virtual_walls" value="$(arg with_virtual_walls)" />
       <arg name="prefix" value="$(arg prefix)" />
+      <arg name="sbpl_allocated_time" value="$(arg sbpl_allocated_time)" />
     </include>
   </group>
 </launch>
