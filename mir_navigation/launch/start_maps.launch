@@ -2,12 +2,14 @@
   <arg name="map_file" default="$(find mir_gazebo)/maps/maze.yaml" doc="Path to a map .yaml file (required)." />
   <arg name="virtual_walls_map_file" default="$(arg map_file)" doc="Path to a virtual walls map .yaml file (optional)." />
   <arg name="with_virtual_walls" default="true" />
+  <arg name="map_ns" default="" doc="Namespace of the map servers (/map, /virtual_walls/map by default); e.g. /mobipick2 for a second robot with its own map copy (#226)" />
+  <arg name="map_frame" default="map" doc="frame_id of the published maps" />
 
-  <node name="static_map_server" pkg="map_server" type="map_server" args="$(arg map_file)" ns="/" output="screen">
-    <param name="frame_id" type="string" value="map"/>
+  <node name="static_map_server" pkg="map_server" type="map_server" args="$(arg map_file)" ns="$(arg map_ns)/" output="screen">
+    <param name="frame_id" type="string" value="$(arg map_frame)"/>
   </node>
 
-  <node if="$(arg with_virtual_walls)" name="virtual_walls_map_server" pkg="map_server" type="map_server" args="$(arg virtual_walls_map_file)" ns="/virtual_walls" output="screen">
-    <param name="frame_id" type="string" value="map"/>
+  <node if="$(arg with_virtual_walls)" name="virtual_walls_map_server" pkg="map_server" type="map_server" args="$(arg virtual_walls_map_file)" ns="$(arg map_ns)/virtual_walls" output="screen">
+    <param name="frame_id" type="string" value="$(arg map_frame)"/>
   </node>
 </launch>
