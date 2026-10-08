@@ -3,15 +3,19 @@
     <arg name="local_planner" default="dwb" doc="Local planner can be either dwa, base, teb or pose"/>
     <arg name="with_virtual_walls" default="true" doc="Enables usage of virtual walls when set. Set to false when running SLAM." />
     <arg name="prefix" default="" doc="Prefix used for robot tf frames" /> <!-- used in the config files -->
+    <arg name="map_ns" default="" doc="Namespace of the map servers: the costmaps read MAP_NS/map and MAP_NS/virtual_walls/map (#226)" />
+    <arg name="map_frame" default="map" doc="Global frame of the global costmap (#226)" />
+    <arg name="sbpl_allocated_time" default="3.0" doc="Seconds SBPL (ARA*) may search; it finds a first plan within 0.1 s and only polishes it until this time, so a hard plan is delivered only after it: 3 s instead of 10 s cut the standing time before a turn-around from up to 9 s without costlier plans" />
 
     <node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen" clear_params="true">
         <param name="SBPLLatticePlanner/primitive_filename" value="$(find mir_navigation)/mprim/unicycle_highcost_5cm.mprim" />
         <rosparam file="$(find mir_navigation)/config/move_base_common_params.yaml" command="load" />
         <rosparam file="$(find mir_navigation)/config/sbpl_global_params.yaml" command="load" />
+        <param name="SBPLLatticePlanner/allocated_time" value="$(arg sbpl_allocated_time)" />
         <rosparam file="$(find mir_navigation)/config/$(arg local_planner)_local_planner_params.yaml" command="load" />
         <!-- global costmap params -->
         <rosparam file="$(find mir_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap" subst_value="true" />
-        <rosparam file="$(find mir_navigation)/config/costmap_global_params.yaml" command="load" />
+        <rosparam file="$(find mir_navigation)/config/costmap_global_params.yaml" command="load" subst_value="true" />
         <rosparam file="$(find mir_navigation)/config/costmap_global_params_plugins_virtual_walls.yaml" command="load" if="$(arg with_virtual_walls)" />
         <rosparam file="$(find mir_navigation)/config/costmap_global_params_plugins_no_virtual_walls.yaml" command="load" unless="$(arg with_virtual_walls)" />
         <!-- local costmap params -->
@@ -19,7 +23,12 @@
         <rosparam file="$(find mir_navigation)/config/costmap_local_params.yaml" command="load" subst_value="true" />
         <rosparam file="$(find mir_navigation)/config/costmap_local_params_plugins_virtual_walls.yaml" command="load" if="$(arg with_virtual_walls)" />
         <rosparam file="$(find mir_navigation)/config/costmap_local_params_plugins_no_virtual_walls.yaml" command="load" unless="$(arg with_virtual_walls)" />
-        <remap from="map" to="/map" />
+        <remap from="map" to="$(arg map_ns)/map" />
         <remap from="marker" to="move_base_node/DWBLocalPlanner/markers" />
+    </node>
+
+    <node pkg="mir_navigation" type="global_plan_debug_viz.py" name="global_plan_debug_viz" output="screen">
+        <param name="global_plan_topic" value="move_base_node/DWBLocalPlanner/transformed_global_plan" />
+        <param name="marker_frame" value="$(arg prefix)base_link" />
     </node>
 </launch>

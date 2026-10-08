@@ -3,6 +3,11 @@ project(mir_dwb_critics)
 
 set_directory_properties(PROPERTIES COMPILE_OPTIONS "-Wall;-Werror")
 
+# The critics score ~1000 trajectories per control cycle; an unoptimized build misses the controller rate.
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+endif()
+
 find_package(catkin REQUIRED COMPONENTS
   angles
   costmap_queue
@@ -30,12 +35,23 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME}
+  src/braking_obstacle_footprint.cpp
   src/path_angle.cpp
   src/path_progress.cpp
+  src/path_follower.cpp
   src/path_dist_pruned.cpp
 )
 add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
+
+if(CATKIN_ENABLE_TESTING)
+  find_package(rostest REQUIRED)
+  add_rostest_gtest(path_follower_test test/path_follower.test test/path_follower_test.cpp)
+  target_link_libraries(path_follower_test ${PROJECT_NAME} ${catkin_LIBRARIES})
+  # Debug tool: replay recorded poses against a recorded plan (see test/replay_path_follower.cpp).
+  add_executable(replay_path_follower EXCLUDE_FROM_ALL test/replay_path_follower.cpp)
+  target_link_libraries(replay_path_follower ${PROJECT_NAME} ${catkin_LIBRARIES})
+endif()
 
 install(PROGRAMS
     nodes/print_dwb_scores.py

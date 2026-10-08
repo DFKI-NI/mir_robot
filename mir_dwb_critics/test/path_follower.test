@@ -1,0 +1,3 @@
+<launch>
+  <test test-name="path_follower_regression" pkg="mir_dwb_critics" type="path_follower_test" time-limit="30" />
+</launch>

@@ -1,8 +1,11 @@
-base_global_planner: SBPLLatticePlanner
+# SBPLLatticePlanner whose plans end at the requested goal pose (see mir_navigation/src); its parameters stay
+# in the SBPLLatticePlanner namespace below.
+base_global_planner: mir_navigation/SBPLLatticePlannerExactGoal
 SBPLLatticePlanner:
+  goal_blend_distance: 0.3   # blend the last 0.3 m of the plan from the lattice end pose into the exact goal
   environment_type: XYThetaLattice
   planner_type: ARAPlanner
-  allocated_time: 10.0
+  allocated_time: 3.0   # the launch arg sbpl_allocated_time overrides this
   initial_epsilon: 15.0
   forward_search: false
   nominalvel_mpersecs: 0.8

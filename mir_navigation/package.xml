@@ -17,6 +17,15 @@
 
   <build_depend>roslaunch</build_depend>
 
+  <depend>angles</depend>
+  <depend>costmap_2d</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav_core</depend>
+  <depend>pluginlib</depend>
+  <depend>sbpl_lattice_planner</depend>
+  <depend>tf2</depend>
+  <depend>tf2_geometry_msgs</depend>
+
   <exec_depend>amcl</exec_depend>
   <exec_depend>base_local_planner</exec_depend>
   <exec_depend>dwa_local_planner</exec_depend>
@@ -31,7 +40,12 @@
   <exec_depend>mir_gazebo</exec_depend>
   <exec_depend>move_base</exec_depend>
   <exec_depend>nav_core_adapter</exec_depend>    <!-- for dwb_local_planner -->
+  <exec_depend>nav_msgs</exec_depend>
   <exec_depend>python3-matplotlib</exec_depend>
-  <exec_depend>sbpl_lattice_planner</exec_depend>
+  <exec_depend>rospy</exec_depend>
   <exec_depend>teb_local_planner</exec_depend>
+  <exec_depend>visualization_msgs</exec_depend>
+  <export>
+    <nav_core plugin="${prefix}/bgp_plugin.xml" />
+  </export>
 </package>

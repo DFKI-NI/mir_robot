@@ -1,0 +1,5 @@
+<library path="lib/libmir_navigation_planners">
+  <class name="mir_navigation/SBPLLatticePlannerExactGoal" type="mir_navigation::SBPLLatticePlannerExactGoal" base_class_type="nav_core::BaseGlobalPlanner">
+    <description>SBPLLatticePlanner whose plans end at the requested goal pose instead of one lattice sample short of it.</description>
+  </class>
+</library>

@@ -5,18 +5,26 @@
   <arg name="with_virtual_walls" default="true" />
   <arg name="prefix" default="" />
   <arg name="namespace" default="$(arg prefix)" doc="Namespace to push all topics into."/>
+  <arg name="sbpl_allocated_time" default="3.0" doc="SBPL search time [s], see move_base.xml" />
+  <arg name="map_ns" default="" doc="Namespace of the map servers, see start_maps.launch (#226)" />
+  <arg name="map_frame" default="map" doc="Global frame of the maps and the global costmap (#226)" />
 
   <group if="$(eval namespace != '')" ns="$(arg namespace)">
     <include file="$(find mir_navigation)/launch/start_maps.launch">
       <arg name="map_file" value="$(arg map_file)" />
       <arg name="virtual_walls_map_file" value="$(arg virtual_walls_map_file)" />
       <arg name="with_virtual_walls" value="$(arg with_virtual_walls)" />
+      <arg name="map_ns" value="$(arg map_ns)" />
+      <arg name="map_frame" value="$(arg map_frame)" />
     </include>
 
     <include file="$(find mir_navigation)/launch/move_base.xml">
       <arg name="local_planner" value="$(arg local_planner)"/>
       <arg name="with_virtual_walls" value="$(arg with_virtual_walls)" />
       <arg name="prefix" value="$(arg prefix)" />
+      <arg name="sbpl_allocated_time" value="$(arg sbpl_allocated_time)" />
+      <arg name="map_ns" value="$(arg map_ns)" />
+      <arg name="map_frame" value="$(arg map_frame)" />
     </include>
   </group>
 
@@ -27,12 +35,17 @@
       <arg name="map_file" value="$(arg map_file)" />
       <arg name="virtual_walls_map_file" value="$(arg virtual_walls_map_file)" />
       <arg name="with_virtual_walls" value="$(arg with_virtual_walls)" />
+      <arg name="map_ns" value="$(arg map_ns)" />
+      <arg name="map_frame" value="$(arg map_frame)" />
     </include>
 
     <include file="$(find mir_navigation)/launch/move_base.xml">
       <arg name="local_planner" value="$(arg local_planner)"/>
       <arg name="with_virtual_walls" value="$(arg with_virtual_walls)" />
       <arg name="prefix" value="$(arg prefix)" />
+      <arg name="sbpl_allocated_time" value="$(arg sbpl_allocated_time)" />
+      <arg name="map_ns" value="$(arg map_ns)" />
+      <arg name="map_frame" value="$(arg map_frame)" />
     </include>
   </group>
 </launch>

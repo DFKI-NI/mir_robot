@@ -6,6 +6,7 @@
   <arg name="delta_yaw" default="0.0" />
   <arg name="odom_frame_id" default="odom"/>
   <arg name="base_frame_id" default="base_footprint"/>
+  <arg name="global_frame_id" default="" doc="frame of the published pose (fake_localization's own default /map when empty); e.g. mobipick2/map for a robot in a scene copy (#226)"/>
 
   <node name="fake_localization" pkg="fake_localization" type="fake_localization" output="screen">
     <param name="odom_frame_id" value="$(arg odom_frame_id)"/>
@@ -13,5 +14,6 @@
     <param name="delta_x"       value="$(arg delta_x)" />
     <param name="delta_y"       value="$(arg delta_y)" />
     <param name="delta_yaw"     value="$(arg delta_yaw)" />
+    <param name="global_frame_id" value="$(arg global_frame_id)" if="$(eval global_frame_id != '')" />
   </node>
 </launch>
