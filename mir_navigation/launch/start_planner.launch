@@ -5,7 +5,7 @@
   <arg name="with_virtual_walls" default="true" />
   <arg name="prefix" default="" />
   <arg name="namespace" default="$(arg prefix)" doc="Namespace to push all topics into."/>
-  <arg name="sbpl_allocated_time" default="10.0" doc="SBPL search time [s], see move_base.xml" />
+  <arg name="sbpl_allocated_time" default="3.0" doc="SBPL search time [s], see move_base.xml" />
   <arg name="map_ns" default="" doc="Namespace of the map servers, see start_maps.launch (#226)" />
   <arg name="map_frame" default="map" doc="Global frame of the maps and the global costmap (#226)" />
 
