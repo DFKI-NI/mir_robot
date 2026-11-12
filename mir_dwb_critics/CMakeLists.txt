@@ -49,6 +49,8 @@ if(CATKIN_ENABLE_TESTING)
   add_rostest_gtest(path_follower_test test/path_follower.test test/path_follower_test.cpp)
   target_link_libraries(path_follower_test ${PROJECT_NAME} ${catkin_LIBRARIES})
   # Debug tool: replay recorded poses against a recorded plan (see test/replay_path_follower.cpp).
+  # Intentionally built with EXCLUDE_FROM_ALL and never installed.
+  #catkin_lint: ignore uninstalled_target
   add_executable(replay_path_follower EXCLUDE_FROM_ALL test/replay_path_follower.cpp)
   target_link_libraries(replay_path_follower ${PROJECT_NAME} ${catkin_LIBRARIES})
 endif()

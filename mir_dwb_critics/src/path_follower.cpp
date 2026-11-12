@@ -202,8 +202,10 @@ std::vector<PathFollowerCritic::Vertex> PathFollowerCritic::filletCorners(const 
   auto pointAt = [&](double s, size_t hint) {
     // Interpolate the polyline at arc length s, searching from the vertex index hint.
     size_t i = std::min(hint, vertices.size() - 2);
-    while (i > 0 && vertices[i].s > s) --i;
-    while (i + 2 < vertices.size() && vertices[i + 1].s < s) ++i;
+    while (i > 0 && vertices[i].s > s)
+      --i;
+    while (i + 2 < vertices.size() && vertices[i + 1].s < s)
+      ++i;
     const Vertex& a = vertices[i];
     const Vertex& b = vertices[i + 1];
     double t = b.s > a.s ? std::max(0.0, std::min(1.0, (s - a.s) / (b.s - a.s))) : 0.0;
@@ -232,10 +234,14 @@ std::vector<PathFollowerCritic::Vertex> PathFollowerCritic::filletCorners(const 
       continue;
     }
     size_t prev = i, next = i;
-    while (prev > 0 && !isAnchor(prev - 1)) --prev;
-    if (prev > 0) --prev;
-    while (next + 1 < vertices.size() && !isAnchor(next + 1)) ++next;
-    if (next + 1 < vertices.size()) ++next;
+    while (prev > 0 && !isAnchor(prev - 1))
+      --prev;
+    if (prev > 0)
+      --prev;
+    while (next + 1 < vertices.size() && !isAnchor(next + 1))
+      ++next;
+    if (next + 1 < vertices.size())
+      ++next;
     // Two neighbouring corners share the space between them; a stop point or the plan end only needs a margin.
     double back = corner.s - vertices[prev].s, ahead = vertices[next].s - corner.s;
     double length = std::min({ corner_fillet_length_, isCorner(prev) ? 0.5 * back : back - 0.02,

@@ -83,8 +83,9 @@ bool BrakingObstacleFootprintCritic::prepare(const geometry_msgs::Pose2D& pose, 
     catch (const nav_core2::IllegalTrajectoryException&)
     {
       current_pose_blocked_ = true;
-      ROS_WARN_THROTTLE_NAMED(2.0, "BrakingObstacleFootprint",
-                              "Footprint at the current pose touches an obstacle; scoring trajectories by where they lead.");
+      ROS_WARN_THROTTLE_NAMED(
+          2.0, "BrakingObstacleFootprint",
+          "Footprint at the current pose touches an obstacle; scoring trajectories by where they lead.");
     }
   }
   return true;

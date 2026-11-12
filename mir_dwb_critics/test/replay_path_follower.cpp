@@ -30,8 +30,10 @@ int main(int argc, char** argv)
     geometry_msgs::Pose2D p;
     in >> p.x >> p.y >> p.theta;
     plan.poses.push_back(p);
-    min_x = std::min(min_x, p.x); max_x = std::max(max_x, p.x);
-    min_y = std::min(min_y, p.y); max_y = std::max(max_y, p.y);
+    min_x = std::min(min_x, p.x);
+    max_x = std::max(max_x, p.x);
+    min_y = std::min(min_y, p.y);
+    max_y = std::max(max_y, p.y);
   }
   in >> word >> n;
   std::vector<std::pair<double, geometry_msgs::Pose2D>> robot(n);
@@ -60,8 +62,8 @@ int main(int argc, char** argv)
   {
     const geometry_msgs::Pose2D& pose = entry.second;
     // DWB pruning: drop leading poses until one is within prune_distance (1 m) of the robot.
-    while (global_plan.poses.size() > 1 && std::hypot(global_plan.poses.front().x - pose.x,
-                                                      global_plan.poses.front().y - pose.y) >= 1.0)
+    while (global_plan.poses.size() > 1 &&
+           std::hypot(global_plan.poses.front().x - pose.x, global_plan.poses.front().y - pose.y) >= 1.0)
     {
       global_plan.poses.erase(global_plan.poses.begin());
     }
@@ -71,9 +73,11 @@ int main(int argc, char** argv)
     for (const auto& p : global_plan.poses)
     {
       bool far = std::hypot(p.x - pose.x, p.y - pose.y) > 2.0;
-      if (far && transformed.poses.empty()) continue;
+      if (far && transformed.poses.empty())
+        continue;
       transformed.poses.push_back(p);
-      if (far) break;
+      if (far)
+        break;
     }
     bool ok = critic.prepare(pose, nav_2d_msgs::Twist2D(), plan.poses.back(), transformed);
     auto target = critic.target();
