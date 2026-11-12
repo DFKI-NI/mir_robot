@@ -2,30 +2,13 @@ cmake_minimum_required(VERSION 3.5.1)
 project(mir_navigation)
 
 find_package(catkin REQUIRED COMPONENTS
-  angles
-  costmap_2d
-  geometry_msgs
-  nav_core
-  pluginlib
   roslaunch
-  sbpl_lattice_planner
-  tf2
-  tf2_geometry_msgs
 )
 
 ###################################
 ## catkin specific configuration ##
 ###################################
-catkin_package(
-  LIBRARIES mir_navigation_planners
-  CATKIN_DEPENDS angles costmap_2d geometry_msgs nav_core pluginlib sbpl_lattice_planner tf2 tf2_geometry_msgs
-)
-
-include_directories(${catkin_INCLUDE_DIRS})
-
-add_library(mir_navigation_planners src/sbpl_lattice_planner_exact_goal.cpp)
-add_dependencies(mir_navigation_planners ${catkin_EXPORTED_TARGETS})
-target_link_libraries(mir_navigation_planners ${catkin_LIBRARIES})
+catkin_package()
 
 #############
 ## Install ##
@@ -45,14 +28,12 @@ install(PROGRAMS
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-install(TARGETS mir_navigation_planners
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-install(FILES bgp_plugin.xml
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
+## Mark executables and/or libraries for installation
+# install(TARGETS mir_navigation mir_navigation_node
+#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+# )
 
 ## Mark cpp header files for installation
 # install(DIRECTORY include/${PROJECT_NAME}/
