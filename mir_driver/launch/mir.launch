@@ -71,14 +71,16 @@
     </node>
   </group>
 
-  <node name="b_rep117_laser_filter" pkg="mir_driver" type="rep117_filter.py" output="screen">
+  <node name="b_rep117_laser_filter" pkg="laser_filters" type="scan_to_scan_filter_chain" output="screen">
     <remap from="scan" to="b_scan" />
     <remap from="scan_filtered" to="b_scan_rep117" />
+    <rosparam command="load" file="$(find mir_driver)/config/rep117_filter.yaml" />
   </node>
 
-  <node name="f_rep117_laser_filter" pkg="mir_driver" type="rep117_filter.py" output="screen">
+  <node name="f_rep117_laser_filter" pkg="laser_filters" type="scan_to_scan_filter_chain" output="screen">
     <remap from="scan" to="f_scan" />
     <remap from="scan_filtered" to="f_scan_rep117" />
+    <rosparam command="load" file="$(find mir_driver)/config/rep117_filter.yaml" />
   </node>
 
   <node name="fake_mir_joint_publisher" pkg="mir_driver" type="fake_mir_joint_publisher.py" output="screen" />
