@@ -22,6 +22,7 @@ catkin_package()
 install(PROGRAMS
   mprim/genmprim_unicycle_highcost_5cm.py
   nodes/acc_finder.py
+  nodes/global_plan_debug_viz.py
   nodes/min_max_finder.py
   scripts/plot_mprim.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

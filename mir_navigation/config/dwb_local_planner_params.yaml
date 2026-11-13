@@ -1,19 +1,20 @@
 base_local_planner: nav_core_adapter::LocalPlannerAdapter
+controller_frequency: 15.0
 LocalPlannerAdapter:
   planner_name: dwb_local_planner::DWBLocalPlanner
 DWBLocalPlanner:
   # Robot configuration
   max_vel_x:  0.8
-  min_vel_x: -0.2
+  min_vel_x: -0.8 # NOTE: no preference over going forward
 
   max_vel_y: 0.0  # diff drive robot
   min_vel_y: 0.0  # diff drive robot
 
   max_speed_xy: 0.8    # max_trans_vel: 0.8  # choose slightly less than the base's capability
-  min_speed_xy: 0.1    # min_trans_vel: 0.1  # this is the min trans velocity when there is negligible rotational velocity
+  min_speed_xy: 0.0    # Allow a zero command when settling at intermediate/final goals.
 
   max_vel_theta: 1.0    # max_rot_vel: 1.0  # choose slightly less than the base's capability
-  min_speed_theta: 0.1  # min_rot_vel: 0.1 default: 0.4  # this is the min angular velocity when there is negligible translational velocity
+  min_speed_theta: 0.0  # Required for a stationary trajectory and stopped goal checking.
 
   acc_lim_x: 1.5
   acc_lim_y: 0.0      # diff drive robot
@@ -32,11 +33,13 @@ DWBLocalPlanner:
   split_path: true
 
   # Forward simulation (trajectory generation)
-  trajectory_generator_name: dwb_plugins::StandardTrajectoryGenerator # or dwb_plugins::LimitedAccelGenerator
+  # LimitedAccelGenerator only samples velocities reachable within one control period, so the commanded velocity
+  # ramps smoothly at acc_lim_* instead of jumping to any value the StandardTrajectoryGenerator can reach in sim_time.
+  trajectory_generator_name: dwb_plugins::LimitedAccelGenerator
   sim_time: 0.8
-  vx_samples: 15
+  vx_samples: 21
   vy_samples: 1       # diff drive robot, there is only one sample
-  vtheta_samples: 15
+  vtheta_samples: 21
   discretize_by_time: false
   angular_granularity: 0.15
   linear_granularity: 0.05
@@ -44,20 +47,33 @@ DWBLocalPlanner:
   # include_last_point
 
   # Goal checking
-  goal_checker_name: dwb_plugins::SimpleGoalChecker
-  # stateful: true
+  goal_checker_name: dwb_plugins::StoppedGoalChecker
+  trans_stopped_velocity: 0.03
+  rot_stopped_velocity: 0.05
+  # A stateful checker latches XY the first time the robot passes within xy_goal_tolerance. SBPL plans regularly
+  # drive through the goal position (e.g. before reversing into it), which then reported success up to 25 cm away.
+  stateful: false
 
   # Critics (trajectory scoring)
   #default_critic_namespaces: [dwb_critics, mir_dwb_critics]
-  critics: [RotateToGoal, ObstacleFootprint, PathAlign, PathDistPruned, PathProgress]
+  # critics: [RotateToGoal, ObstacleFootprint, PathAlign, PathDistPruned, PathProgress]
+  # PathFollower handles the final in-place rotation itself (RotateToGoal latches its goal window and then forbids
+  # the small position corrections that a non-stateful goal checker may still need).
+  critics: [ObstacleFootprint, PathFollower]
   RotateToGoal:
-    scale: 100.0
+    scale: 10.0
     # lookahead_time: -1.0
     # slowing_factor: 5.0
   ObstacleFootprint:
-    scale: 0.01             # default: 0.01  mir: 0.01  - weighting for how much the controller should avoid obstacles
-    max_scaling_factor: 0.2 # default: 0.2   mir: 0.2   - how much to scale the robot's footprint when at speed.
-    scaling_speed: 0.25     # default: 0.25  mir: 0.25  - absolute velocity at which to start scaling the robot's footprint
+    # Checks the footprint only over the distance needed to brake to a stop from the sampled velocity. The stock
+    # critic checks the whole sim_time rollout and rejects every trajectory when braking towards a stop point next
+    # to a table, which made move_base replan or run recoveries in the middle of a leg.
+    class: 'mir_dwb_critics::BrakingObstacleFootprint'
+    scale: 0.001            # Collision rejection stays mandatory; inflation cost must not prevent alignment.
+    reaction_time: 0.07     # one control period, added to the braking time (s)
+    # decel / rot_decel default to the planner's decel_lim_x / decel_lim_theta
+    footprint_inset: 0.02   # obstacle cells are 5 cm squares; an outline overlapping one by 2 cm is not contact
+    escape_current_collision: true  # a touching current pose must not make every trajectory illegal (-> recovery)
     sum_scores: false       # if true, return sum of scores of all trajectory points instead of only last one
   PathAlign:
     scale: 16.0
@@ -71,7 +87,27 @@ DWBLocalPlanner:
     class: 'mir_dwb_critics::PathProgress'
     xy_local_goal_tolerance: 0.20
     angle_threshold: 0.78539816  # 45 degrees
-
+  PathFollower:
+    class: 'mir_dwb_critics::PathFollower'
+    scale: 1.0                    # the terms below are already weighted against each other
+    speed_scale: 64.0             # ((v - v_desired) / max_speed)^2: a 0.1 m/s deviation costs 1.0
+    rotation_scale: 64.0          # ((w - w_desired) / max_rotation)^2 while turning at a stop point
+    heading_scale: 25.0           # (endpoint heading error)^2: 0.2 rad costs 1.0
+    path_distance_scale: 4.0      # per costmap cell of lateral error at the rollout endpoint (plus corner cutting)
+    stop_turn_angle: 0.5          # in-place turns of at least this angle stop the robot; smaller ones are driven as arcs
+    start_turn_angle: 0.2         # ... except at the plan start, where the standing robot turns in place first
+    xy_local_goal_tolerance: 0.05 # arc length to a stop point at which the robot switches to turning in place
+    xy_final_goal_tolerance: 0.02 # ... same for the final pose, which should be precise
+    yaw_local_goal_tolerance: 0.1 # heading error at which an intermediate in-place turn counts as done
+    decel: 0.7                    # braking deceleration of the speed profile into stop points (m/s^2)
+    rot_decel: 1.0                # braking deceleration of the in-place rotation profile (rad/s^2)
+    approach_gain: 3.0            # v = gain * distance for the final approach to a stop point
+    rotation_gain: 4.0            # w = gain * heading error for the final part of an in-place turn
+    search_window: 1.0            # how far ahead (m) the robot is searched for on the plan per cycle
+    corner_fillet_length: 0.3     # replace driven-through turns by an arc starting this far (m) before/after them
+    curve_rotation: 0.9           # angular velocity (rad/s) budgeted for following curves: limits speed to this / curvature
+    curve_lookahead: 1.0          # how far ahead (m) curves are considered for slowing down
+    plan_alignment_position_tolerance: 0.15
 
   # Prune already passed poses from plan
   prune_plan: true

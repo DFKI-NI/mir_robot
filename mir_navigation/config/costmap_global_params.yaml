@@ -1,5 +1,10 @@
 global_costmap:
     global_frame: map
+    # SBPL plans with this (padded) footprint while the local planner checks the (slightly inset) real one, so
+    # plans keep some margin instead of grazing obstacles. It cannot be much larger: the tables demo poses put the
+    # robot's front 6 cm from the table cells and SBPL snaps the start to the 5 cm lattice, so with 0.05 or more
+    # SBPL already reports "Solution not found" when leaving table 2/3 in the moelk world.
+    footprint_padding: 0.03
     update_frequency: 1.0
     publish_frequency: 1.0
     raytrace_range: 2.0
