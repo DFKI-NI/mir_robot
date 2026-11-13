@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="bag" default="$(find mir_driver)/test/2024-02-22_raw_scans.bag" />
+
+  <node name="laser_filter_chain" pkg="laser_filters" type="scan_to_scan_filter_chain">
+    <remap from="scan" to="raw_scan" />
+    <remap from="scan_filtered" to="filtered_scan_chain" />
+    <rosparam command="load" file="$(find mir_driver)/config/rep117_filter.yaml" />
+  </node>
+
+  <test pkg="mir_driver" type="test_rep117_filter_chain.py" test-name="test_rep117_filter_chain" time-limit="120">
+    <param name="bag" value="$(arg bag)" />
+  </test>
+</launch>

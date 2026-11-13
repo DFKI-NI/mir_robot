@@ -38,6 +38,10 @@
   <depend>tf</depend>
   <depend>visualization_msgs</depend>
 
+  <exec_depend>laser_filters</exec_depend>
   <exec_depend>mir_description</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
+
+  <test_depend>rosbag</test_depend>
+  <test_depend>rostest</test_depend>
 </package>

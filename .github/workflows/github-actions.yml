@@ -31,7 +31,7 @@ jobs:
     - name: Install pip dependencies
       run: pip install pre-commit
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         path: src/mir_robot
     - name: Use rosdep to install remaining dependencies

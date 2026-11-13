@@ -22,7 +22,7 @@
   <xacro:property name="mir_base_inertial_z_length" value="0.20" />
 
   <xacro:if value="${mir_type == 'mir_100'}">
-    <xacro:property name="mir_base_mass" value="77.0" />
+    <xacro:property name="mir_base_mass" value="59.8" />  <!-- whole MiR100 67 kg without load (data sheet 08-2018) minus wheels, casters and caster arms -->
     <xacro:property name="mir_act_wheel_radius" value="0.0625" />
     <xacro:property name="mir_act_wheel_width" value="0.032" />
     <xacro:property name="mir_act_wheel_mass" value="1.0" />
