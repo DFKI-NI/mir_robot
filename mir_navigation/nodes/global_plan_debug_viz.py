@@ -38,12 +38,6 @@ class GlobalPlanDebugViz:
     def __init__(self):
         self._plan_counter = 0
 
-        default_plan_topic = rospy.get_param('~default_global_plan_topic', 'move_base_node/SBPLLatticePlanner/plan')
-        plan_topic = rospy.get_param('~global_plan_topic', default_plan_topic)
-
-        pose_array_topic = rospy.get_param('~pose_array_topic', 'global_plan_pose_array')
-        marker_topic = rospy.get_param('~marker_topic', 'global_plan_marker')
-
         self._marker_frame = rospy.get_param('~marker_frame', 'base_link')
         self._marker_height = rospy.get_param('~marker_height', 0.8)
         self._marker_scale = rospy.get_param('~marker_scale', 0.2)
@@ -69,11 +63,11 @@ class GlobalPlanDebugViz:
 
         self._poses_to_skip = skip_param
 
-        self._pose_array_pub = rospy.Publisher(pose_array_topic, PoseArray, queue_size=1, latch=True)
-        self._marker_pub = rospy.Publisher(marker_topic, Marker, queue_size=1, latch=True)
-        self._plan_sub = rospy.Subscriber(plan_topic, Path, self._plan_callback, queue_size=1)
+        self._pose_array_pub = rospy.Publisher('~pose_array', PoseArray, queue_size=1, latch=True)
+        self._marker_pub = rospy.Publisher('~marker', Marker, queue_size=1, latch=True)
+        self._plan_sub = rospy.Subscriber('~global_plan', Path, self._plan_callback, queue_size=1)
 
-        rospy.loginfo('global_plan_debug_viz listening to %s', plan_topic)
+        rospy.loginfo('global_plan_debug_viz listening to %s', self._plan_sub.name)
 
     def _plan_callback(self, msg: Path):
         self._plan_counter += 1
