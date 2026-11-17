@@ -7,7 +7,7 @@ obstacle_range: 3.0
 publish_voxel_map: true
 footprint_padding: 0.0
 navigation_map:
-  map_topic: /map
+  map_topic: $(arg map_ns)/map
 obstacles:
   observation_sources: b_scan_marking b_scan_clearing f_scan_marking f_scan_clearing
   b_scan_marking:
@@ -43,5 +43,5 @@ obstacles:
     min_obstacle_height: 0.13
     max_obstacle_height: 0.25
 virtual_walls_map:
-  map_topic: /virtual_walls/map
+  map_topic: $(arg map_ns)/virtual_walls/map
   use_maximum: true
